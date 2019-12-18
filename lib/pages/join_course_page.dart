@@ -1,4 +1,5 @@
 import 'package:common_utils/common_utils.dart';
+import 'package:course_app/provide/course_provide.dart';
 import 'package:course_app/provide/joincourse_provide.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
@@ -135,13 +136,13 @@ class _JoinCoursePageState extends State<JoinCoursePage> {
             //validator: validateCode,
           ),
         ),
-        Provide<JoinCourseProvide>(
+        Provide<CourseProvide>(
           builder: (context, child, data) {
             if (data.code == Code.error) {
               return Padding(
                 padding: EdgeInsets.only(top: 10, right: 115),
                 child: Text(
-                  '该加课码不存在或者已经失效',
+                  Provide.value<CourseProvide>(context).backMessage,
                   style:
                       TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                 ),
@@ -170,15 +171,25 @@ class _JoinCoursePageState extends State<JoinCoursePage> {
     String value = _controller.value.text;
     if (value.length == 6 && !RegexUtil.isZh(value)) {
       print('*******');
-      Provide.value<JoinCourseProvide>(context).changeCode(codes: Code.loading);
-      Provide.value<JoinCourseProvide>(context)
-          .postJoinCode(value)
-          .then((onValue) {
+      Provide.value<CourseProvide>(context).changeCode(codes: Code.loading);
+      Provide.value<CourseProvide>(context)
+          .postJoinCode('2',value)
+          .then((item) {
         //TODO 处理加课
-        print(onValue);
-        if (onValue == true) {
+        print(item);
+        if (item!=null) {
           Navigator.pop(context);
-          Application.router.navigateTo(context, Routes.classRoomPage);
+          //Application.router.navigateTo(context, Routes.classRoomPage);
+          Application.router.navigateTo(
+              context,
+              Routes.classRoomPage +
+                  '?' +
+                  'studentNums=${item.member}'
+                      '&classtitle=${Uri.encodeComponent(item.title)}'
+                      '&courseNumber=${item.courseNumber}'
+                      '&joinCode=${item.joincode}'
+                      '&teacherId=${item.teacherId}'
+                      '&courseId=${item.courseId}');
         }
       });
     } else {

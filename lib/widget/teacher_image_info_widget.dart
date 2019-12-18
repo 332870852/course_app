@@ -18,7 +18,8 @@ class TeacherImageInfoWidget extends StatelessWidget {
   ///房主头像信息
   Widget _teacherImageInfo({@required url, @required teacherName}) {
     return Container(
-      padding: EdgeInsets.only(left: 50),
+     // color: Colors.grey,
+      padding: EdgeInsets.only(left: 0),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[

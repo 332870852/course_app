@@ -1,0 +1,44 @@
+import 'package:course_app/config/service_url.dart';
+import 'package:course_app/model/Course.dart';
+import 'package:course_app/service/service_method.dart';
+import 'package:course_app/utils/ResponseModel.dart';
+import 'package:dio/dio.dart';
+import 'dart:async';
+import 'dart:io';
+import 'package:flutter/material.dart';
+
+class StudentMethod {
+
+  static Future<ResponseModel> getCoursePage(
+      {@required String userId, num pageNo, num pageSize}) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('userId', () => userId);
+    map.putIfAbsent('pageNo', () => pageNo);
+    map.putIfAbsent('pageSize', () => pageSize);
+    Response respData = await get(
+        method: studentPath.servicePath['getCoursePage'], queryParameters: map);
+   // print(respData.data);
+    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+    if (responseModel.code == 1) {
+       //print(responseModel.data);
+        return responseModel;
+
+    } else {
+      throw responseModel.errors[0];
+    }
+  }
+
+  static Future<ResponseModel> JoinCode(String userId,String joinCode)async{
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('userId', () => userId);
+    map.putIfAbsent('joinCode', () => joinCode);
+    Response respData =await post(method: studentPath.servicePath['joinCourse'],requestmap: map);
+    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+    if (responseModel.code != 0) {
+      return responseModel;
+    } else {
+      throw responseModel.errors[0];
+    }
+  }
+
+}

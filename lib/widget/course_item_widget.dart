@@ -1,7 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:course_app/config/constants.dart';
+import 'package:course_app/model/Course.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
-import 'package:course_app/test/test_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -13,6 +14,7 @@ class CourseItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //item.bgkColor
     return Container(
       height: ScreenUtil().setHeight(330),
       margin: EdgeInsets.only(top: 10, left: 20, right: 20),
@@ -21,19 +23,21 @@ class CourseItemWidget extends StatelessWidget {
           _headItem(
             context,
             title: item.title,
+            bgkColor: item.bgkColor,
+            bgkUrl: item.bgkUrl,
             joincode: item.joincode,
             semester: item.semester,
             start: item.start,
             end: item.end,
-            courseId: item.course_id,
+            courseId: item.courseNumber,
           ),
-          leadingItem(context, url: item.head_urls, nums: item.nums)
+          leadingItem(context, url: item.head_urls.asMap(), nums: item.member)
         ],
       ),
     );
   }
 
-  //点击底部更多
+  ///点击底部更多
   Future _openModalBottomSheet(context) async {
     final option = await showModalBottomSheet(
         context: context,
@@ -53,7 +57,6 @@ class CourseItemWidget extends StatelessWidget {
             ),
           );
         });
-
     print(option);
   }
 
@@ -79,11 +82,15 @@ class CourseItemWidget extends StatelessWidget {
     context, {
     @required String title,
     @required String joincode,
+    var bgkColor,
+    String bgkUrl,
     String courseId,
     var start,
     var end,
     var semester,
   }) {
+
+    //print("color :${bgkColor}");
     return InkWell(
       child: Container(
         height: ScreenUtil().setHeight(200),
@@ -91,11 +98,17 @@ class CourseItemWidget extends StatelessWidget {
         padding: EdgeInsets.only(top: 5, left: 10, bottom: 0),
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage(
-                  'assets/bg_swiper.png',
+                image: CachedNetworkImageProvider(
+                  (bgkUrl != null) ? bgkUrl : '',
+                  errorListener: () {
+                    //TODO 背景图片
+                    print('56446*******4');
+                  },
                 ),
                 fit: BoxFit.cover),
-            color: Colors.blueAccent,
+            color: (Constants.bgkMap[bgkColor] != null)
+                ? Constants.bgkMap[bgkColor]
+                : Theme.of(context).primaryColor,
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10), topRight: Radius.circular(10))),
         child: Column(
@@ -140,14 +153,25 @@ class CourseItemWidget extends StatelessWidget {
       onTap: () {
         print('点击了${title}');
         //TODO 点击课程
-        Application.router.navigateTo(context, Routes.classRoomPage,);
+        Application.router.navigateTo(
+            context,
+            Routes.classRoomPage +
+                '?' +
+                'studentNums=${item.member}'
+                    '&classtitle=${Uri.encodeComponent(item.title)}'
+                    '&courseNumber=${item.courseNumber}'
+                    '&joinCode=${item.joincode}'
+                  //  '&teacherName=${Uri.encodeComponent(item.teacherName)}'
+                  //  '&teacherUrl=${(item.teacherUrl != null) ? Uri.encodeComponent(item.teacherUrl) : ''}'
+                    '&teacherId=${item.teacherId}'
+                    '&courseId=${item.courseId}');
       },
     );
   }
 
   ///底部
   Widget leadingItem(BuildContext context,
-      {@required List<String> url, @required int nums}) {
+      {@required Map url, @required int nums}) {
     return Container(
       height: ScreenUtil().setHeight(100),
       decoration: BoxDecoration(
@@ -171,26 +195,24 @@ class CourseItemWidget extends StatelessWidget {
   }
 
   ///头像和人数
-  Widget _imageCount(List<String> url, int nums) {
+  Widget _imageCount(Map url, int nums) {
+    CircleAvatar _circleAvatar(url) {
+      return CircleAvatar(
+        backgroundImage: (url != null)
+            ? NetworkImage(url)
+            : AssetImage('assets/img/dpic.png'),
+        minRadius: 10,
+        maxRadius: 10,
+      );
+    }
+
     return Container(
       padding: EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          CircleAvatar(
-            child: Image.network(url[0]),
-            minRadius: 10,
-            maxRadius: 10,
-          ),
-          CircleAvatar(
-            child: Image.network(url[1]),
-            minRadius: 10,
-            maxRadius: 10,
-          ),
-          CircleAvatar(
-            child: Image.network(url[2]),
-            minRadius: 10,
-            maxRadius: 10,
-          ),
+          _circleAvatar(url[0]),
+          _circleAvatar(url[1]),
+          _circleAvatar(url[2]),
           Padding(
             padding: EdgeInsets.only(left: 5),
             child: Text(

@@ -2,8 +2,18 @@ import 'package:course_app/config/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+///课堂页信息头部
 class ClassRoomTitleWidget extends StatelessWidget {
-  ClassRoomTitleWidget({Key key}) : super(key: key);
+  final classtitle;
+  final joinCode;
+  final studentNums;
+
+  ClassRoomTitleWidget(
+      {Key key,
+      @required this.classtitle,
+      @required this.joinCode,
+      @required this.studentNums})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,8 +21,8 @@ class ClassRoomTitleWidget extends StatelessWidget {
       padding: EdgeInsets.only(left: 1, right: 25, top: 40),
       child: Column(
         children: <Widget>[
-          _titleBar(context, classtitle: '16级程序语文题求解'),
-          _classRommInfo(joinCode: '1WSLL5', studentNums: 100000),
+          _titleBar(context, classtitle: classtitle),
+          _classRommInfo(joinCode: joinCode, studentNums: studentNums),
         ],
       ),
     );
@@ -47,6 +57,8 @@ class ClassRoomTitleWidget extends StatelessWidget {
             ),
           ),
           Container(
+            //color: Colors.red,
+            width: 250,
             child: Text(
               classtitle,
               style: TextStyle(
@@ -54,6 +66,7 @@ class ClassRoomTitleWidget extends StatelessWidget {
                 fontSize: ScreenUtil().setSp(35),
               ),
               overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
         ],
@@ -94,7 +107,7 @@ class ClassRoomTitleWidget extends StatelessWidget {
                   color: Colors.white,
                   size: ScreenUtil().setSp(35),
                 ),
-                '同学: ${studentNums}'),
+                '同学 ${studentNums}'),
           ),
           Text(
             ' | ',

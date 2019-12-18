@@ -10,9 +10,20 @@ import 'package:provide/provide.dart';
 ///课堂主界面
 
 class ClassRoomPage extends StatefulWidget {
-  final String id;
+  final String courseId;
+  final int studentNums;
+  final courseNumber;
+  final classtitle;
+  final joinCode;
+  final teacherId;
 
-  ClassRoomPage({Key key, this.id}) : super(key: key);
+  ClassRoomPage(this.courseId, {Key key,
+    @required this.studentNums,
+    @required this.classtitle,
+    @required this.joinCode,
+    @required this.teacherId,
+    this.courseNumber,})
+      : super(key: key);
 
   @override
   _ClassRoomPageState createState() => _ClassRoomPageState();
@@ -34,12 +45,22 @@ class _ClassRoomPageState extends State<ClassRoomPage> {
                   child: Container(
                     height: ScreenUtil().setHeight(420),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
                       gradient: LinearGradient(
                           colors: [
-                            Theme.of(context).primaryColor,
-                            Theme.of(context).primaryColor.withGreen(222),
-                            Theme.of(context).primaryColor.withOpacity(0.50),
+                            Theme
+                                .of(context)
+                                .primaryColor,
+                            Theme
+                                .of(context)
+                                .primaryColor
+                                .withGreen(222),
+                            Theme
+                                .of(context)
+                                .primaryColor
+                                .withOpacity(0.50),
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter),
@@ -51,13 +72,19 @@ class _ClassRoomPageState extends State<ClassRoomPage> {
             ),
             Positioned(
               child: TeacherImageInfoWidget(
-                  url:
-                      'http://pic31.nipic.com/20130730/789607_232633343194_2.jpg',
-                  teacherName: '李建刚'),
+                  url: " ",
+                teacherName: " lijiangang",
+                 ),
               top: 40,
               right: 10,
             ),
-            ClassRoomTitleWidget(),
+            ClassRoomTitleWidget(
+              studentNums: widget.studentNums,
+              classtitle: (widget.courseNumber != null&&widget.courseNumber.toString()!='null')
+                  ? '${widget.classtitle}(${widget.courseNumber})'
+                  : widget.classtitle,
+              joinCode: widget.joinCode,
+            ),
 //            SingleChildScrollView(
 //              child: Column(
 //                children: <Widget>[
@@ -72,7 +99,6 @@ class _ClassRoomPageState extends State<ClassRoomPage> {
 //              ],
 //            ),
             BottomTabBarWidget(),
-
           ],
         ));
   }
