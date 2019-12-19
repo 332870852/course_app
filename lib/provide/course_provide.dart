@@ -29,6 +29,7 @@ class CourseProvide with ChangeNotifier {
      );
      if (responseModel.data != null) {
        print("网络");
+
        List<dynamic> list = responseModel.data;
        courseList = list
            .map((item) {

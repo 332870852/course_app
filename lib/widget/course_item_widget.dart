@@ -1,10 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:course_app/config/constants.dart';
+import 'package:course_app/data/user_head_image.dart';
 import 'package:course_app/model/Course.dart';
+import 'package:course_app/provide/course_provide.dart';
+import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provide/provide.dart';
 
 ///课堂项
 class CourseItemWidget extends StatelessWidget {
@@ -14,7 +18,10 @@ class CourseItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //item.bgkColor
+    print("999*08454");
+//    Provide.value<UserProvide>(context).getUserHeadImage(item.userIdSet).then((onValue){
+//      List<UserHeadImage> userImageList=
+//    });
     return Container(
       height: ScreenUtil().setHeight(330),
       margin: EdgeInsets.only(top: 10, left: 20, right: 20),
@@ -31,7 +38,7 @@ class CourseItemWidget extends StatelessWidget {
             end: item.end,
             courseId: item.courseNumber,
           ),
-          leadingItem(context, url: item.head_urls.asMap(), nums: item.member)
+          leadingItem(context, nums: item.member)
         ],
       ),
     );
@@ -89,7 +96,6 @@ class CourseItemWidget extends StatelessWidget {
     var end,
     var semester,
   }) {
-
     //print("color :${bgkColor}");
     return InkWell(
       child: Container(
@@ -161,8 +167,8 @@ class CourseItemWidget extends StatelessWidget {
                     '&classtitle=${Uri.encodeComponent(item.title)}'
                     '&courseNumber=${item.courseNumber}'
                     '&joinCode=${item.joincode}'
-                  //  '&teacherName=${Uri.encodeComponent(item.teacherName)}'
-                  //  '&teacherUrl=${(item.teacherUrl != null) ? Uri.encodeComponent(item.teacherUrl) : ''}'
+                    //  '&teacherName=${Uri.encodeComponent(item.teacherName)}'
+                    //  '&teacherUrl=${(item.teacherUrl != null) ? Uri.encodeComponent(item.teacherUrl) : ''}'
                     '&teacherId=${item.teacherId}'
                     '&courseId=${item.courseId}');
       },
@@ -170,8 +176,7 @@ class CourseItemWidget extends StatelessWidget {
   }
 
   ///底部
-  Widget leadingItem(BuildContext context,
-      {@required Map url, @required int nums}) {
+  Widget leadingItem(BuildContext context, {@required int nums}) {
     return Container(
       height: ScreenUtil().setHeight(100),
       decoration: BoxDecoration(
@@ -182,7 +187,7 @@ class CourseItemWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          _imageCount(url, nums),
+          _imageCount(context,nums,userIds: item.userIdSet),
           IconButton(
               icon: Icon(Icons.more_horiz),
               onPressed: () {
@@ -194,25 +199,50 @@ class CourseItemWidget extends StatelessWidget {
     );
   }
 
-  ///头像和人数
-  Widget _imageCount(Map url, int nums) {
-    CircleAvatar _circleAvatar(url) {
-      return CircleAvatar(
-        backgroundImage: (url != null)
-            ? NetworkImage(url)
-            : AssetImage('assets/img/dpic.png'),
-        minRadius: 10,
-        maxRadius: 10,
-      );
+ ///头像
+  CircleAvatar _circleAvatar({image}) {
+    var url;
+    if(image!=null){
+      url=image.faceImage;
     }
+    //print(url);
+    return CircleAvatar(
+      backgroundImage: (url != null)
+          ? NetworkImage(url)
+          : AssetImage('assets/img/dpic.png'),
+      minRadius: 10,
+      maxRadius: 10,
+    );
+  }
 
+  ///头像和人数
+  Widget _imageCount(context, int nums,{userIds}) {
     return Container(
       padding: EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
-          _circleAvatar(url[0]),
-          _circleAvatar(url[1]),
-          _circleAvatar(url[2]),
+          FutureBuilder(
+              future: Provide.value<UserProvide>(context).getUserHeadImage(userIds),
+              builder: (context, snaphot) {
+                if (snaphot.hasData) {
+                  Map map=snaphot.data.asMap();
+                  return Row(
+                    children: <Widget>[
+                      _circleAvatar(image:(map[0]!=null)?map[0]:null),
+                      _circleAvatar(image:(map[1]!=null)?map[1]:null),
+                      _circleAvatar(image:(map[2]!=null)?map[2]:null),
+                    ],
+                  );
+                } else {
+                  return  Row(
+                    children: <Widget>[
+                      _circleAvatar(),
+                      _circleAvatar(),
+                      _circleAvatar(),
+                    ],
+                  );
+                }
+              }),
           Padding(
             padding: EdgeInsets.only(left: 5),
             child: Text(

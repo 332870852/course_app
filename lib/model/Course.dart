@@ -3,7 +3,7 @@ part 'Course.g.dart';
 
 @JsonSerializable()
 ///课堂列表数据
-class Course extends Object {//with $CourseSerializerMixin
+class Course extends Object{//with $CourseSerializerMixin
   num courseId;
   String title ;//课堂标题
   String joincode;//加课码
@@ -18,12 +18,15 @@ class Course extends Object {//with $CourseSerializerMixin
   String cid;//加课二维码
   List<String> head_urls;
   DateTime createTime;
+  List<num> userIdSet;
   Course();
+
 
   @override
   String toString() {
-    return 'Course{courseId: $courseId, title: $title, joincode: $joincode, courseNumber: $courseNumber, start: $start, end: $end, semester: $semester, member: $member, bgkColor: $bgkColor, bgkUrl: $bgkUrl, teacherId: $teacherId, cid: $cid, head_urls: $head_urls, createTime: $createTime}';
+    return 'Course{courseId: $courseId, title: $title, joincode: $joincode, courseNumber: $courseNumber, start: $start, end: $end, semester: $semester, member: $member, bgkColor: $bgkColor, bgkUrl: $bgkUrl, teacherId: $teacherId, cid: $cid, head_urls: $head_urls, createTime: $createTime, userIdSet: $userIdSet}';
   }
+
   factory Course.fromJson(Map<String, dynamic> json) =>
       _$CourseFromJson(json);
 

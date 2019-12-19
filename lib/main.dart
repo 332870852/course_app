@@ -2,12 +2,14 @@ import 'package:course_app/pages/home_page.dart';
 import 'package:course_app/provide/bottom_tabBar_provide.dart';
 import 'package:course_app/provide/course_provide.dart';
 import 'package:course_app/provide/currentIndex_provide.dart';
-import 'package:course_app/provide/joincourse_provide.dart';
+import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
+
+import 'model/Course.dart';
 
 void main() {
   var providers = Providers();
@@ -19,10 +21,11 @@ void main() {
   ///
   var bottomTabBarProvide = BottomTabBarProvide();
   var courseProvide = CourseProvide();
+  var userProvide=UserProvide();
   providers
     ..provide(Provider<CurrentIndexProvide>.value(currentIndexProvide))
-    //..provide(Provider<JoinCourseProvide>.value(joinCourseProvide))
     ..provide(Provider<BottomTabBarProvide>.value(bottomTabBarProvide))
+    ..provide(Provider<UserProvide>.value(userProvide))
     ..provide(Provider<CourseProvide>.value(courseProvide));
 
   runApp(ProviderNode(child: MyApp(), providers: providers));
@@ -36,7 +39,7 @@ class MyApp extends StatelessWidget {
     Routes.configureRoutes(router);
     Application.router = router;
 
-    Provide.value<CourseProvide>(context).student_getCoursePage('2');
+   Provide.value<CourseProvide>(context).student_getCoursePage('2');
 
     return Container(
       child: MaterialApp(

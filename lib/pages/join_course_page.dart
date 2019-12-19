@@ -1,6 +1,5 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:course_app/provide/course_provide.dart';
-import 'package:course_app/provide/joincourse_provide.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:flutter/material.dart';

@@ -29,6 +29,7 @@ import 'dart:io';
 
 Future<Response> get({@required String method, Map queryParameters}) async {
   var url = serviceUrl+method;
+  print(url);
   Map<String, dynamic> map = new Map();
   if (queryParameters!=null) {
     map.addAll(queryParameters);
@@ -36,11 +37,12 @@ Future<Response> get({@required String method, Map queryParameters}) async {
   Response response;
   Dio dio = new Dio();
   try {
-   // dio.options.headers.putIfAbsent("token", ()=>"857b8e2a-91ad-4fb1-b382-8067c2720e34");//
+   // dio.options.headers.putIfAbsent("token", ()=>"857b8e2a-91ad-4fb1-b382-8067c2720e34");//4
     dio.options.connectTimeout=3000;
-    response =  await dio.get(url,queryParameters: queryParameters);
+    dio.options.contentType=ContentType.json;
+    response =  await dio.get(url,queryParameters: map,);
     if (response.statusCode == 200) {
-      //print(response);
+     // print(response);
       return response;
     } else {
       print('code: ${response.statusCode},data:${response.data}');

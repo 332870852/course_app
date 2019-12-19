@@ -1,4 +1,5 @@
 import 'package:course_app/provide/bottom_tabBar_provide.dart';
+import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/widget/bottomTabBar_widget.dart';
 import 'package:course_app/widget/class_room_title_widget.dart';
 import 'package:course_app/widget/classroom_top_navigator_widget.dart';
@@ -27,11 +28,20 @@ class ClassRoomPage extends StatefulWidget {
 
   @override
   _ClassRoomPageState createState() => _ClassRoomPageState();
+
 }
 
 class _ClassRoomPageState extends State<ClassRoomPage> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    Provide.value<UserProvide>(context).getTeacherInfo(teacherId: widget.teacherId);
     return Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomPadding: true,
@@ -71,10 +81,7 @@ class _ClassRoomPageState extends State<ClassRoomPage> {
               ],
             ),
             Positioned(
-              child: TeacherImageInfoWidget(
-                  url: " ",
-                teacherName: " lijiangang",
-                 ),
+              child: TeacherImageInfoWidget(teacherId:widget.teacherId,),
               top: 40,
               right: 10,
             ),

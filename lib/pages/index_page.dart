@@ -1,6 +1,6 @@
 import 'package:course_app/config/constants.dart';
-import 'package:course_app/model/Course.dart';
 import 'package:course_app/provide/course_provide.dart';
+import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/widget/course_item_widget.dart';
 import 'package:fluro/fluro.dart';
@@ -9,9 +9,6 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
-import 'course_page.dart';
 
 class IndexPage extends StatefulWidget {
   @override
@@ -30,7 +27,7 @@ class _IndexPageState extends State<IndexPage>
 
   @override
   Widget build(BuildContext context) {
-    //print("66666");
+
     return Scaffold(
         backgroundColor: Colors.grey.shade200,
         appBar: AppBar(
@@ -44,9 +41,11 @@ class _IndexPageState extends State<IndexPage>
   }
 
   Widget _ProvideData() {
+
     return Provide<CourseProvide>(builder: (context, child, data) {
 //      if (data.courseList.length > 0) {
        print("6666666   ${data.courseList.length}");
+
         return EasyRefresh.custom(
           controller: _controller,
           slivers: <Widget>[
@@ -94,50 +93,6 @@ class _IndexPageState extends State<IndexPage>
     });
   }
 
-//  Widget _ProvideData() {
-//    return Provide<CourseProvide>(builder: (context, child, data) {
-//      if (data.courseList.length > 0) {
-//        print("6666666   ${data.courseList.length}");
-//        return EasyRefresh.custom(
-//          controller: _controller,
-//          //enableControlFinishRefresh: true,
-//          //enableControlFinishLoad: true,
-//          slivers: <Widget>[
-//            SliverList(
-//                delegate: SliverChildBuilderDelegate((context, index) {
-//              return CourseItemWidget(item: data.courseList[index]);
-//            }, childCount: data.courseList.length)),
-//          ],
-//          firstRefresh: true,
-//          //headerIndex: Provide.value<CourseProvide>(context).curssor.offset,
-//          header: MaterialHeader(),
-//          footer: ClassicalFooter(
-//            bgColor: Colors.white,
-//            textColor: Theme.of(context).primaryColor,
-//            loadingText: '正在加载...',
-//            loadedText: '下拉加载',
-//            noMoreText: '没有更多了',
-//            loadReadyText: '释放立即刷新',
-//            loadText: '上拉加载',
-//            loadFailedText: '加载失败',
-//          ),
-//          onRefresh: () async {
-//            await Provide.value<CourseProvide>(context)
-//                .student_getCoursePage('2');
-//            await _controller.finishRefresh(success: true);
-//            // Fluttertoast.showToast(msg: '刷新成功!');
-//          },
-//          onLoad: () async {
-//            _getMoreList(context);
-//          },
-//        );
-//      } else {
-//        return Center(
-//          child: Text('暂时没有数据'),
-//        );
-//      }
-//    });
-//  }
 
   /// +
   Widget _popButtom(context) {

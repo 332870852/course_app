@@ -4,5 +4,13 @@ class studentPath {
   static const servicePath = {
     'getCoursePage': 'student/getCoursePage',
     'joinCourse': 'student/joinCourse',
+
+  };
+}
+
+class userPath{
+  static const servicePath = {
+    'getUserHeadImage': 'getUserHeadImage',
+    'getUserInfo':'getUserInfo',
   };
 }
