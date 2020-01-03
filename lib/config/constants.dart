@@ -11,5 +11,7 @@ class Constants{
     'pink':Colors.pink,
     'orange':Colors.orange
   };
+  static const DividerWith=1.0;
+  static const DividerColor=0xffd9d9d9;
 }
 
