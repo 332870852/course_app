@@ -9,7 +9,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
-
+import 'package:course_app/config/service_url.dart';
 class IndexPage extends StatefulWidget {
   @override
   _IndexPageState createState() => _IndexPageState();
@@ -73,7 +73,7 @@ class _IndexPageState extends State<IndexPage>
           ),
           onRefresh: () async {
             await Provide.value<CourseProvide>(context)
-                .student_getCoursePage('2').whenComplete(()async{
+                .student_getCoursePage(userPath.userId).whenComplete(()async{
               _controller.finishRefresh(success: true);
               _controller.resetLoadState();
             }).catchError((onError){

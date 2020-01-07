@@ -8,9 +8,7 @@ import 'package:course_app/router/routes.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
-
-import 'model/Course.dart';
-
+import 'package:course_app/config/service_url.dart';
 void main() {
   var providers = Providers();
   var currentIndexProvide = CurrentIndexProvide();
@@ -35,11 +33,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final router = Router();
     Routes.configureRoutes(router);
     Application.router = router;
 
-   Provide.value<CourseProvide>(context).student_getCoursePage('2');
+   Provide.value<CourseProvide>(context).student_getCoursePage(userPath.userId);
+   Provide.value<UserProvide>(context).getUserInfo(userId: userPath.userId);
 
     return Container(
       child: MaterialApp(

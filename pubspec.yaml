@@ -33,6 +33,9 @@ dependencies:
   fluro: ^1.5.1 #路由
   cached_network_image: ^1.1.3  #图片缓存
   common_utils: ^1.1.3
+  shared_preferences: ^0.5.1
+  flutter_spinkit: ^4.1.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -60,6 +63,11 @@ flutter:
     - assets/img/网络失败.png
     - assets/img/netpic_error.png
     - assets/img/dpic.png
+    - assets/img/用户.png
+    - assets/img/sex0.png
+    - assets/img/sex1.png
+    - assets/img/性别v.png
+    - assets/img/性别男.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

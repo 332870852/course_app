@@ -1,21 +1,23 @@
 import 'package:course_app/config/service_url.dart';
+import 'package:course_app/data/user_dto.dart';
 import 'package:course_app/model/Course.dart';
 import 'package:course_app/service/service_method.dart';
 import 'package:course_app/utils/ResponseModel.dart';
+import 'package:course_app/utils/exception.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class userMethod {
-
+class UserMethod {
   ///获取头像
   static Future<ResponseModel> getUserHeadImage({@required List userId}) async {
     Map<String, dynamic> map = new Map();
-     String str= userId.toString();
-     str=str.substring(1,str.length-1);
-     //print(str);
-     map.putIfAbsent('userId', () => str);
+    String str = userId.toString();
+    str = str.substring(1, str.length - 1);
+    //print(str);
+    map.putIfAbsent('userId', () => str);
     Response respData = await get(
         method: userPath.servicePath['getUserHeadImage'], queryParameters: map);
     ResponseModel responseModel = ResponseModel.fromJson(respData.data);
@@ -39,6 +41,36 @@ class userMethod {
       return responseModel;
     } else {
       throw responseModel.errors[0];
+    }
+  }
+
+  ///修改个人信息
+  static Future<ResponseModel> updateUser(
+      {@required userId, @required UserSubDto userSubDto}) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('userId', () => userId.toString());
+
+    try {
+      Response respData = await post(
+        method: userPath.servicePath['updateUser'],
+        requestmap: map,
+        data: userSubDto.toJson(),
+      );
+      ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+      if (responseModel.code == 1) {
+        print(responseModel.data);
+        return responseModel;
+      } else {
+        throw responseModel.errors[0];
+      }
+    } on ServerErrorException catch (e) {
+      Fluttertoast.showToast(
+        msg: '更改失败，服务器繁忙请稍后再试',
+        gravity: ToastGravity.BOTTOM,
+      );
+      // print(e.msg);
+    } catch (e) {
+      print("系统错误");
     }
   }
 }

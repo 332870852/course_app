@@ -1,7 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:course_app/config/constants.dart';
-import 'package:course_app/provide/course_provide.dart';
+import 'package:course_app/provide/user_provider.dart';
+import 'package:course_app/router/application.dart';
+import 'package:course_app/router/routes.dart';
 import 'package:course_app/widget/bottom_clipper_widget.dart';
+import 'package:course_app/widget/user_image_widget.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +13,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class MemberPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+//    Provide.value<UserProvide>(context).getUserInfo(userId: '123');
+    Provide.value<UserProvide>(context).getUserInfo_sp();
     return Scaffold(
         backgroundColor: Colors.grey[300],
         body: Stack(
@@ -35,6 +41,7 @@ class MemberPage extends StatelessWidget {
                 listNavigator(),
                 accountNavigator(
                     title: '退出',
+                    textcolor: Colors.red,
                     icon: Icon(
                       Icons.power_settings_new,
                       color: Colors.red,
@@ -45,42 +52,33 @@ class MemberPage extends StatelessWidget {
                     }),
               ],
             ),
-            UserItemWidget(),
+            Provide<UserProvide>(
+              builder: (context, child, data) {
+                print(data.userInfoVo);
+                if (data.userInfoVo != null) {
+                  return UserItemWidget(
+                    username: (data.userInfoVo.nickname != null)
+                        ? data.userInfoVo.nickname
+                        : '无',
+                    identity: data.userInfoVo.role,
+                    schoolName: data.userInfoVo.identityVo.schoolName,
+                    url: data.userInfoVo.faceImage,
+                  );
+                } else {
+                  return UserItemWidget(
+                    username: '无',
+                    identity: 3,
+                    schoolName: '',
+                  );
+                }
+              },
+            ),
           ],
         ));
   }
 
+  ///选项
   Widget ListItem({@required title, Icon icon, GestureTapCallback onTap}) {
-//    return ListTile(
-//      leading: icon,
-//      title: Container(
-//        padding: const EdgeInsets.symmetric(vertical: 10.0),
-//        decoration: BoxDecoration(
-//          border: Border(
-//              bottom: BorderSide(
-//                  width: Constants.DividerWith,
-//                  color: Color(Constants.DividerColor))),
-//        ),
-//        child: Row(
-//          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//          crossAxisAlignment: CrossAxisAlignment.center,
-//          children: <Widget>[
-//            Text(
-//              title,
-//              style:
-//              TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
-//            ),
-//            Icon(
-//              Icons.chevron_right,
-//              color: Colors.black26,
-//              size: 30,
-//            ),
-//          ],
-//        ),
-//      ),
-//      onTap: onTap,
-//    );
-
     return Material(
       child: Ink(
         child: InkWell(
@@ -91,7 +89,6 @@ class MemberPage extends StatelessWidget {
               horizontal: 16.0,
             ),
             //让下划线不占满整个控件
-            //padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 10.0, bottom: 10.0),
             padding: const EdgeInsets.symmetric(vertical: 10.0),
             //padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
             decoration: BoxDecoration(
@@ -186,7 +183,8 @@ class MemberPage extends StatelessWidget {
       {@required String title,
       Icon icon,
       GestureTapCallback onTap,
-      bool flag = true}) {
+      bool flag = true,
+      Color textcolor = Colors.black}) {
     return Container(
         margin: EdgeInsets.only(top: 10),
         color: Colors.white,
@@ -218,7 +216,7 @@ class MemberPage extends StatelessWidget {
                     child: Text(
                       title,
                       style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.w500),
+                          color: textcolor, fontWeight: FontWeight.w500),
                     ),
                     flex: 5,
                   ),
@@ -241,8 +239,22 @@ class MemberPage extends StatelessWidget {
 
 ///用户头像和信息
 class UserItemWidget extends StatelessWidget {
+  final url;
+  final String username;
+  final int identity;
+  final String schoolName;
+
+  UserItemWidget(
+      {Key key,
+      @required this.username,
+      @required this.identity,
+      this.schoolName = '',
+      this.url = ''})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -253,64 +265,79 @@ class UserItemWidget extends StatelessWidget {
       height: 120,
       width: ScreenUtil().width,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           InkWell(
             onTap: () {
               //TODO 点击头像
               print("点击了头像");
             },
-            child: UserImage(
-                url:
-                    "http://pic31.nipic.com/20130730/789607_232633343194_2.jpg"),
+            child: UserImageWidget(url: url),
           ),
           InkWell(
             onTap: () {
               //TODO 点击用户信息
               print("点击用户信息");
+              Application.router.navigateTo(context, Routes.userInfoPage);
             },
-            child: nameInfo(name: '李建刚', identify: 1),
-          )
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                nameInfo(
+                    name: username, identify: identity, schoolName: schoolName),
+                Icon(
+                  Icons.chevron_right,
+                  size: 40,
+                  color: Colors.black26,
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  ///头像图片
-  Widget UserImage({@required String url}) {
-    return Container(
-      margin: EdgeInsets.only(left: 15.0, right: 5, top: 5, bottom: 0),
-      width: 80,
-      height: 100,
-      child: CachedNetworkImage(
-        imageUrl: url,
-      ),
-    );
-  }
-
   ///名字学校
-  Widget nameInfo({@required String name, @required int identify}) {
+  Widget nameInfo({@required String name, @required int identify, schoolName}) {
+    if (name.length > 5) {
+      name = name.substring(0, 5) + '..';
+    }
+    if (schoolName.length > 9) {
+      schoolName = schoolName.substring(0, 9) + '..';
+    }
+    if (schoolName == null || schoolName.toString().length < 1) {
+      schoolName = '暂无';
+    }
     return Container(
         margin: EdgeInsets.only(left: 15.0, right: 5, top: 0, bottom: 0),
         //padding: EdgeInsets.only(top: 5),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Wrap(
-                  children: <Widget>[
-                    Text(
-                      name,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: ScreenUtil().setSp(40)),
-                    ),
-                    Text(
-                      (identify == 1) ? '(学生)' : '(教师)',
-                      style: TextStyle(
-                          color: Colors.blue, fontSize: ScreenUtil().setSp(40)),
-                    ),
-                  ],
+                Container(
+                  width: 160,
+                  alignment: Alignment.center,
+                  child: RichText(
+                    text: TextSpan(
+                        text: name,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: ScreenUtil().setSp(40)),
+                        children: [
+                          TextSpan(
+                            text: (identify == 3) ? '(学生)' : '(教师)',
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: ScreenUtil().setSp(40)),
+                          ),
+                        ]),
+                    maxLines: 1,
+                    // overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 Wrap(
                   children: <Widget>[
@@ -319,7 +346,7 @@ class UserItemWidget extends StatelessWidget {
                       color: Colors.black26,
                     ),
                     Text(
-                      ' 桂林电子科技大学',
+                      schoolName,
                       style: TextStyle(
                         color: Colors.black26,
                       ),
@@ -328,14 +355,6 @@ class UserItemWidget extends StatelessWidget {
                   ],
                 ),
               ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Icon(
-                Icons.chevron_right,
-                size: 50,
-                color: Colors.black26,
-              ),
             ),
           ],
         ));

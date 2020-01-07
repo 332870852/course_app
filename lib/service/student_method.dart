@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 class StudentMethod {
 
+  ///获取课程
   static Future<ResponseModel> getCoursePage(
       {@required String userId, num pageNo, num pageSize}) async {
     Map<String, dynamic> map = new Map();
@@ -22,22 +23,27 @@ class StudentMethod {
     if (responseModel.code == 1) {
        //print(responseModel.data);
         return responseModel;
-
     } else {
       throw responseModel.errors[0];
     }
   }
 
+  ///加课
   static Future<ResponseModel> JoinCode(String userId,String joinCode)async{
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('userId', () => userId);
     map.putIfAbsent('joinCode', () => joinCode);
     Response respData =await post(method: studentPath.servicePath['joinCourse'],requestmap: map);
-    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
-    if (responseModel.code != 0) {
-      return responseModel;
-    } else {
-      throw responseModel.errors[0];
+
+    try{
+      ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+      if (responseModel.code != 0) {
+        return responseModel;
+      } else {
+        throw responseModel.errors[0];
+      }
+    }catch (e){
+      print("1111111111${e}");
     }
   }
 

@@ -7,24 +7,26 @@ class UserInfoVo {
   String faceImageBig;
   String email;
   String cid;
+  num role;
   IdentityVo identityVo;
 
-  UserInfoVo(
-      {this.userId,
-        this.phoneNumber,
-        this.nickname,
-        this.sex,
-        this.faceImage,
-        this.faceImageBig,
-        this.email,
-        this.cid,
-        this.identityVo});
+
+  UserInfoVo(this.userId, this.phoneNumber, this.nickname, this.sex,
+      this.faceImage, this.faceImageBig, this.email, this.cid, this.role,
+      this.identityVo);
+
+
+  @override
+  String toString() {
+    return 'UserInfoVo{userId: $userId, phoneNumber: $phoneNumber, nickname: $nickname, sex: $sex, faceImage: $faceImage, faceImageBig: $faceImageBig, email: $email, cid: $cid, role: $role, identityVo: $identityVo}';
+  }
 
   UserInfoVo.fromJson(Map<String, dynamic> json) {
     userId = json['userId'];
     phoneNumber = json['phoneNumber'];
     nickname = json['nickname'];
     sex = json['sex'];
+    role=json['role'];
     faceImage = json['faceImage'];
     faceImageBig = json['faceImageBig'];
     email = json['email'];
@@ -40,6 +42,7 @@ class UserInfoVo {
     data['phoneNumber'] = this.phoneNumber;
     data['nickname'] = this.nickname;
     data['sex'] = this.sex;
+    data['role']=this.role;
     data['faceImage'] = this.faceImage;
     data['faceImageBig'] = this.faceImageBig;
     data['email'] = this.email;

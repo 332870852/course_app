@@ -1,4 +1,4 @@
-const serviceUrl = 'http://192.168.31.66:11001/';
+const serviceUrl = 'http://192.168.200.104:11001/';
 
 class studentPath {
   static const servicePath = {
@@ -9,8 +9,10 @@ class studentPath {
 }
 
 class userPath{
+  static String userId="2";
   static const servicePath = {
     'getUserHeadImage': 'getUserHeadImage',
     'getUserInfo':'getUserInfo',
+    'updateUser':'updateUser',
   };
 }
