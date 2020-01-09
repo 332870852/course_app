@@ -1,5 +1,6 @@
 import 'package:course_app/config/service_url.dart';
 import 'package:course_app/data/user_dto.dart';
+import 'package:course_app/data/user_head_image.dart';
 import 'package:course_app/model/Course.dart';
 import 'package:course_app/service/service_method.dart';
 import 'package:course_app/utils/ResponseModel.dart';
@@ -68,9 +69,49 @@ class UserMethod {
         msg: '更改失败，服务器繁忙请稍后再试',
         gravity: ToastGravity.BOTTOM,
       );
-      // print(e.msg);
+       print(e.msg);
     } catch (e) {
       print("系统错误");
     }
+  }
+
+  ///上传头像图片
+  static Future<UserHeadImage> uploadFaceFile(String userId,
+      {@required imagePath}) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('userId', () => userId.toString());
+    File file = File(imagePath);
+    if (file.existsSync()) {
+      // map.putIfAbsent('file', () => file.readAsBytesSync());
+      var name =
+          imagePath.substring(imagePath.lastIndexOf("/") + 1, imagePath.length);
+      FormData formData = FormData.fromMap({
+        "file": MultipartFile.fromFileSync(imagePath, filename: name),
+      });
+      print(file);
+
+      try {
+        Response respData = await post(
+            method: userPath.servicePath['uploadFaceFile'],
+            requestmap: map,
+            data: formData);
+        ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+        if (responseModel.code == 1) {
+          print(responseModel.data);
+          return UserHeadImage.fromJson(responseModel.data);
+        } else {
+          throw responseModel.errors[0];
+        }
+      } on ServerErrorException catch (e) {
+        Fluttertoast.showToast(
+          msg: '更改失败，服务器繁忙请稍后再试',
+          gravity: ToastGravity.BOTTOM,
+        );
+         print(e.msg);
+      } catch (e) {
+        print("系统错误");
+      }
+    }
+    return null;
   }
 }

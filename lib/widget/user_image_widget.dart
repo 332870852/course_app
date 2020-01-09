@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 ///头像图片
 //Widget UserImage({@required String url}) {
@@ -25,6 +26,9 @@ class UserImageWidget extends StatelessWidget {
       height: 80,
       child: (url==null||url.toString().isEmpty)?Image.asset('assets/img/用户.png'):CachedNetworkImage(
         imageUrl: url,
+        placeholder:  (context,url){
+          return SpinKitFadingFour(color: Colors.grey,);
+        },
       ),
     );
   }

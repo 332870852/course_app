@@ -26,7 +26,7 @@ class ChangeUserInfoPage extends StatefulWidget {
 
 class _ChangeUserNamePageState extends State<ChangeUserInfoPage> {
   TextEditingController _controller;
-
+  String text;
   @override
   void initState() {
     // TODO: implement initState
@@ -44,7 +44,7 @@ class _ChangeUserNamePageState extends State<ChangeUserInfoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.appBarText),
+        title: Text(widget.appBarText.toString()),
         backgroundColor: Theme.of(context).primaryColor,
         leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
@@ -68,7 +68,8 @@ class _ChangeUserNamePageState extends State<ChangeUserInfoPage> {
                       : () {
                           //TODO
                           Navigator.pop(context, true);
-                          Provide.value<UserProvide>(context).modif=_controller.value.text;
+                          Provide.value<UserProvide>(context).modif =
+                              _controller.value.text;
                         },
               child: Text('保存'),
             ),

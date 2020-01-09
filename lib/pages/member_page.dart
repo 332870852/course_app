@@ -7,6 +7,7 @@ import 'package:course_app/widget/bottom_clipper_widget.dart';
 import 'package:course_app/widget/user_image_widget.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+//import 'package:image_pickers/image_pickers.dart';
 import 'package:provide/provide.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -271,6 +272,7 @@ class UserItemWidget extends StatelessWidget {
             onTap: () {
               //TODO 点击头像
               print("点击了头像");
+             // ImagePickers.previewImage(url);
             },
             child: UserImageWidget(url: url),
           ),

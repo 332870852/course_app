@@ -62,7 +62,7 @@ class IdentityVo {
   String stuId;
   String workId;
   String classId;
-  DateTime time;
+  String time;
 
   IdentityVo(
       {this.identityId,

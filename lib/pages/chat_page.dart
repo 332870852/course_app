@@ -18,7 +18,6 @@ class ChatPage extends StatelessWidget {
       body: Column(
         children: <Widget>[
           spinkit,
-          SpinKitDoubleBounce(),
           IconButton(icon: Icon(Icons.access_alarm), onPressed: (){
           })
         ],

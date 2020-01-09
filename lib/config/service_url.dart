@@ -14,5 +14,6 @@ class userPath{
     'getUserHeadImage': 'getUserHeadImage',
     'getUserInfo':'getUserInfo',
     'updateUser':'updateUser',
+    'uploadFaceFile':'uploadFaceFile',
   };
 }

@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:course_app/config/constants.dart';
 import 'package:course_app/data/user_dto.dart';
+import 'package:course_app/data/user_head_image.dart';
 import 'package:course_app/data/user_info.dart';
 import 'package:course_app/pages/user_info_page/change_user_info.dart';
 import 'package:course_app/provide/user_provider.dart';
@@ -13,7 +16,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provide/provide.dart';
 import 'package:course_app/service/user_method.dart';
 import 'package:course_app/config/service_url.dart';
-
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+//import 'package:image_pickers/image_pickers.dart';
+//import 'package:image_pickers/CropConfig.dart';
+//import 'package:image_pickers/Media.dart';
+//import 'package:image_pickers/UIConfig.dart';
+import 'package:image_picker/image_picker.dart';
 class UserInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -41,13 +49,17 @@ class UserInfoPage extends StatelessWidget {
                     widget: UserImageWidget(url: data.userInfoVo.faceImage),
                     onTap: () {
                       //TODO
+                      selectImage(context,data.userInfoVo);
                     }),
                 userInfoItem(
                     title: '昵称',
                     height: 50,
                     widget: Text(
-                      data.userInfoVo.nickname,
+                      (data.userInfoVo.nickname.length > 12)
+                          ? data.userInfoVo.nickname.substring(0, 12) + '..'
+                          : data.userInfoVo.nickname,
                       style: TextStyle(color: Colors.black26, fontSize: 20),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     onTap: () async {
                       //TODO
@@ -58,14 +70,14 @@ class UserInfoPage extends StatelessWidget {
                             defaultvalue: data.userInfoVo.nickname,
                             info: '好昵称可以让你的朋友更容易记住你.',
                             textInputFormat: [
-                              LengthLimitingTextInputFormatter(20),
+                              LengthLimitingTextInputFormatter(15),
                             ],
                           )).catchError((onError) {
-                        Fluttertoast.showToast(
-                            msg: '修改失败',
-                            gravity: ToastGravity.BOTTOM,
-                            backgroundColor: Colors.black.withOpacity(0.6),
-                            textColor: Colors.white);
+//                        Fluttertoast.showToast(
+//                            msg: '修改失败',
+//                            gravity: ToastGravity.BOTTOM,
+//                            backgroundColor: Colors.black.withOpacity(0.6),
+//                            textColor: Colors.white);
                       });
                       if (b) {
                         var nickname =
@@ -93,7 +105,7 @@ class UserInfoPage extends StatelessWidget {
                       int sex = await _openSimpleDialog(
                         context,
                       );
-                      print("8888  ${Provide.value<UserProvide>(context).sex}");
+                      //print("8888  ${Provide.value<UserProvide>(context).sex}");
                       if ((sex != Provide.value<UserProvide>(context).sex &&
                               sex != 2) ||
                           Provide.value<UserProvide>(context).sex == null) {
@@ -165,13 +177,15 @@ class UserInfoPage extends StatelessWidget {
                           data: data.userInfoVo,
                           schoolName: data.userInfoVo.identityVo.schoolName,
                           workId: data.userInfoVo.identityVo.workId,
-                          classId: data..userInfoVo.identityVo.classId);
+                          classId: data.userInfoVo.identityVo.classId,
+                          enterTime: data.userInfoVo.identityVo.time);
                     } else {
                       return student(context,
                           data: data.userInfoVo,
                           schoolName: data.userInfoVo.identityVo.schoolName,
                           studentId: data.userInfoVo.identityVo.stuId,
-                          classId: data.userInfoVo.identityVo.classId);
+                          classId: data.userInfoVo.identityVo.classId,
+                          enterTime: data.userInfoVo.identityVo.time);
                     }
                   },
                 ),
@@ -188,13 +202,21 @@ class UserInfoPage extends StatelessWidget {
   ///学生列表
   Widget student(context,
       {UserInfoVo data, studentId, schoolName, classId, enterTime}) {
+    String schoolName_d = schoolName;
+    String classId_d = classId;
+    if (schoolName != null && schoolName.length > 12) {
+      schoolName_d = schoolName.substring(0, 12) + '..';
+    }
+    if (classId != null && classId.length > 12) {
+      classId_d = classId.substring(0, 12) + '..';
+    }
     return Column(
       children: <Widget>[
         userInfoItem(
             title: '学校',
             height: 50,
             widget: Text(
-              (schoolName != null ? schoolName : ''),
+              (schoolName_d != null ? schoolName_d : ''),
               style: TextStyle(color: Colors.black26, fontSize: 20),
             ),
             onTap: () async {
@@ -284,7 +306,7 @@ class UserInfoPage extends StatelessWidget {
             title: '班级',
             height: 50,
             widget: Text(
-              (classId != null ? classId : ''),
+              (classId_d != null ? classId_d : ''),
               style: TextStyle(color: Colors.black26, fontSize: 20),
             ),
             onTap: () async {
@@ -315,12 +337,34 @@ class UserInfoPage extends StatelessWidget {
             title: '入学时间',
             height: 50,
             widget: Text(
-              (enterTime != null ? enterTime : ''),
+              (enterTime != null ? enterTime.toString().substring(0, 10) : ''),
               style: TextStyle(color: Colors.black26, fontSize: 20),
+              overflow: TextOverflow.ellipsis,
             ),
             onTap: () {
               //TODO
-              print('学校');
+              print('入学时间');
+              DatePicker.showDatePicker(
+                context,
+                minTime: DateTime(
+                  DateTime.now().year - 3,
+                  DateTime.now().month,
+                ),
+                maxTime:
+                    DateTime(DateTime.now().year + 3, DateTime.now().month),
+                currentTime: DateTime.parse(enterTime),
+                locale: LocaleType.zh,
+                onConfirm: (date) {
+                  print(date);
+                  UserSubDto userSubDto = UserSubDto();
+                  BeanUtil.UserInfoVo_TO_UserSubDto(data, userSubDto);
+                  String t = date.toIso8601String();
+                  userSubDto.time = t;
+                  UserInfoVo newUserInfo = data;
+                  newUserInfo.identityVo.time = t;
+                  _changUserinfo(context, newUserInfo, userSubDto);
+                },
+              );
             }),
       ],
     );
@@ -329,19 +373,25 @@ class UserInfoPage extends StatelessWidget {
   Widget teacher(context,
       {UserInfoVo data,
       workId,
-      schoolName,
-      classId,
+      String schoolName,
+      String classId,
       enterTime,
       faculty,
       courseTaught,
       profession}) {
+    if (schoolName != null && schoolName.length > 12) {
+      schoolName = schoolName.substring(0, 12) + '..';
+    }
+    if (classId != null && classId.length > 12) {
+      classId = classId.substring(0, 12) + '..';
+    }
     return Column(
       children: <Widget>[
         userInfoItem(
             title: '学校',
             height: 50,
             widget: Text(
-              (schoolName != null ? schoolName : ''),
+              (schoolName != null) ? schoolName : '',
               style: TextStyle(color: Colors.black26, fontSize: 20),
             ),
             onTap: () async {
@@ -446,9 +496,22 @@ class UserInfoPage extends StatelessWidget {
               (enterTime != null ? enterTime : ''),
               style: TextStyle(color: Colors.black26, fontSize: 20),
             ),
-            onTap: () {
+            onTap: () async {
               //TODO
-              print('');
+              debugPrint('入学时间');
+              DateTime date = await DatePicker.showDatePicker(
+                context,
+                minTime: DateTime(
+                  DateTime.now().year - 3,
+                  DateTime.now().month,
+                ),
+                maxTime:
+                    DateTime(DateTime.now().year + 3, DateTime.now().month),
+                locale: LocaleType.zh,
+                onConfirm: (date) {
+                  // print(date);
+                },
+              );
             }),
         userInfoItem(
             title: '院系',
@@ -459,7 +522,7 @@ class UserInfoPage extends StatelessWidget {
             ),
             onTap: () {
               //TODO
-              print('学校');
+              print('院系');
             }),
         userInfoItem(
             title: '所授课程',
@@ -471,7 +534,7 @@ class UserInfoPage extends StatelessWidget {
             ),
             onTap: () {
               //TODO
-              print('学校');
+              print('所授课程');
             }),
         userInfoItem(
             title: '专业',
@@ -483,7 +546,7 @@ class UserInfoPage extends StatelessWidget {
             ),
             onTap: () {
               //TODO
-              print('学校');
+              print('专业');
             }),
       ],
     );
@@ -548,6 +611,7 @@ class UserInfoPage extends StatelessWidget {
     UserMethod.updateUser(userId: userPath.userId, userSubDto: userSubDto)
         .then((onValue) {
       // print("/////${onValue.data}");
+      print(onValue);
       if (onValue.data) {
         //print("00000${onValue.data}");
         Provide.value<UserProvide>(context).saveUserInfo(newUserInfo);
@@ -643,4 +707,29 @@ class UserInfoPage extends StatelessWidget {
         });
     return option;
   }
+
+  ///选择多张图片 Select multiple images
+  Future<void> selectImage(context,UserInfoVo newUserInfo) async {
+    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    print(image);
+   if(image!=null){
+     UserHeadImage userHeadImage=await UserMethod.uploadFaceFile(userPath.userId, imagePath: image.path);
+     Provide.value<UserProvide>(context).userInfoVo.faceImage=userHeadImage.faceImage;
+     Provide.value<UserProvide>(context).userInfoVo.faceImageBig=userHeadImage.faceImageBig;
+     newUserInfo.faceImageBig=userHeadImage.faceImageBig;
+     newUserInfo.faceImage=userHeadImage.faceImageBig;
+     Provide.value<UserProvide>(context).saveUserInfo(newUserInfo);
+   }
+//    List<Media> _listImagePaths = await ImagePickers.pickerPaths(
+//        galleryMode: GalleryMode.image,
+//        selectCount: 1,
+//        showCamera: true,
+//        compressSize: 500,///超过500KB 将压缩图片
+//        uiConfig: UIConfig(uiThemeColor: Color(0xffff0f50)),
+//        cropConfig: CropConfig(enableCrop: true, width: 1, height: 1));
+//    print(_listImagePaths[0].path);
+//    UserMethod.uploadFaceFile(userPath.userId, imagePath: _listImagePaths[0].path);
+  }
+
+
 }

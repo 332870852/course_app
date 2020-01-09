@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.71'
+    ext.kotlin_version = '1.2.71'//
     repositories {
         google()
         jcenter()
@@ -8,6 +8,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        //classpath 'com.android.tools.build:gradle:3.3.0'
     }
 }
 
@@ -24,6 +25,14 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(':app')
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'androidx.core' &&
+                    !details.requested.name.contains('androidx')) {
+                details.useVersion "1.0.0"
+            }
+        }
+    }
 }
 
 task clean(type: Delete) {

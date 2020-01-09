@@ -43,7 +43,7 @@ class UserSubDto {
   String stuId;
   String workId;
   String classId;
-  DateTime time;
+  String time;
 
   UserSubDto(
       {this.schoolName,
