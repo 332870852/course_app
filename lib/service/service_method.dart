@@ -87,7 +87,7 @@ Future<Response> post(
   Dio dio = new Dio();
   try {
     //dio.options.headers.putIfAbsent("token", ()=>"857b8e2a-91ad-4fb1-b382-8067c2720e34");//
-    dio.options.receiveTimeout = 3000;
+    dio.options.receiveTimeout = 30*1000;
     dio.options.connectTimeout = 5000;
     if (contenType != null) {
       dio.options.contentType = ContentType.parse(contenType).value;
@@ -111,7 +111,7 @@ Future<Response> post(
       ResponseModel responseModel = ResponseModel.fromJson(e.response.data);
       throw responseModel.errors[0];
     } else {
-      print("服务器 error");
+      print("服务器 error:${e}");
       if (errCallback != null) {
         errCallback();
       } else {

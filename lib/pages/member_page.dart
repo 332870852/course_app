@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 //import 'package:image_pickers/image_pickers.dart';
 import 'package:provide/provide.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 class MemberPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -274,7 +274,7 @@ class UserItemWidget extends StatelessWidget {
               print("点击了头像");
              // ImagePickers.previewImage(url);
             },
-            child: UserImageWidget(url: url),
+            child: UserImageWidget(url: url,cacheManager: DefaultCacheManager(),),
           ),
           InkWell(
             onTap: () {

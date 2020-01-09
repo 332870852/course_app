@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:course_app/config/constants.dart';
 import 'package:course_app/data/user_dto.dart';
 import 'package:course_app/data/user_head_image.dart';
@@ -17,11 +16,12 @@ import 'package:provide/provide.dart';
 import 'package:course_app/service/user_method.dart';
 import 'package:course_app/config/service_url.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-//import 'package:image_pickers/image_pickers.dart';
-//import 'package:image_pickers/CropConfig.dart';
-//import 'package:image_pickers/Media.dart';
-//import 'package:image_pickers/UIConfig.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_pickers/image_pickers.dart';
+import 'package:image_pickers/CropConfig.dart';
+import 'package:image_pickers/Media.dart';
+import 'package:image_pickers/UIConfig.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+
 class UserInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -46,10 +46,13 @@ class UserInfoPage extends StatelessWidget {
                 userInfoItem(
                     title: '头像',
                     height: null,
-                    widget: UserImageWidget(url: data.userInfoVo.faceImage),
+                    widget: UserImageWidget(
+                      url: data.userInfoVo.faceImage,
+                      cacheManager: DefaultCacheManager(),
+                    ),
                     onTap: () {
                       //TODO
-                      selectImage(context,data.userInfoVo);
+                      selectImage(context, data.userInfoVo);
                     }),
                 userInfoItem(
                     title: '昵称',
@@ -709,27 +712,28 @@ class UserInfoPage extends StatelessWidget {
   }
 
   ///选择多张图片 Select multiple images
-  Future<void> selectImage(context,UserInfoVo newUserInfo) async {
-    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    print(image);
-   if(image!=null){
-     UserHeadImage userHeadImage=await UserMethod.uploadFaceFile(userPath.userId, imagePath: image.path);
-     Provide.value<UserProvide>(context).userInfoVo.faceImage=userHeadImage.faceImage;
-     Provide.value<UserProvide>(context).userInfoVo.faceImageBig=userHeadImage.faceImageBig;
-     newUserInfo.faceImageBig=userHeadImage.faceImageBig;
-     newUserInfo.faceImage=userHeadImage.faceImageBig;
-     Provide.value<UserProvide>(context).saveUserInfo(newUserInfo);
-   }
-//    List<Media> _listImagePaths = await ImagePickers.pickerPaths(
-//        galleryMode: GalleryMode.image,
-//        selectCount: 1,
-//        showCamera: true,
-//        compressSize: 500,///超过500KB 将压缩图片
-//        uiConfig: UIConfig(uiThemeColor: Color(0xffff0f50)),
-//        cropConfig: CropConfig(enableCrop: true, width: 1, height: 1));
-//    print(_listImagePaths[0].path);
-//    UserMethod.uploadFaceFile(userPath.userId, imagePath: _listImagePaths[0].path);
+  Future<void> selectImage(context, UserInfoVo newUserInfo) async {
+    List<Media> _listImagePaths = await ImagePickers.pickerPaths(
+        galleryMode: GalleryMode.image,
+        selectCount: 1,
+        showCamera: true,
+        compressSize: 500,
+
+        ///超过500KB 将压缩图片
+        uiConfig: UIConfig(uiThemeColor: Color(0xffff0f50)),
+        cropConfig: CropConfig(enableCrop: true, width: 1, height: 1));
+    print(_listImagePaths[0].path);
+    UserMethod.uploadFaceFile(userPath.userId,
+            imagePath: _listImagePaths[0].path)
+        .then((userHeadImage) {
+      if (userHeadImage != null) {
+        //     Provide.value<UserProvide>(context).userInfoVo.faceImage=userHeadImage.faceImage;
+        Provide.value<UserProvide>(context).userInfoVo.faceImageBig =
+            userHeadImage.faceImageBig;
+        newUserInfo.faceImageBig = userHeadImage.faceImageBig;
+        newUserInfo.faceImage = userHeadImage.faceImageBig;
+        Provide.value<UserProvide>(context).saveUserInfo(newUserInfo);
+      }
+    });
   }
-
-
 }
