@@ -7,6 +7,7 @@ import 'package:course_app/widget/bottom_clipper_widget.dart';
 import 'package:course_app/widget/user_image_widget.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:image_pickers/image_pickers.dart';
 //import 'package:image_pickers/image_pickers.dart';
 import 'package:provide/provide.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -63,7 +64,7 @@ class MemberPage extends StatelessWidget {
                         : '无',
                     identity: data.userInfoVo.role,
                     schoolName: data.userInfoVo.identityVo.schoolName,
-                    url: data.userInfoVo.faceImage,
+                    url: data.userInfoVo.faceImageBig,
                   );
                 } else {
                   return UserItemWidget(
@@ -272,7 +273,11 @@ class UserItemWidget extends StatelessWidget {
             onTap: () {
               //TODO 点击头像
               print("点击了头像");
-             // ImagePickers.previewImage(url);
+              String yulangUrl=url;
+              if((url!=null||url.toString().isNotEmpty)){
+                return ;
+              }
+              ImagePickers.previewImage(yulangUrl);
             },
             child: UserImageWidget(url: url,cacheManager: DefaultCacheManager(),),
           ),

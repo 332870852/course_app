@@ -9,11 +9,20 @@ class studentPath {
 }
 
 class userPath{
-  static String userId="2";
+  //static String userId="2";
   static const servicePath = {
     'getUserHeadImage': 'getUserHeadImage',
     'getUserInfo':'getUserInfo',
     'updateUser':'updateUser',
     'uploadFaceFile':'uploadFaceFile',
+    'uploadImage':'uploadImage'
+  };
+}
+
+class teacherPath{
+
+  static const servicePath = {
+    'createCourse':'teacher/createCourse',
+    'getCreateCoursesPage':'teacher/getCreateCoursesPage',
   };
 }

@@ -10,6 +10,7 @@ class Routes{
   static String joinCoursePage = '/join_course';
   static String classRoomPage='/class_room_Page';
   static String userInfoPage='/user_info_page';
+  static String createCoursePage='/create_course_page';
   static void configureRoutes(Router router){
     router.notFoundHandler= new Handler(
         handlerFunc: (BuildContext context,Map<String,List<String>> params){
@@ -20,6 +21,7 @@ class Routes{
     router.define(joinCoursePage,handler:JoinCourseHanderl);
     router.define(classRoomPage,handler:classRoomHanderl);
     router.define(userInfoPage, handler: userInfoHanderl);
+    router.define(createCoursePage, handler: createCourseHamderl);
   }
 
 }

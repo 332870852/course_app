@@ -7,6 +7,8 @@ import 'package:dio/dio.dart';
 import 'dart:async';
 import 'dart:io';
 
+import 'package:fluttertoast/fluttertoast.dart';
+
 ///
 Future getHomePageContent() async {
   try {
@@ -29,7 +31,10 @@ Future getHomePageContent() async {
   } catch (e) {}
 }
 
-Future<Response> get({@required String method, Map queryParameters}) async {
+Future<Response> get(
+    {@required String method,
+    Map queryParameters,
+    ProgressCallback onReceiveProgress}) async {
   var url = serviceUrl + method;
   print(url);
   Map<String, dynamic> map = new Map();
@@ -42,10 +47,8 @@ Future<Response> get({@required String method, Map queryParameters}) async {
     // dio.options.headers.putIfAbsent("token", ()=>"857b8e2a-91ad-4fb1-b382-8067c2720e34");//4
     dio.options.connectTimeout = 3000;
     dio.options.contentType = ContentType.json.value;
-    response = await dio.get(
-      url,
-      queryParameters: map,
-    );
+    response = await dio.get(url,
+        queryParameters: map, onReceiveProgress: onReceiveProgress);
     if (response.statusCode == 200) {
       // print(response);
       return response;
@@ -73,31 +76,37 @@ Future<Response> post(
     {@required String method,
     Map requestmap,
     data,
-    contenType,
-    Function errCallback}) async {
+    contentType,int contentLength,
+    Function errCallback,
+    Function sendTimeOutCallBack,
+    Function receiveTimeOutCallBack,
+    Function connectOutCallBack,
+    ProgressCallback onReceiveProgress,
+    ProgressCallback onSendProgress}) async {
   var url = serviceUrl + method;
-  //Map<String, dynamic> map = new Map();
-  var formData = FormData.fromMap(requestmap);
-  //formData.fields.addAll(requestmap);
-  print(formData);
-//  if (requestmap!=null) {
-//    map.addAll(requestmap);
-//  }
+  //var formData = FormData.fromMap(requestmap);
+  print(url);
   Response response;
   Dio dio = new Dio();
   try {
     //dio.options.headers.putIfAbsent("token", ()=>"857b8e2a-91ad-4fb1-b382-8067c2720e34");//
-    dio.options.receiveTimeout = 30*1000;
-    dio.options.connectTimeout = 5000;
-    if (contenType != null) {
-      dio.options.contentType = ContentType.parse(contenType).value;
+    dio.options.receiveTimeout = 30 * 1000;
+    dio.options.connectTimeout = 10 * 1000;
+    if (contentLength != null) {
+//      dio.options.headers
+//          .putIfAbsent('content-length', () => contentLength);
+      print("content-length : ${contentLength}");
     }
-    response = await dio.post(url, queryParameters: requestmap, data: data,
-        onReceiveProgress: (int count, int total) {
-      print("count :${count},total : ${total}");
-    });
+    if (contentType != null) {
+      dio.options.contentType = contentType.value;
+    }
+    response = await dio.post(url,
+        queryParameters: requestmap,
+        data: data,
+        onReceiveProgress: onReceiveProgress,
+        onSendProgress: onSendProgress);
     if (response.statusCode == 200) {
-      print(response);
+      //print(response);
       return response;
     } else {
       print('code: ${response.statusCode},data:${response.data}');
@@ -107,9 +116,13 @@ Future<Response> post(
       print("网络错误： ${e.message}");
       throw e.message;
     }
+    dioErrorTip(
+        e, sendTimeOutCallBack, receiveTimeOutCallBack, connectOutCallBack);
+  } catch (e) {
+    print("post *********$e}");
     if (e.response != null && e.response.data != null) {
       ResponseModel responseModel = ResponseModel.fromJson(e.response.data);
-      throw responseModel.errors[0];
+      throw responseModel.errors;
     } else {
       print("服务器 error:${e}");
       if (errCallback != null) {
@@ -118,9 +131,62 @@ Future<Response> post(
         throw ServerErrorException(code: -1, msg: "服务器error");
       }
     }
-  } catch (e) {
-    print("post *********$e}");
-    throw e;
+    //throw e;
   }
   return null;
+}
+
+///网络错误回调方法
+dioErrorTip(DioError e, Function sendTimeOutCallBack,
+    Function receiveTimeOutCallBack, Function connectOutCallBack) {
+  switch (e.type) {
+    case DioErrorType.CONNECT_TIMEOUT:
+      // TODO: Handle this case.
+      {
+        if (connectOutCallBack != null) {
+          connectOutCallBack();
+        } else {
+          Fluttertoast.showToast(
+            msg: "连接超时",
+            gravity: ToastGravity.BOTTOM,
+          );
+        }
+      }
+      break;
+    case DioErrorType.SEND_TIMEOUT:
+      // TODO: Handle this case.
+      {
+        if (sendTimeOutCallBack != null) {
+          sendTimeOutCallBack();
+        } else {
+          Fluttertoast.showToast(
+            msg: "数据发送超时",
+            gravity: ToastGravity.BOTTOM,
+          );
+        }
+      }
+      break;
+    case DioErrorType.RECEIVE_TIMEOUT:
+      // TODO: Handle this case.
+      {
+        if (receiveTimeOutCallBack != null) {
+          receiveTimeOutCallBack();
+        } else {
+          Fluttertoast.showToast(
+            msg: "数据发送超时",
+            gravity: ToastGravity.BOTTOM,
+          );
+        }
+      }
+      break;
+    case DioErrorType.RESPONSE:
+      // TODO: Handle this case.
+      break;
+    case DioErrorType.CANCEL:
+      // TODO: Handle this case.
+      break;
+    case DioErrorType.DEFAULT:
+      // TODO: Handle this case.
+      break;
+  }
 }

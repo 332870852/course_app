@@ -1,8 +1,10 @@
 import 'package:course_app/config/constants.dart';
+import 'package:course_app/pages/teacher/indext_teacher_page.dart';
 import 'package:course_app/provide/course_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/widget/course_item_widget.dart';
+import 'package:course_app/widget/create_course_widget.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -10,6 +12,7 @@ import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
 import 'package:course_app/config/service_url.dart';
+
 class IndexPage extends StatefulWidget {
   @override
   _IndexPageState createState() => _IndexPageState();
@@ -21,78 +24,80 @@ class _IndexPageState extends State<IndexPage>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
-        backgroundColor: Colors.grey.shade200,
-        appBar: AppBar(
-          title: Text('全部课程'),
-          actions: <Widget>[
-            _popButtom(context),
-          ],
-          elevation: 0.0,
-        ),
-        body: _ProvideData());
+    return Provide<UserProvide>(
+      builder: (context, child, data) {
+        if (data.role == 3) {
+          ///学生界面
+          return IndexstudentPage();
+        } else {
+          return IndexTeacherPage();
+        }
+      },
+    );
   }
 
-  Widget _ProvideData() {
-
-    return Provide<CourseProvide>(builder: (context, child, data) {
-//      if (data.courseList.length > 0) {
-       print("6666666   ${data.courseList.length}");
-
-        return EasyRefresh.custom(
+  ///学生页面
+  Widget IndexstudentPage() {
+    return Scaffold(
+      backgroundColor: Colors.grey.shade200,
+      appBar: AppBar(
+        title: Text('全部课程'),
+        actions: <Widget>[
+          _popButtom(context),
+        ],
+        elevation: 0.0,
+      ),
+      body: Provide<CourseProvide>(builder: (context, child, data) {
+        print("CourseProvide 6666666   ${data.courseList.length}");
+        return CreateCourseWidget(
+          courseList: data.courseList,
           controller: _controller,
-          slivers: <Widget>[
-            SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  return CourseItemWidget(item: data.courseList[index]);
-                }, childCount: data.courseList.length)),
-
-          ],
-          emptyWidget: (data.courseList.length<1)?Center(
-            child: Text('暂时没有数据'),
-          ):null,
-          firstRefresh: true,
-          //headerIndex: Provide.value<CourseProvide>(context).curssor.offset,
-          header: MaterialHeader(),
-          footer: ClassicalFooter(
-            bgColor: Colors.white,
-            textColor: Theme.of(context).primaryColor,
-            loadingText: '正在加载...',
-            loadedText: '下拉加载',
-            noMoreText: '没有更多了',
-            loadReadyText: '释放立即刷新',
-            loadText: '上拉加载',
-            loadFailedText: '加载失败',
-          ),
-          onRefresh: () async {
-            await Provide.value<CourseProvide>(context)
-                .student_getCoursePage(userPath.userId).whenComplete(()async{
-              _controller.finishRefresh(success: true);
-              _controller.resetLoadState();
-            }).catchError((onError){
-              _controller.finishRefresh(success: false);
-            });
-            // Fluttertoast.showToast(msg: '刷新成功!');
-          },
-          onLoad: () async {
-            _getMoreList(context);
-          },
+          onRefresh: () => joinRefresh(context),
+          onLoad: () => joinOnLoad(context),
         );
-//      } else {
-//        return Center(
-//          child: Text('暂时没有数据'),
-//        );
-//      }
+      }),
+    );
+  }
+
+  ///join- fresh
+  joinRefresh(context) async {
+    await Provide.value<CourseProvide>(context)
+        .student_getCoursePage(Provide.value<UserProvide>(context).userId)
+        .whenComplete(() async {
+      _controller.finishRefresh(success: true);
+      _controller.resetLoadState();
+    }).catchError((onError) {
+      _controller.finishRefresh(success: false);
     });
   }
 
+  ///join-onLoad
+  joinOnLoad(context) async {
+    Provide.value<CourseProvide>(context).increatePage();
+    bool flag = await Provide.value<CourseProvide>(context)
+        .getMoreCourseList(Provide.value<UserProvide>(context).userId,
+            pageSize: 5)
+        .catchError((onError) {
+      ///加载出现异常
+      _controller.finishLoad(success: false);
+      Provide.value<CourseProvide>(context).decreatelPage();
+      return;
+    });
+    //print(flag);
+    if (flag == false) {
+      ///没有更多
+      Provide.value<CourseProvide>(context).decreatelPage();
+      _controller.finishLoad(success: true, noMore: true);
+    } else {
+      ///加载出更多数据
+      _controller.finishLoad(success: true, noMore: false);
+    }
+  }
 
   /// +
   Widget _popButtom(context) {
@@ -163,27 +168,80 @@ class _IndexPageState extends State<IndexPage>
     );
   }
 
-  void _getMoreList(context) async {
-    Provide.value<CourseProvide>(context).increatePage();
-//    await Future.delayed(Duration(seconds: 2), () {
-//      Provide.value<CourseProvide>(context).getMoreCourseList('2',pageSize:1);
-//    });
 
-    bool flag = await Provide.value<CourseProvide>(context)
-        .getMoreCourseList('2', pageSize: 5).catchError((onError){
-          ///加载出现异常
-      _controller.finishLoad(success: false);
-      Provide.value<CourseProvide>(context).decreatelPage();
-      return ;
-    });
-   //print(flag);
-    if(flag==false){///没有更多
-      Provide.value<CourseProvide>(context).decreatelPage();
-      _controller.finishLoad(success: true,noMore: true);
-    }else{///加载出更多数据
-      _controller.finishLoad(success: true,noMore: false);
-    }
-  }
+  //  Widget _ProvideData() {
+//    return Provide<CourseProvide>(builder: (context, child, data) {
+////      if (data.courseList.length > 0) {
+//      print("6666666   ${data.courseList.length}");
+//      return EasyRefresh.custom(
+//        controller: _controller,
+//        slivers: <Widget>[
+//          SliverList(
+//              delegate: SliverChildBuilderDelegate((context, index) {
+//            return CourseItemWidget(item: data.courseList[index]);
+//          }, childCount: data.courseList.length)),
+//        ],
+//        emptyWidget: (data.courseList.length < 1)
+//            ? Center(
+//                child: Text('暂时没有数据'),
+//              )
+//            : null,
+//        firstRefresh: true,
+//        //headerIndex: Provide.value<CourseProvide>(context).curssor.offset,
+//        header: MaterialHeader(),
+//        footer: ClassicalFooter(
+//          bgColor: Colors.white,
+//          textColor: Theme.of(context).primaryColor,
+//          loadingText: '正在加载...',
+//          loadedText: '下拉加载',
+//          noMoreText: '没有更多了',
+//          loadReadyText: '释放立即刷新',
+//          loadText: '上拉加载',
+//          loadFailedText: '加载失败',
+//        ),
+//        onRefresh: () async {
+//          await Provide.value<CourseProvide>(context)
+//              .student_getCoursePage(Provide.value<UserProvide>(context).userId)
+//              .whenComplete(() async {
+//            _controller.finishRefresh(success: true);
+//            _controller.resetLoadState();
+//          }).catchError((onError) {
+//            _controller.finishRefresh(success: false);
+//          });
+//          // Fluttertoast.showToast(msg: '刷新成功!');
+//        },
+//        onLoad: () async {
+//          _getMoreList(context);
+//        },
+//      );
+//    });
+//  }
+
+//  void _getMoreList(context) async {
+//    Provide.value<CourseProvide>(context).increatePage();
+////    await Future.delayed(Duration(seconds: 2), () {
+////      Provide.value<CourseProvide>(context).getMoreCourseList('2',pageSize:1);
+////    });
+//
+//    bool flag = await Provide.value<CourseProvide>(context)
+//        .getMoreCourseList(Provide.value<UserProvide>(context).userId,
+//            pageSize: 5)
+//        .catchError((onError) {
+//      ///加载出现异常
+//      _controller.finishLoad(success: false);
+//      Provide.value<CourseProvide>(context).decreatelPage();
+//      return;
+//    });
+//    //print(flag);
+//    if (flag == false) {
+//      ///没有更多
+//      Provide.value<CourseProvide>(context).decreatelPage();
+//      _controller.finishLoad(success: true, noMore: true);
+//    } else {
+//      ///加载出更多数据
+//      _controller.finishLoad(success: true, noMore: false);
+//    }
+//  }
 
   @override
   // TODO: implement wantKeepAlive

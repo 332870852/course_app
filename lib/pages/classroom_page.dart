@@ -87,7 +87,7 @@ class _ClassRoomPageState extends State<ClassRoomPage> {
             ),
             ClassRoomTitleWidget(
               studentNums: widget.studentNums,
-              classtitle: (widget.courseNumber != null&&widget.courseNumber.toString()!='null')
+              classtitle: (widget.courseNumber != null&&widget.courseNumber.toString().isNotEmpty)
                   ? '${widget.classtitle}(${widget.courseNumber})'
                   : widget.classtitle,
               joinCode: widget.joinCode,

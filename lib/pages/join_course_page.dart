@@ -1,5 +1,6 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:course_app/provide/course_provide.dart';
+import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provide/provide.dart';
-
+import 'package:course_app/config/service_url.dart';
 class JoinCoursePage extends StatefulWidget {
   final id;
   JoinCoursePage({Key key, this.id}) : super(key: key);
@@ -172,7 +173,7 @@ class _JoinCoursePageState extends State<JoinCoursePage> {
       print('*******');
       Provide.value<CourseProvide>(context).changeCode(codes: Code.loading);
       Provide.value<CourseProvide>(context)
-          .postJoinCode('2',value)
+          .postJoinCode(Provide.value<UserProvide>(context).userId,value)
           .then((item) {
         //TODO 处理加课
         print(item);

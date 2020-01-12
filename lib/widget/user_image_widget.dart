@@ -31,6 +31,9 @@ class UserImageWidget extends StatelessWidget {
           return SpinKitFadingFour(color: Colors.grey,);
         },
         cacheManager: cacheManager,
+        errorWidget: (BuildContext context, String url, Object error){
+          return Image.asset('assets/img/网络失败.png');
+        },
       ),
     );
   }

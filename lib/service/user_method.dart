@@ -77,7 +77,7 @@ class UserMethod {
 
   ///上传头像图片
   static Future<UserHeadImage> uploadFaceFile(String userId,
-      {@required imagePath}) async {
+      {@required imagePath, ProgressCallback onSendProgress}) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('userId', () => userId.toString());
     File file = File(imagePath);
@@ -93,8 +93,8 @@ class UserMethod {
       try {
         Response respData = await post(
             method: userPath.servicePath['uploadFaceFile'],
-            requestmap: map,
-            data: formData);
+            requestmap: map,//contentLength:formData.length
+            data: formData,onSendProgress: onSendProgress,);
         ResponseModel responseModel = ResponseModel.fromJson(respData.data);
         if (responseModel.code == 1) {
           print(responseModel.data);
@@ -110,6 +110,29 @@ class UserMethod {
          print(e.msg);
       } catch (e) {
         print("系统错误");
+      }
+    }
+    return null;
+  }
+
+  ///上传图片
+  static Future<UserHeadImage>uploadImage({@required String imagePath,ProgressCallback onSendProgress})async{
+    File file = File(imagePath);
+    if (file.existsSync()) {
+      var name =
+      imagePath.substring(imagePath.lastIndexOf("/") + 1, imagePath.length);
+      FormData formData = FormData.fromMap({
+        "file": MultipartFile.fromFileSync(imagePath, filename: name),
+      });
+      Response respData = await post(
+          method: userPath.servicePath['uploadImage'],//contentLength: formData.length
+          data: formData,onSendProgress: onSendProgress,);
+      ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+      if (responseModel.code == 1) {
+        print(responseModel.data);
+        return UserHeadImage.fromJson(responseModel.data);
+      } else {
+        throw responseModel.errors.asMap();
       }
     }
     return null;

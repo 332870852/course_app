@@ -9,7 +9,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvide with ChangeNotifier {
   List<UserHeadImage> userImageList = [];
+ /////////////////////////
+  ///userId
+  String userId;
+  int role=3; // 2-教师，3-学生
 
+  void updateUserId({@required String newUserId}){
+    userId=newUserId;
+    notifyListeners();
+  }
+  void updateRole({@required int newRole}){
+    role=newRole;
+    notifyListeners();
+  }
+ /////////////////////////
   ///老师个人信息
   UserInfoVo tacherInfo;
 
@@ -55,16 +68,17 @@ class UserProvide with ChangeNotifier {
 
   ///获取用户信息
   Future<UserInfoVo> getUserInfo({@required userId}) async {
+    print("UserProvide.getUserInfo");
     ResponseModel responseModel;
     if (userInfoVo.toString().isNotEmpty && userInfoVo == null) {
-      print("ttttttttt${userId}");
+      //print("ttttttttt${userId}");
       responseModel = await UserMethod.getUserInfo(userId: userId);
       if (responseModel.data != null) {
         userInfoVo = UserInfoVo.fromJson(responseModel.data);
       }
     }
-
     if(userInfoVo!=null){
+      role=userInfoVo.role;
       saveUserInfo(userInfoVo);
     }
     notifyListeners();

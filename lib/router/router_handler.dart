@@ -1,6 +1,7 @@
 import 'package:course_app/model/Course.dart';
 import 'package:course_app/pages/classroom_page.dart';
 import 'package:course_app/pages/join_course_page.dart';
+import 'package:course_app/pages/teacher/create_course_page.dart';
 import 'package:course_app/pages/user_info_page.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
@@ -38,4 +39,11 @@ Handler userInfoHanderl = Handler( handlerFunc: (BuildContext context, Map<Strin
   //String goodsId = params['id'].first;
   //print('index>details goodsID is ${goodsId}');
   return UserInfoPage();
+});
+
+///创建课程页
+Handler createCourseHamderl=Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  //String goodsId = params['id'].first;
+  //print('index>details goodsID is ${goodsId}');
+  return CreateCoursePage();
 });

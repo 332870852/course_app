@@ -8,7 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
-
+import 'package:connectivity/connectivity.dart';
 class HomePage extends StatelessWidget {
 
   @override

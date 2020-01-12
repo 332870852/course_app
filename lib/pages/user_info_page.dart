@@ -7,11 +7,14 @@ import 'package:course_app/pages/user_info_page/change_user_info.dart';
 import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/navigator.dart';
 import 'package:course_app/utils/bean_util.dart';
+import 'package:course_app/widget/progress_dialog_widget.dart';
+import 'package:course_app/widget/select_item_widget.dart';
 import 'package:course_app/widget/user_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provide/provide.dart';
 import 'package:course_app/service/user_method.dart';
 import 'package:course_app/config/service_url.dart';
@@ -76,11 +79,11 @@ class UserInfoPage extends StatelessWidget {
                               LengthLimitingTextInputFormatter(15),
                             ],
                           )).catchError((onError) {
-//                        Fluttertoast.showToast(
-//                            msg: '修改失败',
-//                            gravity: ToastGravity.BOTTOM,
-//                            backgroundColor: Colors.black.withOpacity(0.6),
-//                            textColor: Colors.white);
+                        Fluttertoast.showToast(
+                            msg: '修改失败',
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.black.withOpacity(0.6),
+                            textColor: Colors.white);
                       });
                       if (b) {
                         var nickname =
@@ -561,57 +564,58 @@ class UserInfoPage extends StatelessWidget {
       @required String title,
       Widget widget,
       GestureTapCallback onTap}) {
-    return Material(
-      color: Colors.white,
-      child: Ink(
-        child: InkWell(
-          onTap: onTap,
-          child: Row(
-            children: <Widget>[
-              SizedBox(
-                width: 16,
-              ),
-              Expanded(
-                  child: Container(
-                height: height,
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                            color: Color(Constants.DividerColor),
-                            width: Constants.DividerWith))),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      title,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: ScreenUtil().setSp(40),
-                          fontWeight: FontWeight.w500),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        (widget != null) ? widget : SizedBox(),
-                        Icon(
-                          Icons.chevron_right,
-                          color: Colors.black26,
-                          size: ScreenUtil().setSp(50),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              )),
-            ],
-          ),
-        ),
-      ),
-    );
+    return SelectItemWidget(height: height,title: title,widget: widget,onTap: onTap,);
+//    return Material(
+//      color: Colors.white,
+//      child: Ink(
+//        child: InkWell(
+//          onTap: onTap,
+//          child: Row(
+//            children: <Widget>[
+//              SizedBox(
+//                width: 16,
+//              ),
+//              Expanded(
+//                  child: Container(
+//                height: height,
+//                decoration: BoxDecoration(
+//                    border: Border(
+//                        bottom: BorderSide(
+//                            color: Color(Constants.DividerColor),
+//                            width: Constants.DividerWith))),
+//                child: Row(
+//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                  children: <Widget>[
+//                    Text(
+//                      title,
+//                      style: TextStyle(
+//                          color: Colors.black,
+//                          fontSize: ScreenUtil().setSp(40),
+//                          fontWeight: FontWeight.w500),
+//                    ),
+//                    Row(
+//                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                      children: <Widget>[
+//                        (widget != null) ? widget : SizedBox(),
+//                        Icon(
+//                          Icons.chevron_right,
+//                          color: Colors.black26,
+//                          size: ScreenUtil().setSp(50),
+//                        ),
+//                      ],
+//                    ),
+//                  ],
+//                ),
+//              )),
+//            ],
+//          ),
+//        ),
+//      ),
+//    );
   }
 
   _changUserinfo(context, UserInfoVo newUserInfo, UserSubDto userSubDto) async {
-    UserMethod.updateUser(userId: userPath.userId, userSubDto: userSubDto)
+    UserMethod.updateUser(userId: Provide.value<UserProvide>(context).userId, userSubDto: userSubDto)
         .then((onValue) {
       // print("/////${onValue.data}");
       print(onValue);
@@ -722,18 +726,25 @@ class UserInfoPage extends StatelessWidget {
         ///超过500KB 将压缩图片
         uiConfig: UIConfig(uiThemeColor: Color(0xffff0f50)),
         cropConfig: CropConfig(enableCrop: true, width: 1, height: 1));
-    print(_listImagePaths[0].path);
-    UserMethod.uploadFaceFile(userPath.userId,
-            imagePath: _listImagePaths[0].path)
+    ProgressDialog pr=ProgressDialogWdiget.showProgressStatic(context,message: '图片上传',maxProgress: 100);
+   // print(_listImagePaths[0].path);
+    UserMethod.uploadFaceFile(Provide.value<UserProvide>(context).userId,
+            imagePath: _listImagePaths[0].path,onSendProgress: (int count,int total){
+      ///更新进度条
+          ProgressDialogWdiget.updateProgressStatic(pr, progress: (count/total)*100,message: '上传中...');
+        })
         .then((userHeadImage) {
       if (userHeadImage != null) {
-        //     Provide.value<UserProvide>(context).userInfoVo.faceImage=userHeadImage.faceImage;
+        Provide.value<UserProvide>(context).userInfoVo.faceImage=userHeadImage.faceImage;
         Provide.value<UserProvide>(context).userInfoVo.faceImageBig =
             userHeadImage.faceImageBig;
         newUserInfo.faceImageBig = userHeadImage.faceImageBig;
         newUserInfo.faceImage = userHeadImage.faceImageBig;
         Provide.value<UserProvide>(context).saveUserInfo(newUserInfo);
       }
+    }).whenComplete((){
+      ///关闭进度条
+      pr.dismiss();
     });
   }
 }

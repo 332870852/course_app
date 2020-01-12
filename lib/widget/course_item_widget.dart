@@ -122,7 +122,7 @@ class CourseItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              (courseId != null) ? '${title}(${courseId})' : title,
+              (courseId != null&&courseId.isNotEmpty) ? '${title}(${courseId})' : title,
               style: TextStyle(
                   color: Colors.white, fontSize: ScreenUtil().setSp(40)),
               overflow: TextOverflow.ellipsis,
