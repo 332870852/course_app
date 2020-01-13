@@ -10,14 +10,16 @@ class ProgressDialogWdiget {
       {String message,
       Color backgroundColor = Colors.white,
       double maxProgress = 100,
-      TextStyle messageTextStyle}) {
-    _pr = new ProgressDialog(context, type: ProgressDialogType.Download);
+      TextStyle messageTextStyle,
+        ProgressDialogType type=ProgressDialogType.Download,
+        Widget progressWidget}) {
+    _pr = new ProgressDialog(context, type: type);
     _pr.style(
         message: message,
         borderRadius: 10.0,
         backgroundColor: backgroundColor,
         elevation: 10.0,
-        progressWidget: CircularProgressIndicator(),
+        progressWidget: (progressWidget==null)?CircularProgressIndicator():progressWidget,
         progress: 0.0,
         maxProgress: maxProgress,
         progressTextStyle: TextStyle(
@@ -79,12 +81,16 @@ class ProgressDialogWdiget {
       {String message,
       Color backgroundColor = Colors.white,
       double maxProgress = 100,
-      TextStyle messageTextStyle}) {
+      TextStyle messageTextStyle,
+        ProgressDialogType type=ProgressDialogType.Download,
+        Widget progressWidget}) {
      ProgressDialog pr = ProgressDialogWdiget().createProgressDialog(context,
         message: message,
         backgroundColor: backgroundColor,
         maxProgress: maxProgress,
-        messageTextStyle: messageTextStyle);
+        messageTextStyle: messageTextStyle,
+     progressWidget: progressWidget,
+     type: type);
     pr.show();
     return pr;
   }

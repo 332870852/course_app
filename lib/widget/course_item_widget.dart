@@ -92,9 +92,7 @@ class CourseItemWidget extends StatelessWidget {
                   title: '退出课程',
                   content: '是否确定退出课程(${title})?',
                   onOk: () {
-                    Future.delayed(Duration(milliseconds: 30)).then((onValue) {
-                      Navigator.pop(context, 1);
-                    });
+                    Navigator.pop(context, 1);
                   },
                   onCancel: () {
                     Navigator.pop(context, 0);
@@ -104,6 +102,7 @@ class CourseItemWidget extends StatelessWidget {
               });
           print(b);
           if (b == 1) {
+            //TODO 学生退课
             StudentMethod.removeCourse(
                     userId: Provide.value<UserProvide>(context).userId,
                     courseId: courseId)
@@ -151,12 +150,11 @@ class CourseItemWidget extends StatelessWidget {
       case 0:
         {
           ///
-
           break;
         }
       case 1:
         {
-          //TODO 编辑课程
+          //TODO 编辑修改课程
           //Application.router.navigateTo(context, path)
           ///修改编辑页面的控件状态
           Provide.value<CreateCourseProvide>(context).setModifyStatus(
@@ -170,18 +168,20 @@ class CourseItemWidget extends StatelessWidget {
               MaterialPageRoute(
                   builder: (context) => CreateCoursePage(
                         titlePage: '编辑课程',
-                        isEditPage: true, ///是编辑页
+                        isEditPage: true,
+
+                        ///是编辑页
                         courseId: item.courseId.toString(),
                         courseTitle: '${item.title}',
                         selBgkColor: '${item.bgkColor}',
                         courseNum: '${item.courseNumber}',
                         imageUrl: '${item.bgkUrl}',
-                      ))).then((onValue){
-                        if(onValue!=null){
-                          Course course=onValue;
-                          ///更新修改的课程
-                          Provide.value<CourseTeacherProvide>(context).updateCourse(course);
-                        }
+                      ))).then((onValue) {
+            if (onValue != null) {
+              Course course = onValue;
+              ///更新修改的课程
+              Provide.value<CourseTeacherProvide>(context).updateCourse(course);
+            }
           });
           // TeacherMethod.updateCourse(courseDo: null)
           break;
@@ -189,6 +189,34 @@ class CourseItemWidget extends StatelessWidget {
       case 2:
         {
           ///删除课程
+          var b = await showCupertinoDialog(
+              context: context,
+              builder: (context) {
+                return CupertionDialog(
+                  title: '删除课程',
+                  content: '是否确定删除课程(${item.title}),删除后将无法恢复?',
+                  onOk: () {
+                    Navigator.pop(context, 1);
+                  },
+                  onCancel: () {
+                    Navigator.pop(context, 0);
+                  },
+                  isLoding: false,
+                );
+              });
+          if (b == 1) {
+            ///确定
+            //TODO 教师删除课程
+            bool flag = await TeacherMethod.deleteCourse(
+                    courseId: courseId,
+                    userId: Provide.value<UserProvide>(context).userId)
+                .catchError((onError) {
+              Fluttertoast.showToast(msg: '删除失败${onError}');
+            });
+            if(flag){
+              Provide.value<CourseTeacherProvide>(context).deleteCourse(courseId);
+            }
+          }
           break;
         }
     }

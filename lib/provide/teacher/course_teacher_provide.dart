@@ -113,4 +113,19 @@ class CourseTeacherProvide with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  ///删除课程
+  void deleteCourse(String courseId) {
+    int delIndex=-1;
+    int index=0;
+    courseList.forEach((co){
+      if(co.courseId.toString()==courseId){
+        delIndex=index;
+      }
+      index++;
+    });
+    print(delIndex);
+    courseList.removeAt(delIndex);
+    notifyListeners();
+  }
 }

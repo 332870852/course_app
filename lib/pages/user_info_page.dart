@@ -10,6 +10,7 @@ import 'package:course_app/utils/bean_util.dart';
 import 'package:course_app/widget/progress_dialog_widget.dart';
 import 'package:course_app/widget/select_item_widget.dart';
 import 'package:course_app/widget/user_image_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -615,6 +616,8 @@ class UserInfoPage extends StatelessWidget {
   }
 
   _changUserinfo(context, UserInfoVo newUserInfo, UserSubDto userSubDto) async {
+    //TODO 修改个人信息
+    ProgressDialog pr=ProgressDialogWdiget.showProgressStatic(context,message: '请稍后..',type: ProgressDialogType.Normal,progressWidget: CupertinoActivityIndicator(radius: 20.0,));
     UserMethod.updateUser(userId: Provide.value<UserProvide>(context).userId, userSubDto: userSubDto)
         .then((onValue) {
       // print("/////${onValue.data}");
@@ -623,6 +626,8 @@ class UserInfoPage extends StatelessWidget {
         //print("00000${onValue.data}");
         Provide.value<UserProvide>(context).saveUserInfo(newUserInfo);
       }
+    }).whenComplete((){
+       pr.dismiss();
     });
   }
 
