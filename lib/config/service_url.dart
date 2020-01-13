@@ -4,7 +4,7 @@ class studentPath {
   static const servicePath = {
     'getCoursePage': 'student/getCoursePage',
     'joinCourse': 'student/joinCourse',
-
+     'removeCourse':'student/removeCourse',
   };
 }
 
@@ -24,5 +24,7 @@ class teacherPath{
   static const servicePath = {
     'createCourse':'teacher/createCourse',
     'getCreateCoursesPage':'teacher/getCreateCoursesPage',
+    'updateCourse':'teacher/updateCourse',
+    'deleteCourse':'teacher/deleteCourse',
   };
 }

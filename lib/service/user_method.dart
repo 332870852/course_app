@@ -50,12 +50,17 @@ class UserMethod {
       {@required userId, @required UserSubDto userSubDto}) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('userId', () => userId.toString());
-
     try {
       Response respData = await post(
         method: userPath.servicePath['updateUser'],
         requestmap: map,
         data: userSubDto.toJson(),
+        connectOutCallBack: (){
+          Fluttertoast.showToast(
+            msg: '更改失败，服务器繁忙请稍后再试',
+            gravity: ToastGravity.BOTTOM,
+          );
+        }
       );
       ResponseModel responseModel = ResponseModel.fromJson(respData.data);
       if (responseModel.code == 1) {
@@ -64,13 +69,7 @@ class UserMethod {
       } else {
         throw responseModel.errors[0];
       }
-    } on ServerErrorException catch (e) {
-      Fluttertoast.showToast(
-        msg: '更改失败，服务器繁忙请稍后再试',
-        gravity: ToastGravity.BOTTOM,
-      );
-       print(e.msg);
-    } catch (e) {
+    }catch (e) {
       print("系统错误");
     }
   }
@@ -137,4 +136,7 @@ class UserMethod {
     }
     return null;
   }
+
+
+
 }

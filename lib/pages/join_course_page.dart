@@ -138,7 +138,7 @@ class _JoinCoursePageState extends State<JoinCoursePage> {
         ),
         Provide<CourseProvide>(
           builder: (context, child, data) {
-            if (data.code == Code.error) {
+            if (data.code == Codes.error) {
               return Padding(
                 padding: EdgeInsets.only(top: 10, right: 115),
                 child: Text(
@@ -147,7 +147,7 @@ class _JoinCoursePageState extends State<JoinCoursePage> {
                       TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                 ),
               );
-            } else if (data.code == Code.loading) {
+            } else if (data.code == Codes.loading) {
               return Padding(
                 padding: EdgeInsets.only(top: 10, right: 115),
                 child: Text(
@@ -171,7 +171,7 @@ class _JoinCoursePageState extends State<JoinCoursePage> {
     String value = _controller.value.text;
     if (value.length == 6 && !RegexUtil.isZh(value)) {
       print('*******');
-      Provide.value<CourseProvide>(context).changeCode(codes: Code.loading);
+      Provide.value<CourseProvide>(context).changeCode(codes: Codes.loading);
       Provide.value<CourseProvide>(context)
           .postJoinCode(Provide.value<UserProvide>(context).userId,value)
           .then((item) {

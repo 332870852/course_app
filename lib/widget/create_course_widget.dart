@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
 
-
+///课堂首页老师创建课程显示页
 class CreateCourseWidget extends StatefulWidget {
   EasyRefreshController controller;
   final List<Course> courseList;
   OnRefreshCallback onRefresh;
   OnLoadCallback onLoad;
-
+  final int role; //1-学生版界面，2-教师版界面，默认学生
   CreateCourseWidget(
       {Key key,
       @required this.courseList,
+      @required this.role,
       this.onLoad,
       this.onRefresh,
       this.controller})
@@ -40,18 +41,18 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget>
 
   @override
   Widget build(BuildContext context) {
-    return  EasyRefresh.custom(
+    return EasyRefresh.custom(
       controller: widget.controller,
       slivers: <Widget>[
         SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
-              return CourseItemWidget(item: widget.courseList[index]);
-            }, childCount: widget.courseList.length)),
+          return CourseItemWidget(item: widget.courseList[index],role: widget.role,);
+        }, childCount: widget.courseList.length)),
       ],
       emptyWidget: (widget.courseList.length < 1)
           ? Center(
-        child: Text('暂时没有数据'),
-      )
+              child: Text('暂时没有数据'),
+            )
           : null,
       firstRefresh: true,
       //headerIndex: Provide.value<CourseProvide>(context).curssor.offset,

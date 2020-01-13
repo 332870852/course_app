@@ -47,4 +47,26 @@ class StudentMethod {
     }
   }
 
+  ///学生退课
+  static Future<bool> removeCourse({@required String userId,@required String courseId})async{
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('userId', () => userId);
+    map.putIfAbsent('courseId', () => courseId);
+    try {
+      Response respData = await post(
+        method: studentPath.servicePath['removeCourse'],
+        requestmap: map,
+      );
+      ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+      if (responseModel.code == 1) {
+        print(responseModel.data);
+        return responseModel.data;
+      } else {
+        throw responseModel.errors[0];
+      }
+    }catch (e) {
+      print("removeCourse 系统错误");
+    }
+    return false;
+  }
 }

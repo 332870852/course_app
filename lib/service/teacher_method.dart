@@ -45,4 +45,38 @@ class TeacherMethod {
     }
   }
 
+  //TODO test
+  ///老师修改课堂
+  static Future<Course> updateCourse({String userId,@required CourseDo courseDo})async{
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('userId', () => userId);
+    Response respData = await post(
+        method: teacherPath.servicePath['updateCourse'], requestmap:map,data: courseDo.toJson());
+    print(respData);
+    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+    if (responseModel.code == 1) {
+      Course course= Course.fromJson(responseModel.data);
+      return course;
+    } else {
+      throw responseModel.errors[0];
+    }
+  }
+
+  //TODO test
+  ///删除课程
+  static Future<bool> deleteCourse({String userId,@required String courseId})async{
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('userId', () => userId);
+    map.putIfAbsent('courseId', () => courseId);
+    Response respData = await post(
+        method: teacherPath.servicePath['deleteCourse'], requestmap:map);
+    print(respData);
+    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+    if (responseModel.code == 1) {
+      return responseModel.data;
+    } else {
+      throw responseModel.errors[0];
+    }
+  }
+
 }

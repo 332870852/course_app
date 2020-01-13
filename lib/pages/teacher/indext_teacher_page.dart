@@ -59,6 +59,7 @@ class IndexTeacherPage extends StatelessWidget {
                     print(
                         "CourseTeacherProvide 6666666   ${data.courseList.length}");
                     return CreateCourseWidget(
+                      role: 2,///2-教师
                       courseList: data.courseList,
                       controller: _createcontroller,
                       onRefresh: ()=>createRefresh(context),
@@ -70,6 +71,7 @@ class IndexTeacherPage extends StatelessWidget {
                   Provide<CourseProvide>(builder: (context, child, data) {
                     print("CourseProvide 6666666   ${data.courseList.length}");
                     return CreateCourseWidget(
+                      role: 1, ///1-学生
                       courseList: data.courseList,
                       controller: _joincontroller,
                       onRefresh: ()=>joinRefresh(context),
@@ -176,7 +178,7 @@ class IndexTeacherPage extends StatelessWidget {
     });
   }
 
-  ///join-onLoad
+  ///create-onLoad
   createOnLoad(context) async {
     Provide.value<CourseTeacherProvide>(context).increatePage();
     bool flag = await Provide.value<CourseTeacherProvide>(context)
@@ -193,6 +195,7 @@ class IndexTeacherPage extends StatelessWidget {
       ///没有更多
       Provide.value<CourseTeacherProvide>(context).decreatelPage();
       _createcontroller.finishLoad(success: true, noMore: true);
+      debugPrint("没有更多");
     } else {
       ///加载出更多数据
       _createcontroller.finishLoad(success: true, noMore: false);

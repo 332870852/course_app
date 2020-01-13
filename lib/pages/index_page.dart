@@ -3,6 +3,7 @@ import 'package:course_app/pages/teacher/indext_teacher_page.dart';
 import 'package:course_app/provide/course_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/application.dart';
+import 'package:course_app/router/routes.dart';
 import 'package:course_app/widget/course_item_widget.dart';
 import 'package:course_app/widget/create_course_widget.dart';
 import 'package:fluro/fluro.dart';
@@ -55,6 +56,7 @@ class _IndexPageState extends State<IndexPage>
       body: Provide<CourseProvide>(builder: (context, child, data) {
         print("CourseProvide 6666666   ${data.courseList.length}");
         return CreateCourseWidget(
+          role: 1,
           courseList: data.courseList,
           controller: _controller,
           onRefresh: () => joinRefresh(context),
@@ -128,8 +130,8 @@ class _IndexPageState extends State<IndexPage>
         switch (selected) {
           case 'join_course':
             {
-              Provide.value<CourseProvide>(context).code = Code.def;
-              Application.router.navigateTo(context, '/join_course',
+              Provide.value<CourseProvide>(context).code = Codes.def;
+              Application.router.navigateTo(context, Routes.joinCoursePage,
                   transition: TransitionType.inFromRight);
               break;
             }

@@ -45,5 +45,7 @@ Handler userInfoHanderl = Handler( handlerFunc: (BuildContext context, Map<Strin
 Handler createCourseHamderl=Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   //String goodsId = params['id'].first;
   //print('index>details goodsID is ${goodsId}');
-  return CreateCoursePage();
+  var titlePage = params['titlePage'].first;
+  //print("***********************${titlePage}");
+  return CreateCoursePage(titlePage: titlePage.toString());
 });

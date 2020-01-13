@@ -1,6 +1,8 @@
 import 'package:course_app/config/constants.dart';
+import 'package:course_app/model/Course.dart';
 import 'package:course_app/provide/course_provide.dart';
 import 'package:course_app/provide/create_course_provider.dart';
+import 'package:course_app/provide/teacher/course_teacher_provide.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:fluro/fluro.dart';
@@ -46,18 +48,20 @@ Widget Index_popButtom(context, {List<IndexBuildPopupMenuItem> list}) {
       switch (selected) {
         case 'join_course':
           {///加课
-            Provide.value<CourseProvide>(context).code = Code.def;
+            Provide.value<CourseProvide>(context).code = Codes.def;
             Application.router.navigateTo(context, Routes.joinCoursePage,
                 transition: TransitionType.inFromRight);
             break;
           }
         case 'create_course':
-          {///创建课程
-            Application.router.navigateTo(context, Routes.createCoursePage).whenComplete((){
-              print("staasdss");
-              Provide.value<CreateCourseProvide>(context).InitStatus();
-            }).then((onValue){
+          {//TODO 创建课程
+            Provide.value<CreateCourseProvide>(context).InitStatus();///初始化创建页面的控件状态
+            Application.router.navigateTo(context, Routes.createCoursePage+'?titlePage=${Uri.encodeComponent('创建课程')}').then((onValue){
               print("Routes.createCoursePage: ${onValue}");
+              if(onValue!=null){
+                 Course course=onValue;
+                 Provide.value<CourseTeacherProvide>(context).addCourse(course);
+              }
             });
             break;
           }

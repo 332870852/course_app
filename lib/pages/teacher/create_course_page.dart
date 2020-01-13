@@ -24,21 +24,32 @@ import 'package:course_app/config/service_url.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
+///创建课程页和编辑课程页，（共用)
 class CreateCoursePage extends StatelessWidget {
   final FormKey = GlobalKey<FormState>();
+  final String titlePage; //页面标题
+  final String courseId; //课程id
+  ///是否是编辑页面，默认- 否
+  bool isEditPage;
   String courseTitle;
   String courseNum;
   String imageUrl;
-  String selBgkColor='';
+  String selBgkColor = '';
+
   //TabController _controller;
-  List<String> _tags = [
-    'blue',
-    'black',
-    'pink',
-    'orange',
-    'green',
-    'purple'
-  ];
+  List<String> _tags = ['blue', 'black', 'pink', 'orange', 'green', 'purple'];
+
+  CreateCoursePage(
+      {Key key,
+      this.courseId,
+      this.titlePage,
+      this.courseTitle,
+      this.courseNum,
+      this.selBgkColor,
+      this.imageUrl,
+      this.isEditPage = false})
+      : super(key: key);
+
   String validateCourseTitle(value) {
     //判断用户数据
     if (value.isEmpty || value == "") {
@@ -47,14 +58,15 @@ class CreateCoursePage extends StatelessWidget {
     return null;
   }
 
-   submitSave(context)  async{
+  submitSave(context) async {
     if (FormKey.currentState.validate()) {
       ///保存
       FormKey.currentState.save();
       print(courseTitle);
       if (courseTitle != null && courseTitle.isNotEmpty) {
         ///显示加载按钮
-        Provide.value<CreateCourseProvide>(context).changeDisplaySave(status: false);
+        Provide.value<CreateCourseProvide>(context)
+            .changeDisplaySave(status: false);
         CourseDo courseDo = CourseDo();
         courseDo.courseTitle = courseTitle;
         courseDo.number = courseNum;
@@ -68,15 +80,37 @@ class CreateCoursePage extends StatelessWidget {
         courseDo.bgkUrl = imageUrl;
         courseDo.teacherId = Provide.value<UserProvide>(context).userId;
         Provide.value<CreateCourseProvide>(context).courseDo = courseDo;
-        Course course=await TeacherMethod.createCourse(courseDo: courseDo).catchError((onError){
-          debugPrint(onError);
-          Fluttertoast.showToast(msg: '创建失败,请稍后重试',gravity: ToastGravity.CENTER);
-        }).whenComplete((){
-          ///创建结束，关闭按钮加载状态
-          Provide.value<CreateCourseProvide>(context).changeDisplaySave(status: true);
-        });
-        Navigator.pop(context,course);
         print(courseDo);
+        if(!isEditPage){
+          //TODO 创建课程
+          Course course = await TeacherMethod.createCourse(courseDo: courseDo)
+              .catchError((onError) {
+            debugPrint(onError);
+            Fluttertoast.showToast(
+                msg: '创建失败,请稍后重试', gravity: ToastGravity.CENTER);
+          }).whenComplete(() {
+            ///创建结束，关闭按钮加载状态
+            Provide.value<CreateCourseProvide>(context)
+                .changeDisplaySave(status: true);
+          });
+          Navigator.pop(context, course);
+        }else{
+          //TODO 修改课程
+          courseDo.courseId=courseId;
+          print("//TODO 修改课程 updateCourse: ${courseDo}");
+          Course course = await TeacherMethod.updateCourse(userId: Provide.value<UserProvide>(context).userId,courseDo: courseDo)
+              .catchError((onError) {
+            debugPrint(onError);
+            Fluttertoast.showToast(
+                msg: '修改失败,请稍后重试', gravity: ToastGravity.CENTER);
+          }).whenComplete(() {
+            ///结束，关闭按钮加载状态
+            Provide.value<CreateCourseProvide>(context)
+                .changeDisplaySave(status: true);
+          });
+          Navigator.pop(context, course);
+        }
+
       } else {
         Fluttertoast.showToast(
           msg: "课程名称不能为空",
@@ -92,7 +126,7 @@ class CreateCoursePage extends StatelessWidget {
         width: ScreenUtil().width,
         child: Scaffold(
             appBar: AppBar(
-              title: Text('创建课程'),
+              title: Text('${titlePage}'),
               elevation: 0.0,
               leading: IconButton(
                   icon: Icon(
@@ -103,32 +137,30 @@ class CreateCoursePage extends StatelessWidget {
                     Navigator.pop(context);
                   }),
               actions: <Widget>[
-//             Container(
-//            width: 60,
-//              margin: EdgeInsets.all(10),
-//              child: FlatButton(
-//                  textColor: Colors.white,
-//                  color: Colors.green,
-//                  disabledColor: Colors.grey.withOpacity(0.7),
-//                  disabledTextColor: Colors.black45,
-//                  onPressed:  ()=>submitSave(context),
-//                  child: Text('保存')//(data.displaySave)?Text('保存'):SpinKitWave(color: Colors.white, type: SpinKitWaveType.start,size:ScreenUtil().setSp(30),)//,
-//              ),
-//            ),
-                Provide<CreateCourseProvide>(builder: (context,child,data){
-                  return  Container(
-                    width: 60,
-                    margin: EdgeInsets.all(10),
-                    child: FlatButton(
-                        textColor: Colors.white,
-                        color: Colors.green,
-                        disabledColor: Colors.grey.withOpacity(0.7),
-                        disabledTextColor: Colors.black45,
-                        onPressed:  (data.displaySave)?()=>submitSave(context):null,
-                        child: (data.displaySave)?Text('保存'):SpinKitWave(color: Colors.white, type: SpinKitWaveType.start,size:ScreenUtil().setSp(30),)//,
-                    ),
-                  );
-                },),
+                Provide<CreateCourseProvide>(
+                  builder: (context, child, data) {
+                    return Container(
+                      width: 60,
+                      margin: EdgeInsets.all(10),
+                      child: FlatButton(
+                          textColor: Colors.white,
+                          color: Colors.green,
+                          disabledColor: Colors.grey.withOpacity(0.7),
+                          disabledTextColor: Colors.black45,
+                          onPressed: (data.displaySave)
+                              ? () => submitSave(context)
+                              : null,
+                          child: (data.displaySave)
+                              ? Text('保存')
+                              : SpinKitWave(
+                                  color: Colors.white,
+                                  type: SpinKitWaveType.start,
+                                  size: ScreenUtil().setSp(30),
+                                ) //,
+                          ),
+                    );
+                  },
+                ),
               ],
             ),
             body: SingleChildScrollView(
@@ -141,11 +173,13 @@ class CreateCoursePage extends StatelessWidget {
                           title: '课程名称',
                           hintText: '请输入课程名称(必填)',
                           valueStr: 'courseTitle',
-                          valid: validateCourseTitle),
+                          valid: validateCourseTitle,
+                          initialValue: courseTitle),
                       _itemWidget(
                           title: '课号',
                           hintText: '请输入课程课号(选填)',
-                          valueStr: 'courseNum'),
+                          valueStr: 'courseNum',
+                          initialValue: courseNum),
                       Container(
                         height: 20,
                         color: Colors.black26,
@@ -169,28 +203,33 @@ class CreateCoursePage extends StatelessWidget {
                             width: ScreenUtil().width,
                             height: 230,
                             padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                              ),
-                              child: GridView.count(
-                                physics: NeverScrollableScrollPhysics(),
-                                ///禁止上下拉动出现波纹
-                                crossAxisCount: 3,
-                                padding: EdgeInsets.all(5.0),
-                                children: _tags.map((tag) {
-                                  return FilterChip(
-                                    label: Text(tag,style: TextStyle(color: Colors.white),),
-                                    backgroundColor: Constants.bgkMap[tag],
-                                    selectedColor: Constants.bgkMap[tag],
-                                    selected: data.selectedBgk.contains(tag),
-                                    checkmarkColor: Colors.white,
-                                    onSelected: (value){
-                                      selBgkColor=tag;
-                                      Provide.value<CreateCourseProvide>(context).AddselectedBgk(tag: tag);
-                                    },
-                                  );
-                                }).toList(),
-                              ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+                            child: GridView.count(
+                              physics: NeverScrollableScrollPhysics(),
+
+                              ///禁止上下拉动出现波纹
+                              crossAxisCount: 3,
+                              padding: EdgeInsets.all(5.0),
+                              children: _tags.map((tag) {
+                                return FilterChip(
+                                  label: Text(
+                                    tag,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  backgroundColor: Constants.bgkMap[tag],
+                                  selectedColor: Constants.bgkMap[tag],
+                                  selected: data.selectedBgk.contains(tag),
+                                  checkmarkColor: Colors.white,
+                                  onSelected: (value) {
+                                    selBgkColor = tag;
+                                    Provide.value<CreateCourseProvide>(context)
+                                        .AddselectedBgk(tag: tag);
+                                  },
+                                );
+                              }).toList(),
+                            ),
                           );
                         }
                       }),
@@ -385,7 +424,8 @@ class CreateCoursePage extends StatelessWidget {
   }
 
   ///输入框
-  Widget _itemWidget({title, hintText, valueStr, Function valid}) {
+  Widget _itemWidget(
+      {title, hintText, valueStr, Function valid, String initialValue}) {
     return Container(
       padding: EdgeInsets.only(left: 10.0),
       alignment: Alignment.centerLeft,
@@ -419,6 +459,7 @@ class CreateCoursePage extends StatelessWidget {
               inputFormatters: [
                 LengthLimitingTextInputFormatter(20),
               ],
+              initialValue: initialValue,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: hintText,

@@ -16,14 +16,16 @@ class CourseTeacherProvide with ChangeNotifier {
 
   ///加课返回状态码
   Code code = Code.def;
+
   ///加课返回消息
-  String backMessage='';
+  String backMessage = '';
 
   ///当前页
   Curssor curssor = Curssor(1, 1, 5);
 
   ///获取网络课程数据
   Future<List<Course>> teacher_getCoursePage(userId) async {
+    print(curssor);
     ResponseModel responseModel = await TeacherMethod.getCoursePage(
       userId: userId,
     );
@@ -32,10 +34,12 @@ class CourseTeacherProvide with ChangeNotifier {
       List<dynamic> list = responseModel.data;
       courseList = list
           .map((item) {
-        return Course.fromJson(item);
-      }).toList()
+            return Course.fromJson(item);
+          })
+          .toList()
           .cast();
       curssor = responseModel.cursor;
+      print(curssor);
       notifyListeners();
     }
     return courseList;
@@ -47,18 +51,19 @@ class CourseTeacherProvide with ChangeNotifier {
     notifyListeners();
   }
 
-
   ///加载更多
   Future<bool> getMoreCourseList(userId, {pageSize = 5}) async {
+    print(curssor);
+    //print(courseList.length);
     ResponseModel responseModel = await TeacherMethod.getCoursePage(
         userId: userId, pageNo: curssor.offset, pageSize: pageSize);
-    print(responseModel.data == '');
+    print(responseModel.data);
     List<dynamic> list = responseModel.data;
-    if (list!=null&&list.isNotEmpty) {
+    if (list != null && list.isNotEmpty) {
       List<Course> more = list
           .map((item) {
-        return Course.fromJson(item);
-      })
+            return Course.fromJson(item);
+          })
           .toList()
           .cast();
       curssor = responseModel.cursor;
@@ -71,6 +76,7 @@ class CourseTeacherProvide with ChangeNotifier {
   }
 
   void increatePage() async {
+    print(curssor.offset);
     curssor.offset = curssor.offset + 1;
     //print("increatePage${curssor.offset}");
   }
@@ -78,5 +84,33 @@ class CourseTeacherProvide with ChangeNotifier {
   void decreatelPage() async {
     curssor.offset = curssor.offset - 1;
     //print("decreatelPage ${curssor.offset}");
+  }
+
+  ///更新修改的课程
+  void updateCourse(Course course) {
+    int index = 0;
+    int updateindex = -1;
+    print(courseList.length);
+    //print(course.courseId);
+    courseList.forEach((co) {
+      print("xun huan  ${co.courseId}");
+      if (co.courseId == course.courseId) {
+        updateindex = index;
+      }
+      index++;
+    });
+    print("updateCourse : ${updateindex}");
+    courseList[updateindex] = course;
+    print(courseList.length);
+    //save -sp
+    notifyListeners();
+  }
+
+  ///添加课程
+  void addCourse(Course course) {
+    if (!courseList.contains(course)) {
+      courseList.insert(0, course);
+      notifyListeners();
+    }
   }
 }

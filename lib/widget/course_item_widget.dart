@@ -2,26 +2,32 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:course_app/config/constants.dart';
 import 'package:course_app/data/user_head_image.dart';
 import 'package:course_app/model/Course.dart';
+import 'package:course_app/pages/teacher/create_course_page.dart';
 import 'package:course_app/provide/course_provide.dart';
+import 'package:course_app/provide/create_course_provider.dart';
+import 'package:course_app/provide/teacher/course_teacher_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
+import 'package:course_app/service/student_method.dart';
+import 'package:course_app/service/teacher_method.dart';
+import 'package:course_app/widget/cupertion_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provide/provide.dart';
+import 'package:flutter/cupertino.dart';
 
 ///课堂项
 class CourseItemWidget extends StatelessWidget {
   final Course item;
-
-  CourseItemWidget({Key key, @required this.item}) : super(key: key);
+  final int role; //1-学生版界面，2-教师版界面，默认学生
+  CourseItemWidget({Key key, @required this.item, this.role = 1})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     print("999*08454");
-//    Provide.value<UserProvide>(context).getUserHeadImage(item.userIdSet).then((onValue){
-//      List<UserHeadImage> userImageList=
-//    });
     return Container(
       height: ScreenUtil().setHeight(330),
       margin: EdgeInsets.only(top: 10, left: 20, right: 20),
@@ -38,14 +44,18 @@ class CourseItemWidget extends StatelessWidget {
             end: item.end,
             courseId: item.courseNumber,
           ),
-          leadingItem(context, nums: item.member)
+          leadingItem(context,
+              nums: item.member,
+              courseId: item.courseId.toString(),
+              title: item.title)
         ],
       ),
     );
   }
 
-  ///点击底部更多
-  Future _openModalBottomSheet(context) async {
+  ///学生点击底部更多
+  Future _openModalBottomSheet(context,
+      {@required String courseId, title}) async {
     final option = await showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -65,6 +75,123 @@ class CourseItemWidget extends StatelessWidget {
           );
         });
     print(option);
+    switch (option) {
+      case 0:
+        {
+          ///
+          break;
+        }
+      case 1:
+        {
+          //是否确定退出课程(${title})?
+          ///退出课程
+          var b = await showCupertinoDialog(
+              context: context,
+              builder: (context) {
+                return CupertionDialog(
+                  title: '退出课程',
+                  content: '是否确定退出课程(${title})?',
+                  onOk: () {
+                    Future.delayed(Duration(milliseconds: 30)).then((onValue) {
+                      Navigator.pop(context, 1);
+                    });
+                  },
+                  onCancel: () {
+                    Navigator.pop(context, 0);
+                  },
+                  isLoding: false,
+                );
+              });
+          print(b);
+          if (b == 1) {
+            StudentMethod.removeCourse(
+                    userId: Provide.value<UserProvide>(context).userId,
+                    courseId: courseId)
+                .then((onValue) {
+              if (onValue == true) {
+                print(onValue);
+                Provide.value<CourseProvide>(context).removeCourse(courseId);
+                Fluttertoast.showToast(msg: '退课成功');
+              } else {
+                Fluttertoast.showToast(msg: '退课失败');
+              }
+            }).catchError((onError) {
+              print("StudentMethod.removeCourse   ${onError}");
+            });
+          }
+          break;
+        }
+    }
+  }
+
+  ///教师点击底部更多
+  Future _openTeacherModalBottomSheet(context,
+      {@required String courseId}) async {
+    final option = await showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            height: 210.0,
+            child: Column(
+              children: <Widget>[
+                _bottomItem(context, '置顶课程', 0),
+                _bottomItem(context, '编辑课程', 1),
+                _bottomItem(context, '删除课程', 2),
+                Container(
+                  height: 10,
+                  color: Colors.grey.shade300,
+                ),
+                _bottomItem(context, '取消', 3),
+              ],
+            ),
+          );
+        });
+    print(option);
+    switch (option) {
+      case 0:
+        {
+          ///
+
+          break;
+        }
+      case 1:
+        {
+          //TODO 编辑课程
+          //Application.router.navigateTo(context, path)
+          ///修改编辑页面的控件状态
+          Provide.value<CreateCourseProvide>(context).setModifyStatus(
+              start: item.start,
+              end: item.end,
+              url: item.bgkUrl,
+              bgk: item.bgkColor,
+              sem: item.semester);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CreateCoursePage(
+                        titlePage: '编辑课程',
+                        isEditPage: true, ///是编辑页
+                        courseId: item.courseId.toString(),
+                        courseTitle: '${item.title}',
+                        selBgkColor: '${item.bgkColor}',
+                        courseNum: '${item.courseNumber}',
+                        imageUrl: '${item.bgkUrl}',
+                      ))).then((onValue){
+                        if(onValue!=null){
+                          Course course=onValue;
+                          ///更新修改的课程
+                          Provide.value<CourseTeacherProvide>(context).updateCourse(course);
+                        }
+          });
+          // TeacherMethod.updateCourse(courseDo: null)
+          break;
+        }
+      case 2:
+        {
+          ///删除课程
+          break;
+        }
+    }
   }
 
   Widget _bottomItem(context, title, index) {
@@ -122,7 +249,9 @@ class CourseItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              (courseId != null&&courseId.isNotEmpty) ? '${title}(${courseId})' : title,
+              (courseId != null && courseId.isNotEmpty)
+                  ? '${title}(${courseId})'
+                  : title,
               style: TextStyle(
                   color: Colors.white, fontSize: ScreenUtil().setSp(40)),
               overflow: TextOverflow.ellipsis,
@@ -176,7 +305,8 @@ class CourseItemWidget extends StatelessWidget {
   }
 
   ///底部
-  Widget leadingItem(BuildContext context, {@required int nums}) {
+  Widget leadingItem(BuildContext context,
+      {@required int nums, @required String courseId, String title}) {
     return Container(
       height: ScreenUtil().setHeight(100),
       decoration: BoxDecoration(
@@ -187,54 +317,57 @@ class CourseItemWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          _imageCount(context,nums,userIds: item.userIdSet),
+          _imageCount(context, nums, userIds: item.userIdSet),
           IconButton(
               icon: Icon(Icons.more_horiz),
               onPressed: () {
                 //TODO  点击底部更多
-                _openModalBottomSheet(context);
+                (role == 1)
+                    ? _openModalBottomSheet(context,
+                        courseId: courseId, title: title)
+                    : _openTeacherModalBottomSheet(context, courseId: courseId);
               }),
         ],
       ),
     );
   }
 
- ///头像
+  ///头像
   CircleAvatar _circleAvatar({image}) {
     var url;
-    if(image!=null){
-      url=image.faceImage;
+    if (image != null) {
+      url = image.faceImage;
     }
     //print(url);
     return CircleAvatar(
-      backgroundImage: (url != null)
-          ? NetworkImage(url)
-          : AssetImage('assets/img/dpic.png'),
+      backgroundImage:
+          (url != null) ? NetworkImage(url) : AssetImage('assets/img/dpic.png'),
       minRadius: 10,
       maxRadius: 10,
     );
   }
 
   ///头像和人数
-  Widget _imageCount(context, int nums,{userIds}) {
+  Widget _imageCount(context, int nums, {userIds}) {
     return Container(
       padding: EdgeInsets.all(5),
       child: Row(
         children: <Widget>[
           FutureBuilder(
-              future: Provide.value<UserProvide>(context).getUserHeadImage(userIds),
+              future:
+                  Provide.value<UserProvide>(context).getUserHeadImage(userIds),
               builder: (context, snaphot) {
                 if (snaphot.hasData) {
-                  Map map=snaphot.data.asMap();
+                  Map map = snaphot.data.asMap();
                   return Row(
                     children: <Widget>[
-                      _circleAvatar(image:(map[0]!=null)?map[0]:null),
-                      _circleAvatar(image:(map[1]!=null)?map[1]:null),
-                      _circleAvatar(image:(map[2]!=null)?map[2]:null),
+                      _circleAvatar(image: (map[0] != null) ? map[0] : null),
+                      _circleAvatar(image: (map[1] != null) ? map[1] : null),
+                      _circleAvatar(image: (map[2] != null) ? map[2] : null),
                     ],
                   );
                 } else {
-                  return  Row(
+                  return Row(
                     children: <Widget>[
                       _circleAvatar(),
                       _circleAvatar(),

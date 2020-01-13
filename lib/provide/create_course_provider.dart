@@ -14,7 +14,7 @@ class CreateCourseProvide with ChangeNotifier {
     selectedBgk=[];
     notifyListeners();
   }
-  ////////////////////////////////////////控件状态
+  ////////////////////////////////////////控件状态//////////
   ///选择学年的radio控件
   var groupValueYear = '${DateTime.now().year}-${DateTime.now().year + 1}';
 
@@ -93,6 +93,18 @@ class CreateCourseProvide with ChangeNotifier {
     }
      selectedBgk.add(tag);
      notifyListeners();
+  }
+
+  ///修改控件的状态
+  void setModifyStatus({String url,int start,int end,String bgk,int sem}) {
+    if(start!=null&&end!=null){
+      groupValueYear = '${start}-${end}';
+      print(groupValueYear);
+    }
+    bgkUrl=(url!=null)?url:'';
+    selectedBgk=[bgk];
+    currentSem=sem;
+    currentIndex=0;
   }
 
 }
