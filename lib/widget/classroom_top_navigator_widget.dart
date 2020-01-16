@@ -37,41 +37,49 @@ class ClassRoomTopNavigatorWidget extends StatelessWidget {
 
   final List navigatorList = [
     {
+      'id':0,
       'image': 0xe63e,
       'itemname': "公告",
       'backgroundColor':Colors.lightBlue
     },
     {
+      'id':1,
       'image': 0xe604,
       'itemname': "资料",
       'backgroundColor':Colors.blueAccent
     },
     {
+      'id':2,
       'image': 0xe6c6,
       'itemname': "话题",
       'backgroundColor':Colors.lightBlueAccent
     },
     {
+      'id':3,
       'image': 0xe602,
       'itemname': "考勤",
       'backgroundColor':Colors.blue.withGreen(100)
     },
     {
+      'id':4,
       'image': 0xe61b,
       'itemname': "复习包",
       'backgroundColor':Colors.lightBlue.shade400
     },
     {
+      'id':5,
       'image': 0xe6c4,
       'itemname': "作业",
       'backgroundColor':Colors.lightBlue.shade900
     },
     {
+      'id':6,
       'image': 0xe69d,
       'itemname': "测试",
       'backgroundColor':Colors.green.withOpacity(0.5)
     },
     {
+      'id':7,
       'image': 0xe60f,
       'itemname': "视频",
       'backgroundColor':Colors.green.withBlue(200)
@@ -81,7 +89,14 @@ class ClassRoomTopNavigatorWidget extends StatelessWidget {
   Widget _gridViewItemUI(BuildContext context, item,{Color backgroundColor}) {
     return InkWell(
       onTap: () {
-        //TODO q
+        //TODO 处理
+        int type=item['id'];
+        switch(type){
+          case 0:{
+            print("hahahha ");
+            break;
+          }
+        }
       },
       child: Column(
         children: <Widget>[

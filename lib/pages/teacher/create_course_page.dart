@@ -32,8 +32,8 @@ class CreateCoursePage extends StatelessWidget {
   ///是否是编辑页面，默认- 否
   bool isEditPage;
   String courseTitle;
-  String courseNum;
-  String imageUrl;
+  String courseNum='';
+  String imageUrl='';
   String selBgkColor = '';
 
   //TabController _controller;
@@ -289,7 +289,6 @@ class CreateCoursePage extends StatelessWidget {
                 selectCount: 1,
                 showCamera: true,
                 compressSize: 500,
-
                 ///超过500KB 将压缩图片
                 uiConfig: UIConfig(uiThemeColor: Color(0xffff0f50)),
                 cropConfig: CropConfig(enableCrop: true, width: 1, height: 1));

@@ -44,23 +44,26 @@ class UserSubDto {
   String workId;
   String classId;
   String time;
-
+  String faculty; //院系
+  String teach; //所授课程
+  String profession; //专业
   UserSubDto(
       {this.schoolName,
-        this.realName,
-        this.role,
-        this.nickname,
-        this.sex,
-        this.faceImage,
-        this.faceImageBig,
-        this.stuId,
-        this.workId,
-        this.classId,
-        this.time});
+      this.realName,
+      this.role,
+      this.nickname,
+      this.sex,
+      this.faceImage,
+      this.faceImageBig,
+      this.stuId,
+      this.workId,
+      this.classId,
+      this.time});
+
 
   @override
   String toString() {
-    return 'UserSubDto{schoolName: $schoolName, realName: $realName, role: $role, nickname: $nickname, sex: $sex, faceImage: $faceImage, faceImageBig: $faceImageBig, stuId: $stuId, workId: $workId, classId: $classId, time: $time}';
+    return 'UserSubDto{schoolName: $schoolName, realName: $realName, role: $role, nickname: $nickname, sex: $sex, faceImage: $faceImage, faceImageBig: $faceImageBig, stuId: $stuId, workId: $workId, classId: $classId, time: $time, faculty: $faculty, teach: $teach, profession: $profession}';
   }
 
   UserSubDto.fromJson(Map<String, dynamic> json) {
@@ -75,6 +78,9 @@ class UserSubDto {
     workId = json['workId'];
     classId = json['classId'];
     time = json['time'];
+    faculty=json['faculty'];
+    teach=json['teach'];
+    profession=json['profession'];
   }
 
   Map<String, dynamic> toJson() {
@@ -90,6 +96,9 @@ class UserSubDto {
     data['workId'] = this.workId;
     data['classId'] = this.classId;
     data['time'] = this.time;
+    data['faculty']=this.faculty;
+    data['teach']=this.teach;
+    data['profession']=this.profession;
     return data;
   }
 }

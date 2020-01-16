@@ -47,20 +47,30 @@ Widget Index_popButtom(context, {List<IndexBuildPopupMenuItem> list}) {
     onSelected: (String selected) {
       switch (selected) {
         case 'join_course':
-          {///加课
+          {
+            ///加课
             Provide.value<CourseProvide>(context).code = Codes.def;
             Application.router.navigateTo(context, Routes.joinCoursePage,
                 transition: TransitionType.inFromRight);
             break;
           }
         case 'create_course':
-          {//TODO 创建课程
-            Provide.value<CreateCourseProvide>(context).InitStatus();///初始化创建页面的控件状态
-            Application.router.navigateTo(context, Routes.createCoursePage+'?titlePage=${Uri.encodeComponent('创建课程')}').then((onValue){
+          {
+            //TODO 创建课程
+            Provide.value<CreateCourseProvide>(context).InitStatus();
+
+            ///初始化创建页面的控件状态
+            Application.router
+                .navigateTo(
+                    context,
+                    Routes.createCoursePage +
+                        '?titlePage=${Uri.encodeComponent('创建课程')}',
+                    transition: TransitionType.inFromRight)
+                .then((onValue) {
               print("Routes.createCoursePage: ${onValue}");
-              if(onValue!=null){
-                 Course course=onValue;
-                 Provide.value<CourseTeacherProvide>(context).addCourse(course);
+              if (onValue != null) {
+                Course course = onValue;
+                Provide.value<CourseTeacherProvide>(context).addCourse(course);
               }
             });
             break;

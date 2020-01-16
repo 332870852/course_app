@@ -32,8 +32,18 @@ class UserProvide with ChangeNotifier {
 
   ///修改的字段
   var modif='';
-  ///
+  /// 性别
   int sex;
+
+  ///////////////控件/////////////
+   ///对话框确认按钮的状态
+  int dialogState=0;  //0-默认值,1-加载中，2-失败
+
+  void ChangeDialogState(int state){
+    dialogState=state;
+    notifyListeners();
+  }
+  ///////////////////////////////
 
   ///获取课堂头像
   Future<List<UserHeadImage>> getUserHeadImage(List ids) async {

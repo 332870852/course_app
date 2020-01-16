@@ -63,7 +63,9 @@ class IdentityVo {
   String workId;
   String classId;
   String time;
-
+  String faculty; //院系
+  String teach; //所授课程
+  String profession; //专业
   IdentityVo(
       {this.identityId,
         this.schoolName,
@@ -74,6 +76,11 @@ class IdentityVo {
         this.classId,
         this.time});
 
+  @override
+  String toString() {
+    return 'IdentityVo{identityId: $identityId, schoolName: $schoolName, role: $role, realName: $realName, stuId: $stuId, workId: $workId, classId: $classId, time: $time, faculty: $faculty, teach: $teach, profession: $profession}';
+  }
+
   IdentityVo.fromJson(Map<String, dynamic> json) {
     identityId = json['identityId'];
     schoolName = json['schoolName'];
@@ -83,6 +90,9 @@ class IdentityVo {
     workId = json['workId'];
     classId = json['classId'];
     time = json['time'];
+    faculty=json['faculty'];
+    teach=json['teach'];
+    profession=json['profession'];
   }
 
   Map<String, dynamic> toJson() {
@@ -95,6 +105,9 @@ class IdentityVo {
     data['workId'] = this.workId;
     data['classId'] = this.classId;
     data['time'] = this.time;
+    data['faculty']=this.faculty;
+    data['teach']=this.teach;
+    data['profession']=this.profession;
     return data;
   }
 }

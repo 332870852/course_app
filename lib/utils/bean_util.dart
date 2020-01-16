@@ -16,6 +16,9 @@ class BeanUtil{
     userSubDto.realName=suor.identityVo.realName;
     userSubDto.stuId=suor.identityVo.stuId;
     userSubDto.classId=suor.identityVo.classId;
+    userSubDto.faculty=suor.identityVo.faculty;
+    userSubDto.teach=suor.identityVo.teach;
+    userSubDto.profession=suor.identityVo.profession;
     return userSubDto;
   }
 }

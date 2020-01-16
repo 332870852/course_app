@@ -92,19 +92,9 @@ class _ClassRoomPageState extends State<ClassRoomPage> {
                   : widget.classtitle,
               joinCode: widget.joinCode,
             ),
-//            SingleChildScrollView(
-//              child: Column(
-//                children: <Widget>[
-//                  ClassRoomTitleWidget(),
-//                ],
-//              ),
-//            ),
+
             ClassRoomTopNavigatorWidget(),
-//            Column(
-//              children: <Widget>[
-//                ClassRoomTopNavigatorWidget(),
-//              ],
-//            ),
+
             BottomTabBarWidget(),
           ],
         ));

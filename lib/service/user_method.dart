@@ -46,7 +46,7 @@ class UserMethod {
   }
 
   ///修改个人信息
-  static Future<ResponseModel> updateUser(
+  static Future<dynamic> updateUser(
       {@required userId, @required UserSubDto userSubDto}) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('userId', () => userId.toString());
@@ -65,13 +65,14 @@ class UserMethod {
       ResponseModel responseModel = ResponseModel.fromJson(respData.data);
       if (responseModel.code == 1) {
         print(responseModel.data);
-        return responseModel;
+        return responseModel.data;
       } else {
         throw responseModel.errors[0];
       }
     }catch (e) {
       print("系统错误");
     }
+    return false;
   }
 
   ///上传头像图片

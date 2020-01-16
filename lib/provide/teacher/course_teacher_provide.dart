@@ -25,7 +25,8 @@ class CourseTeacherProvide with ChangeNotifier {
 
   ///获取网络课程数据
   Future<List<Course>> teacher_getCoursePage(userId) async {
-    print(curssor);
+
+    curssor = Curssor(1, 1, 5);
     ResponseModel responseModel = await TeacherMethod.getCoursePage(
       userId: userId,
     );

@@ -25,6 +25,7 @@ import 'package:image_pickers/CropConfig.dart';
 import 'package:image_pickers/Media.dart';
 import 'package:image_pickers/UIConfig.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:common_utils/common_utils.dart';
 
 class UserInfoPage extends StatelessWidget {
   @override
@@ -185,14 +186,19 @@ class UserInfoPage extends StatelessWidget {
                           schoolName: data.userInfoVo.identityVo.schoolName,
                           workId: data.userInfoVo.identityVo.workId,
                           classId: data.userInfoVo.identityVo.classId,
-                          enterTime: data.userInfoVo.identityVo.time);
+                          enterTime: '${data.userInfoVo.identityVo.time}',
+                          faculty: data.userInfoVo.identityVo.faculty,
+                          courseTaught: data.userInfoVo.identityVo.teach,
+                          profession: data.userInfoVo.identityVo.profession);
                     } else {
-                      return student(context,
-                          data: data.userInfoVo,
-                          schoolName: data.userInfoVo.identityVo.schoolName,
-                          studentId: data.userInfoVo.identityVo.stuId,
-                          classId: data.userInfoVo.identityVo.classId,
-                          enterTime: data.userInfoVo.identityVo.time);
+                      return student(
+                        context,
+                        data: data.userInfoVo,
+                        schoolName: data.userInfoVo.identityVo.schoolName,
+                        studentId: data.userInfoVo.identityVo.stuId,
+                        classId: data.userInfoVo.identityVo.classId,
+                        enterTime: '${data.userInfoVo.identityVo.time}',
+                      );
                     }
                   },
                 ),
@@ -208,7 +214,7 @@ class UserInfoPage extends StatelessWidget {
 
   ///学生列表
   Widget student(context,
-      {UserInfoVo data, studentId, schoolName, classId, enterTime}) {
+      {UserInfoVo data, studentId, schoolName, classId, String enterTime}) {
     String schoolName_d = schoolName;
     String classId_d = classId;
     if (schoolName != null && schoolName.length > 12) {
@@ -305,9 +311,16 @@ class UserInfoPage extends StatelessWidget {
               '学生',
               style: TextStyle(color: Colors.black26, fontSize: 20),
             ),
-            onTap: () {
+            onTap: () async {
               //TODO
               print('身份');
+              var b = await showCupertinoDialog(
+                  context: context,
+                  builder: (context) {
+                    Provide.value<UserProvide>(context).ChangeDialogState(0);
+                    return modifIdentity(context,
+                        currentRole: Provide.value<UserProvide>(context).role);
+                  });
             }),
         userInfoItem(
             title: '班级',
@@ -344,7 +357,9 @@ class UserInfoPage extends StatelessWidget {
             title: '入学时间',
             height: 50,
             widget: Text(
-              (enterTime != null ? enterTime.toString().substring(0, 10) : ''),
+              (enterTime.isNotEmpty && enterTime.length > 9
+                  ? enterTime.toString().substring(0, 10)
+                  : ''),
               style: TextStyle(color: Colors.black26, fontSize: 20),
               overflow: TextOverflow.ellipsis,
             ),
@@ -359,7 +374,7 @@ class UserInfoPage extends StatelessWidget {
                 ),
                 maxTime:
                     DateTime(DateTime.now().year + 3, DateTime.now().month),
-                currentTime: DateTime.parse(enterTime),
+                currentTime: DateTime.tryParse(enterTime),
                 locale: LocaleType.zh,
                 onConfirm: (date) {
                   print(date);
@@ -462,9 +477,15 @@ class UserInfoPage extends StatelessWidget {
               '教师',
               style: TextStyle(color: Colors.black26, fontSize: 20),
             ),
-            onTap: () {
-              //TODO
-              print('学校');
+            onTap: () async {
+              //TODO 身份切换
+              var b = await showCupertinoDialog(
+                  context: context,
+                  builder: (context) {
+                    Provide.value<UserProvide>(context).ChangeDialogState(0);
+                    return modifIdentity(context,
+                        currentRole: Provide.value<UserProvide>(context).role);
+                  });
             }),
         userInfoItem(
             title: '班级',
@@ -500,13 +521,15 @@ class UserInfoPage extends StatelessWidget {
             title: '入学时间',
             height: 50,
             widget: Text(
-              (enterTime != null ? enterTime : ''),
+              (enterTime.isNotEmpty && enterTime.length > 9
+                  ? enterTime.toString().substring(0, 10)
+                  : ''),
               style: TextStyle(color: Colors.black26, fontSize: 20),
             ),
             onTap: () async {
               //TODO
               debugPrint('入学时间');
-              DateTime date = await DatePicker.showDatePicker(
+              DatePicker.showDatePicker(
                 context,
                 minTime: DateTime(
                   DateTime.now().year - 3,
@@ -514,9 +537,17 @@ class UserInfoPage extends StatelessWidget {
                 ),
                 maxTime:
                     DateTime(DateTime.now().year + 3, DateTime.now().month),
+                currentTime: DateTime.tryParse(enterTime),
                 locale: LocaleType.zh,
                 onConfirm: (date) {
-                  // print(date);
+                  print(date);
+                  UserSubDto userSubDto = UserSubDto();
+                  BeanUtil.UserInfoVo_TO_UserSubDto(data, userSubDto);
+                  String t = date.toIso8601String();
+                  userSubDto.time = t;
+                  UserInfoVo newUserInfo = data;
+                  newUserInfo.identityVo.time = t;
+                  _changUserinfo(context, newUserInfo, userSubDto);
                 },
               );
             }),
@@ -527,9 +558,30 @@ class UserInfoPage extends StatelessWidget {
               (faculty != null ? faculty : ''),
               style: TextStyle(color: Colors.black26, fontSize: 20),
             ),
-            onTap: () {
+            onTap: () async{
               //TODO
               print('院系');
+              bool b = await NavugatorPush(context,
+                  page: ChangeUserInfoPage(
+                    appBarText: '完善院系',
+                    defaultvalue: faculty,
+                    info: '完善院系信息',
+                    textInputFormat: [
+                      WhitelistingTextInputFormatter(
+                          RegExp("[a-zA-Z]|[\u4e00-\u9fa5]|[0-9]")),
+                      LengthLimitingTextInputFormatter(20),
+                    ],
+                  ));
+              if (b) {
+                print(data);
+                var faculty = Provide.value<UserProvide>(context).modif;
+                UserSubDto userSubDto = UserSubDto();
+                BeanUtil.UserInfoVo_TO_UserSubDto(data, userSubDto);
+                userSubDto.faculty = faculty;
+                UserInfoVo newUserInfo = data;
+                newUserInfo.identityVo.faculty = faculty;
+                _changUserinfo(context, newUserInfo, userSubDto);
+              }
             }),
         userInfoItem(
             title: '所授课程',
@@ -539,9 +591,30 @@ class UserInfoPage extends StatelessWidget {
               style: TextStyle(color: Colors.black26, fontSize: 20),
               overflow: TextOverflow.ellipsis,
             ),
-            onTap: () {
+            onTap: () async{
               //TODO
               print('所授课程');
+              bool b = await NavugatorPush(context,
+                  page: ChangeUserInfoPage(
+                    appBarText: '完善所授课程',
+                    defaultvalue: courseTaught,
+                    info: '完善所授课程',
+                    textInputFormat: [
+                      WhitelistingTextInputFormatter(
+                          RegExp("[a-zA-Z]|[\u4e00-\u9fa5]|[0-9]")),
+                      LengthLimitingTextInputFormatter(20),
+                    ],
+                  ));
+              if (b) {
+                print(data);
+                var courseTaught = Provide.value<UserProvide>(context).modif;
+                UserSubDto userSubDto = UserSubDto();
+                BeanUtil.UserInfoVo_TO_UserSubDto(data, userSubDto);
+                userSubDto.teach = courseTaught;
+                UserInfoVo newUserInfo = data;
+                newUserInfo.identityVo.teach = faculty;
+                _changUserinfo(context, newUserInfo, userSubDto);
+              }
             }),
         userInfoItem(
             title: '专业',
@@ -551,9 +624,30 @@ class UserInfoPage extends StatelessWidget {
               style: TextStyle(color: Colors.black26, fontSize: 20),
               overflow: TextOverflow.ellipsis,
             ),
-            onTap: () {
+            onTap: () async{
               //TODO
               print('专业');
+              bool b = await NavugatorPush(context,
+                  page: ChangeUserInfoPage(
+                    appBarText: '完善专业',
+                    defaultvalue: profession,
+                    info: '完善专业信息',
+                    textInputFormat: [
+                      WhitelistingTextInputFormatter(
+                          RegExp("[a-zA-Z]|[\u4e00-\u9fa5]|[0-9]")),
+                      LengthLimitingTextInputFormatter(20),
+                    ],
+                  ));
+              if (b) {
+                print(data);
+                var profession = Provide.value<UserProvide>(context).modif;
+                UserSubDto userSubDto = UserSubDto();
+                BeanUtil.UserInfoVo_TO_UserSubDto(data, userSubDto);
+                userSubDto.teach = profession;
+                UserInfoVo newUserInfo = data;
+                newUserInfo.identityVo.profession = profession;
+                _changUserinfo(context, newUserInfo, userSubDto);
+              }
             }),
       ],
     );
@@ -565,70 +659,39 @@ class UserInfoPage extends StatelessWidget {
       @required String title,
       Widget widget,
       GestureTapCallback onTap}) {
-    return SelectItemWidget(height: height,title: title,widget: widget,onTap: onTap,);
-//    return Material(
-//      color: Colors.white,
-//      child: Ink(
-//        child: InkWell(
-//          onTap: onTap,
-//          child: Row(
-//            children: <Widget>[
-//              SizedBox(
-//                width: 16,
-//              ),
-//              Expanded(
-//                  child: Container(
-//                height: height,
-//                decoration: BoxDecoration(
-//                    border: Border(
-//                        bottom: BorderSide(
-//                            color: Color(Constants.DividerColor),
-//                            width: Constants.DividerWith))),
-//                child: Row(
-//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                  children: <Widget>[
-//                    Text(
-//                      title,
-//                      style: TextStyle(
-//                          color: Colors.black,
-//                          fontSize: ScreenUtil().setSp(40),
-//                          fontWeight: FontWeight.w500),
-//                    ),
-//                    Row(
-//                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                      children: <Widget>[
-//                        (widget != null) ? widget : SizedBox(),
-//                        Icon(
-//                          Icons.chevron_right,
-//                          color: Colors.black26,
-//                          size: ScreenUtil().setSp(50),
-//                        ),
-//                      ],
-//                    ),
-//                  ],
-//                ),
-//              )),
-//            ],
-//          ),
-//        ),
-//      ),
-//    );
+    return SelectItemWidget(
+      height: height,
+      title: title,
+      widget: widget,
+      onTap: onTap,
+    );
   }
 
-  _changUserinfo(context, UserInfoVo newUserInfo, UserSubDto userSubDto) async {
+  Future<bool> _changUserinfo(
+      context, UserInfoVo newUserInfo, UserSubDto userSubDto,
+      {bool dipalyLoding = true}) async {
     //TODO 修改个人信息
-    ProgressDialog pr=ProgressDialogWdiget.showProgressStatic(context,message: '请稍后..',type: ProgressDialogType.Normal,progressWidget: CupertinoActivityIndicator(radius: 20.0,));
-    UserMethod.updateUser(userId: Provide.value<UserProvide>(context).userId, userSubDto: userSubDto)
-        .then((onValue) {
-      // print("/////${onValue.data}");
-      print(onValue);
-      if (onValue.data) {
-        //print("00000${onValue.data}");
-        Provide.value<UserProvide>(context).saveUserInfo(newUserInfo);
+    ProgressDialog pr;
+    if (dipalyLoding) {
+      pr = ProgressDialogWdiget.showProgressStatic(context,
+          message: '请稍后..',
+          type: ProgressDialogType.Normal,
+          progressWidget: CupertinoActivityIndicator(
+            radius: 20.0,
+          ));
+    }
+    bool b = await UserMethod.updateUser(
+            userId: Provide.value<UserProvide>(context).userId,
+            userSubDto: userSubDto)
+        .whenComplete(() {
+      if (dipalyLoding && pr.isShowing()) {
+        pr.dismiss();
       }
-    }).whenComplete((){
-       pr.dismiss();
     });
+    if (b) {
+       Provide.value<UserProvide>(context).saveUserInfo(newUserInfo);
+    }
+    return b;
   }
 
   ///dialog
@@ -731,25 +794,89 @@ class UserInfoPage extends StatelessWidget {
         ///超过500KB 将压缩图片
         uiConfig: UIConfig(uiThemeColor: Color(0xffff0f50)),
         cropConfig: CropConfig(enableCrop: true, width: 1, height: 1));
-    ProgressDialog pr=ProgressDialogWdiget.showProgressStatic(context,message: '图片上传',maxProgress: 100);
-   // print(_listImagePaths[0].path);
+    ProgressDialog pr = ProgressDialogWdiget.showProgressStatic(context,
+        message: '图片上传', maxProgress: 100);
+    // print(_listImagePaths[0].path);
     UserMethod.uploadFaceFile(Provide.value<UserProvide>(context).userId,
-            imagePath: _listImagePaths[0].path,onSendProgress: (int count,int total){
+        imagePath: _listImagePaths[0].path,
+        onSendProgress: (int count, int total) {
       ///更新进度条
-          ProgressDialogWdiget.updateProgressStatic(pr, progress: (count/total)*100,message: '上传中...');
-        })
-        .then((userHeadImage) {
+      ProgressDialogWdiget.updateProgressStatic(pr,
+          progress: (count / total) * 100, message: '上传中...');
+    }).then((userHeadImage) {
       if (userHeadImage != null) {
-        Provide.value<UserProvide>(context).userInfoVo.faceImage=userHeadImage.faceImage;
+        Provide.value<UserProvide>(context).userInfoVo.faceImage =
+            userHeadImage.faceImage;
         Provide.value<UserProvide>(context).userInfoVo.faceImageBig =
             userHeadImage.faceImageBig;
         newUserInfo.faceImageBig = userHeadImage.faceImageBig;
         newUserInfo.faceImage = userHeadImage.faceImageBig;
         Provide.value<UserProvide>(context).saveUserInfo(newUserInfo);
       }
-    }).whenComplete((){
+    }).whenComplete(() {
       ///关闭进度条
       pr.dismiss();
     });
+  }
+
+  ///切换身份
+  Widget modifIdentity(context, {@required int currentRole}) {
+    String identity = '';
+    String mod = '';
+    int modint;
+    if (currentRole == 2) {
+      identity = '教师';
+      mod = '学生';
+      modint = 3;
+    } else {
+      identity = '学生';
+      mod = '教师';
+      modint = 2;
+    }
+    return CupertinoAlertDialog(
+      title: Text('切换身份'),
+      content: Text('当前的身份是(${identity}),是否确定切换成(${mod})身份?'),
+      actions: <Widget>[
+        CupertinoDialogAction(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('取消'),
+          textStyle: TextStyle(color: Colors.grey),
+        ),
+        Provide<UserProvide>(
+          builder: (context, child, data) {
+            return CupertinoDialogAction(
+              onPressed: () async {
+                Provide.value<UserProvide>(context).ChangeDialogState(1);
+                UserSubDto userSubDto = UserSubDto();
+                BeanUtil.UserInfoVo_TO_UserSubDto(data.userInfoVo, userSubDto);
+                userSubDto.role = modint;
+                UserInfoVo newUserInfo = data.userInfoVo;
+                newUserInfo.role = modint;
+                newUserInfo.identityVo.role = modint;
+                bool b = await _changUserinfo(context, newUserInfo, userSubDto,
+                    dipalyLoding: false);
+                if (b) {
+                  ///再次刷新用户资料
+                  Provide.value<UserProvide>(context).getUserInfo(
+                      userId: Provide.value<UserProvide>(context).userId);
+                  Navigator.pop(context);
+                } else {
+                  Provide.value<UserProvide>(context).ChangeDialogState(2);
+                }
+
+                ///加载中
+              },
+              child: (data.dialogState == 0)
+                  ? Text('确认')
+                  : (data.dialogState == 1)
+                      ? CupertinoActivityIndicator()
+                      : Text('重试'),
+            );
+          },
+        ),
+      ],
+    );
   }
 }
