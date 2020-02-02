@@ -20,8 +20,8 @@ import 'package:provide/provide.dart';
 
 class AnnouncementPage extends StatefulWidget {
   final String courseId;
-
-  AnnouncementPage({Key key, @required this.courseId}) : super(key: key);
+  final String teacherId;
+  AnnouncementPage({Key key, @required this.courseId,@required this.teacherId}) : super(key: key);
 
   @override
   _AnnouncementPageState createState() => _AnnouncementPageState();
@@ -58,6 +58,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool roleDis=(Provide.value<UserProvide>(context).userId==widget.teacherId);
     return Provide<ReplyListProvide>(
       builder: (context, child, data) {
         announceList = data.announceList;
@@ -80,7 +81,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
           //floatingActionButtonAnimator: ,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: Visibility(
+          floatingActionButton: (roleDis)?Visibility(
             child: FloatingActionButton(
                 child: Icon(Icons.border_color),
                 onPressed: () {
@@ -91,7 +92,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                           '?courseId=${widget.courseId}');
                 }),
             visible: data.display,
-          ),
+          ):null,
           body: Padding(
             padding: EdgeInsets.only(
               top: 10,

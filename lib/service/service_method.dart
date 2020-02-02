@@ -36,7 +36,7 @@ Future<Response> get(
     Map queryParameters,
     ProgressCallback onReceiveProgress}) async {
   var url = serviceUrl + method;
-  print(url);
+  debugPrint(url);
   Map<String, dynamic> map = new Map();
   if (queryParameters != null) {
     map.addAll(queryParameters);

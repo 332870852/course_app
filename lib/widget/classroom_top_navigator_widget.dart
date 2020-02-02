@@ -7,10 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 ///顶部导航
 class ClassRoomTopNavigatorWidget extends StatelessWidget {
   final String courseId;
-  final String userId;
-
+  final String teacherId;
   ClassRoomTopNavigatorWidget(
-      {Key key, @required this.courseId, @required this.userId})
+      {Key key, @required this.courseId,@required this.teacherId})
       : super(key: key);
 
   @override
@@ -103,7 +102,7 @@ class ClassRoomTopNavigatorWidget extends StatelessWidget {
           case 0:
             {
               Application.router.navigateTo(
-                  context, Routes.announcementPage + '?courseId=${courseId}');
+                  context, Routes.announcementPage + '?courseId=${courseId}&teacherId=${teacherId}');
               break;
             }
         }

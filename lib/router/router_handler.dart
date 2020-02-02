@@ -63,7 +63,7 @@ Handler createCourseHanderl = Handler(
 Handler announcementHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   var courseId = (params['courseId'] != null) ? params['courseId'].first : '';
-
+  var teacherId=(params['teacherId'] != null) ? params['teacherId'].first : '';
   ///dio
   UserMethod.getAnnouncementPage(
           userId: Provide.value<UserProvide>(context).userId,
@@ -76,6 +76,7 @@ Handler announcementHanderl = Handler(
   });
   return AnnouncementPage(
     courseId: courseId,
+    teacherId: teacherId,
   );
 });
 

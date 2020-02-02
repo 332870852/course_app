@@ -93,7 +93,7 @@ class _ClassRoomPageState extends State<ClassRoomPage> {
               joinCode: widget.joinCode,
             ),
 
-            ClassRoomTopNavigatorWidget(courseId: widget.courseId,userId: widget.teacherId,),
+            ClassRoomTopNavigatorWidget(courseId: widget.courseId,teacherId: widget.teacherId,),
 
             BottomTabBarWidget(),
           ],
