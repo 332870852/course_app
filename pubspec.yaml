@@ -78,6 +78,10 @@ flutter:
     - assets/img/性别男.png
     - assets/img/add.png
     - assets/img/添加相片.png
+    - assets/img/公告-暂无内容.png
+    - assets/img/暂无公告.png
+    - assets/img/暂无公告icon.png
+    - assets/img/暂无内容@2x.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

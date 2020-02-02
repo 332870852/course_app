@@ -21,7 +21,9 @@ import 'package:provide/provide.dart';
 class AnnouncementPage extends StatefulWidget {
   final String courseId;
   final String teacherId;
-  AnnouncementPage({Key key, @required this.courseId,@required this.teacherId}) : super(key: key);
+
+  AnnouncementPage({Key key, @required this.courseId, @required this.teacherId})
+      : super(key: key);
 
   @override
   _AnnouncementPageState createState() => _AnnouncementPageState();
@@ -58,7 +60,8 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool roleDis=(Provide.value<UserProvide>(context).userId==widget.teacherId);
+    bool roleDis =
+        (Provide.value<UserProvide>(context).userId == widget.teacherId);
     return Provide<ReplyListProvide>(
       builder: (context, child, data) {
         announceList = data.announceList;
@@ -81,18 +84,20 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
           //floatingActionButtonAnimator: ,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: (roleDis)?Visibility(
-            child: FloatingActionButton(
-                child: Icon(Icons.border_color),
-                onPressed: () {
-                  //TODO  创建公告
-                  Application.router.navigateTo(
-                      context,
-                      Routes.createAnnouncePage +
-                          '?courseId=${widget.courseId}');
-                }),
-            visible: data.display,
-          ):null,
+          floatingActionButton: (roleDis)
+              ? Visibility(
+                  child: FloatingActionButton(
+                      child: Icon(Icons.border_color),
+                      onPressed: () {
+                        //TODO  创建公告
+                        Application.router.navigateTo(
+                            context,
+                            Routes.createAnnouncePage +
+                                '?courseId=${widget.courseId}');
+                      }),
+                  visible: data.display,
+                )
+              : null,
           body: Padding(
             padding: EdgeInsets.only(
               top: 10,
@@ -106,9 +111,19 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                     itemCount: announceList.length,
                   )
                 : Center(
-                    child: Text(
-                      '暂无公告',
-                      style: TextStyle(fontSize: ScreenUtil().setSp(35)),
+                    child: Container(
+                      height: 200,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Image.asset('assets/img/暂无内容@2x.png'),
+                          Text('暂无公告',
+                              style: TextStyle(
+                                color: Colors.black26,
+                                fontSize: ScreenUtil().setSp(35),
+                              )),
+                        ],
+                      ),
                     ),
                   ),
           ),
@@ -248,7 +263,10 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
   }
 
   ///学生点击底部更多
-  Future _openModalBottomSheet(context, AnnouncementVo item,) async {
+  Future _openModalBottomSheet(
+    context,
+    AnnouncementVo item,
+  ) async {
     final option = await showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -285,7 +303,8 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
           break;
         }
       case 1:
-        {//TODO 删除公告
+        {
+          //TODO 删除公告
           var b = await showCupertinoDialog(
               context: context,
               builder: (context) {
@@ -301,7 +320,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                   isLoding: false,
                 );
               });
-          if (b==1) {
+          if (b == 1) {
             TeacherMethod.delAnnouncement(
                     announceId: item.announceId.toString(),
                     userId: Provide.value<UserProvide>(context).userId)
