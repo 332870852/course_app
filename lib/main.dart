@@ -4,6 +4,7 @@ import 'package:course_app/provide/course_provide.dart';
 import 'package:course_app/provide/create_course_provider.dart';
 import 'package:course_app/provide/currentIndex_provide.dart';
 import 'package:course_app/provide/teacher/course_teacher_provide.dart';
+import 'package:course_app/provide/reply_list_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
@@ -25,12 +26,14 @@ void main() {
   var userProvide = UserProvide();
   var createCourseProvide = CreateCourseProvide();
   var courseTeacherProvide = CourseTeacherProvide();
+  var replyListProvide = ReplyListProvide();
   providers
     ..provide(Provider<CurrentIndexProvide>.value(currentIndexProvide))
     ..provide(Provider<BottomTabBarProvide>.value(bottomTabBarProvide))
     ..provide(Provider<UserProvide>.value(userProvide))
     ..provide(Provider<CreateCourseProvide>.value(createCourseProvide))
     ..provide(Provider<CourseTeacherProvide>.value(courseTeacherProvide))
+    ..provide(Provider<ReplyListProvide>.value(replyListProvide))
     ..provide(Provider<CourseProvide>.value(courseProvide));
   runApp(ProviderNode(child: MyApp(), providers: providers));
 }

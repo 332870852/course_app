@@ -25,13 +25,13 @@ class CupertionDialog extends StatelessWidget {
 
   CupertionDialog(
       {Key key,
-      @required this.title,
-      this.content,
-      this.onOk,
-      this.onCancel,
-      this.btnOkColor = Colors.blue,
-      this.btnCancelColor = Colors.grey,
-      this.isLoding = false})
+        @required this.title,
+        this.content,
+        this.onOk,
+        this.onCancel,
+        this.btnOkColor = Colors.blue,
+        this.btnCancelColor = Colors.grey,
+        this.isLoding = false})
       : super(key: key);
 
   @override

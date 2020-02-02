@@ -11,6 +11,7 @@ import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:course_app/service/student_method.dart';
 import 'package:course_app/service/teacher_method.dart';
+import 'package:course_app/widget/bottom_menu_item.dart';
 import 'package:course_app/widget/cupertion_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -63,13 +64,13 @@ class CourseItemWidget extends StatelessWidget {
             height: 160.0,
             child: Column(
               children: <Widget>[
-                _bottomItem(context, '置顶课程', 0),
-                _bottomItem(context, '退出课程', 1),
+                bottomItem(context, '置顶课程', 0),
+                bottomItem(context, '退出课程', 1),
                 Container(
                   height: 10,
                   color: Colors.grey.shade300,
                 ),
-                _bottomItem(context, '取消', 2),
+                bottomItem(context, '取消', 2),
               ],
             ),
           );
@@ -133,14 +134,14 @@ class CourseItemWidget extends StatelessWidget {
             height: 210.0,
             child: Column(
               children: <Widget>[
-                _bottomItem(context, '置顶课程', 0),
-                _bottomItem(context, '编辑课程', 1),
-                _bottomItem(context, '删除课程', 2),
+                bottomItem(context, '置顶课程', 0),
+                bottomItem(context, '编辑课程', 1),
+                bottomItem(context, '删除课程', 2),
                 Container(
                   height: 10,
                   color: Colors.grey.shade300,
                 ),
-                _bottomItem(context, '取消', 3),
+                bottomItem(context, '取消', 3),
               ],
             ),
           );
@@ -169,7 +170,6 @@ class CourseItemWidget extends StatelessWidget {
                   builder: (context) => CreateCoursePage(
                         titlePage: '编辑课程',
                         isEditPage: true,
-
                         ///是编辑页
                         courseId: item.courseId.toString(),
                         courseTitle: '${item.title}',
@@ -222,22 +222,7 @@ class CourseItemWidget extends StatelessWidget {
     }
   }
 
-  Widget _bottomItem(context, title, index) {
-    return Container(
-      height: ScreenUtil().setHeight(100),
-      width: ScreenUtil().width,
-      decoration: BoxDecoration(
-          border:
-              Border(bottom: BorderSide(width: 1.0, color: Colors.black12))),
-      child: InkWell(
-          onTap: () {
-            Navigator.pop(context, index);
-          },
-          child: Center(
-            child: Text(title),
-          )),
-    );
-  }
+
 
   ///首部
   Widget _headItem(
@@ -263,7 +248,6 @@ class CourseItemWidget extends StatelessWidget {
                   (bgkUrl != null) ? bgkUrl : '',
                   errorListener: () {
                     //TODO 背景图片
-                    print('56446*******4');
                   },
                 ),
                 fit: BoxFit.cover),

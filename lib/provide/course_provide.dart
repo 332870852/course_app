@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:course_app/model/Course.dart';
 import 'package:course_app/service/student_method.dart';
 import 'package:course_app/utils/ResponseModel.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum Codes {
   def,
@@ -12,7 +15,7 @@ enum Codes {
 
 class CourseProvide with ChangeNotifier {
   List<Course> courseList = [];
-
+  List<String> courseString=[];
   ///加课返回状态码
   Codes code = Codes.def;
 
@@ -41,6 +44,33 @@ class CourseProvide with ChangeNotifier {
     }
     return courseList;
   }
+
+//  ///保存course信息
+//  saveCourseInfo(List<Course> list) async {
+//    ///初始化SharedPreferences
+//    SharedPreferences prefs = await SharedPreferences.getInstance();
+//    ///把字符串进行encode操作，
+//    list.forEach((item){
+//    courseString.add(json.encode(item).toString());
+//    });
+//    prefs.setStringList('courseInfo', courseString);
+//    //进行持久化
+//    //notifyListeners();
+//  }
+//
+//  ///get 信息
+//  getCourseInfo()async{
+//    SharedPreferences prefs = await SharedPreferences.getInstance();
+//    //获得购物车中的商品,这时候是一个字符串
+//    courseString=prefs.getStringList('courseInfo');
+//    List<Course> tempList = [];
+//    courseString.forEach((item){
+//      Course course=Course.fromJson(json.decode(item.toString()));
+//      tempList.add(course);
+//    });
+//    courseList=tempList;
+//    return tempList;
+//  }
 
   ///修改状态
   changeCode({@required Codes codes}) {

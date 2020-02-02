@@ -865,7 +865,6 @@ class UserInfoPage extends StatelessWidget {
                 } else {
                   Provide.value<UserProvide>(context).ChangeDialogState(2);
                 }
-
                 ///加载中
               },
               child: (data.dialogState == 0)

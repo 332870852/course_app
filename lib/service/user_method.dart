@@ -1,6 +1,9 @@
 import 'package:course_app/config/service_url.dart';
+import 'package:course_app/data/announcement_vo.dart';
+import 'package:course_app/data/comment_vo.dart';
 import 'package:course_app/data/user_dto.dart';
 import 'package:course_app/data/user_head_image.dart';
+import 'package:course_app/data/user_info.dart';
 import 'package:course_app/model/Course.dart';
 import 'package:course_app/service/service_method.dart';
 import 'package:course_app/utils/ResponseModel.dart';
@@ -52,16 +55,15 @@ class UserMethod {
     map.putIfAbsent('userId', () => userId.toString());
     try {
       Response respData = await post(
-        method: userPath.servicePath['updateUser'],
-        requestmap: map,
-        data: userSubDto.toJson(),
-        connectOutCallBack: (){
-          Fluttertoast.showToast(
-            msg: '更改失败，服务器繁忙请稍后再试',
-            gravity: ToastGravity.BOTTOM,
-          );
-        }
-      );
+          method: userPath.servicePath['updateUser'],
+          requestmap: map,
+          data: userSubDto.toJson(),
+          connectOutCallBack: () {
+            Fluttertoast.showToast(
+              msg: '更改失败，服务器繁忙请稍后再试',
+              gravity: ToastGravity.BOTTOM,
+            );
+          });
       ResponseModel responseModel = ResponseModel.fromJson(respData.data);
       if (responseModel.code == 1) {
         print(responseModel.data);
@@ -69,7 +71,7 @@ class UserMethod {
       } else {
         throw responseModel.errors[0];
       }
-    }catch (e) {
+    } catch (e) {
       print("系统错误");
     }
     return false;
@@ -92,9 +94,10 @@ class UserMethod {
 
       try {
         Response respData = await post(
-            method: userPath.servicePath['uploadFaceFile'],
-            requestmap: map,//contentLength:formData.length
-            data: formData,onSendProgress: onSendProgress,);
+          method: userPath.servicePath['uploadFaceFile'],
+          requestmap: map, //contentLength:formData.length
+          data: formData, onSendProgress: onSendProgress,
+        );
         ResponseModel responseModel = ResponseModel.fromJson(respData.data);
         if (responseModel.code == 1) {
           print(responseModel.data);
@@ -107,7 +110,7 @@ class UserMethod {
           msg: '更改失败，服务器繁忙请稍后再试',
           gravity: ToastGravity.BOTTOM,
         );
-         print(e.msg);
+        print(e.msg);
       } catch (e) {
         print("系统错误");
       }
@@ -116,17 +119,21 @@ class UserMethod {
   }
 
   ///上传图片
-  static Future<UserHeadImage>uploadImage({@required String imagePath,ProgressCallback onSendProgress})async{
+  static Future<UserHeadImage> uploadImage(
+      {@required String imagePath, ProgressCallback onSendProgress}) async {
     File file = File(imagePath);
     if (file.existsSync()) {
       var name =
-      imagePath.substring(imagePath.lastIndexOf("/") + 1, imagePath.length);
+          imagePath.substring(imagePath.lastIndexOf("/") + 1, imagePath.length);
       FormData formData = FormData.fromMap({
         "file": MultipartFile.fromFileSync(imagePath, filename: name),
       });
       Response respData = await post(
-          method: userPath.servicePath['uploadImage'],//contentLength: formData.length
-          data: formData,onSendProgress: onSendProgress,);
+        method: userPath.servicePath['uploadImage'],
+        //contentLength: formData.length
+        data: formData,
+        onSendProgress: onSendProgress,
+      );
       ResponseModel responseModel = ResponseModel.fromJson(respData.data);
       if (responseModel.code == 1) {
         print(responseModel.data);
@@ -138,6 +145,92 @@ class UserMethod {
     return null;
   }
 
+  ///获取公告
+  static Future<List<AnnouncementVo>> getAnnouncementPage(
+      {@required String userId, @required String courseId}) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('userId', () => userId);
+    map.putIfAbsent('courseId', () => courseId);
+    try {
+      Response respData = await post(
+        method: userPath.servicePath['getAnnouncementPage'],
+        requestmap: map,
+      );
+      ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+      if (responseModel.code == 1) {
+        print(responseModel.data);
+        List<AnnouncementVo> annoList = [];
+        List<dynamic> list = responseModel.data;
+        list.forEach((item) {
+          annoList.add(AnnouncementVo.fromJson(item));
+        });
+        return annoList;
+      } else {
+        throw responseModel.errors[0];
+      }
+    } catch (e) {
+      print("系统错误: ${e}");
+    }
+    return null;
+  }
 
+  ///批量获取个人资料
+  static Future<List<UserInfoVo>> getEveryUserInfo(List<String> userId) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('userId', () => userId);
+    try {
+      Response respData = await post(
+        method: userPath.servicePath['getEveryUserInfo'],
+        requestmap: map,
+      );
+      ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+      if (responseModel.code == 1) {
+        print(responseModel.data);
+        List<UserInfoVo> userList = [];
+        List<dynamic> list = responseModel.data;
+        list.forEach((item) {
+          userList.add(UserInfoVo.fromJson(item));
+        });
+        return userList;
+      } else {
+        throw responseModel.errors[0];
+      }
+    } catch (e) {
+      print("系统错误: ${e}");
+    }
+    return null;
+  }
+
+  ///查看公告评论
+  static Future<List<ReplyList>> getReplyListPage(
+      String announceId, String userId,
+      {int pageNo=1, int pageSize=10}) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('userId', () => userId);
+    map.putIfAbsent('announceId', () => announceId);
+    map.putIfAbsent('pageNo', () => pageNo);
+    map.putIfAbsent('pageSize', () => pageSize);
+    try {
+      Response respData = await post(
+        method: userPath.servicePath['getReplyListPage'],
+        requestmap: map,
+      );
+      ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+      if (responseModel.code == 1) {
+        print(responseModel.data);
+        List<ReplyList> replyList = [];
+        List<dynamic> list = responseModel.data;
+        list.forEach((item) {
+          replyList.add(ReplyList.fromJson(item));
+        });
+        return replyList;
+      } else {
+        throw responseModel.errors[0];
+      }
+    } catch (e) {
+      print("系统错误: ${e}");
+    }
+    return null;
+  }
 
 }

@@ -1,4 +1,6 @@
 import 'package:course_app/config/service_url.dart';
+import 'package:course_app/data/announcement_dto.dart';
+import 'package:course_app/data/announcement_vo.dart';
 import 'package:course_app/data/course_do.dart';
 import 'package:course_app/model/Course.dart';
 import 'package:course_app/service/service_method.dart';
@@ -10,19 +12,20 @@ import 'package:flutter/material.dart';
 
 class TeacherMethod {
   ///创建课程
-  static Future<Course> createCourse(
-      {@required CourseDo courseDo}) async {
+  static Future<Course> createCourse({@required CourseDo courseDo}) async {
     print(courseDo);
-      Response respData = await post(
-          method: teacherPath.servicePath['createCourse'], data:  courseDo.toJson(),contentType: ContentType.json);
-      print(respData);
-      ResponseModel responseModel = ResponseModel.fromJson(respData.data);
-      if(responseModel.code==1){
-        Course course=Course.fromJson(responseModel.data);
-        return course;
-      }else{
-         throw responseModel.errors[0];
-      }
+    Response respData = await post(
+        method: teacherPath.servicePath['createCourse'],
+        data: courseDo.toJson(),
+        contentType: ContentType.json);
+    print(respData);
+    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+    if (responseModel.code == 1) {
+      Course course = Course.fromJson(responseModel.data);
+      return course;
+    } else {
+      throw responseModel.errors[0];
+    }
   }
 
   ///教师获取创建的课程
@@ -34,7 +37,8 @@ class TeacherMethod {
     map.putIfAbsent('pageSize', () => pageSize);
     print(userId);
     Response respData = await get(
-        method: teacherPath.servicePath['getCreateCoursesPage'], queryParameters:map);
+        method: teacherPath.servicePath['getCreateCoursesPage'],
+        queryParameters: map);
     print(respData);
     ResponseModel responseModel = ResponseModel.fromJson(respData.data);
     if (responseModel.code == 1) {
@@ -47,15 +51,18 @@ class TeacherMethod {
 
   //TODO test
   ///老师修改课堂
-  static Future<Course> updateCourse({String userId,@required CourseDo courseDo})async{
+  static Future<Course> updateCourse(
+      {String userId, @required CourseDo courseDo}) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('userId', () => userId);
     Response respData = await post(
-        method: teacherPath.servicePath['updateCourse'], requestmap:map,data: courseDo.toJson());
+        method: teacherPath.servicePath['updateCourse'],
+        requestmap: map,
+        data: courseDo.toJson());
     print(respData);
     ResponseModel responseModel = ResponseModel.fromJson(respData.data);
     if (responseModel.code == 1) {
-      Course course= Course.fromJson(responseModel.data);
+      Course course = Course.fromJson(responseModel.data);
       return course;
     } else {
       throw responseModel.errors[0];
@@ -64,12 +71,13 @@ class TeacherMethod {
 
   //TODO test
   ///删除课程
-  static Future<bool> deleteCourse({String userId,@required String courseId})async{
+  static Future<bool> deleteCourse(
+      {String userId, @required String courseId}) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('userId', () => userId);
     map.putIfAbsent('courseId', () => courseId);
     Response respData = await post(
-        method: teacherPath.servicePath['deleteCourse'], requestmap:map);
+        method: teacherPath.servicePath['deleteCourse'], requestmap: map);
     print(respData);
     ResponseModel responseModel = ResponseModel.fromJson(respData.data);
     if (responseModel.code == 1) {
@@ -77,6 +85,56 @@ class TeacherMethod {
     } else {
       throw responseModel.errors[0];
     }
+  }
+
+  ///创建公告
+  static Future<AnnouncementVo> createAnnouncement(
+      {String userId, @required AnnouncementDto announcementDto}) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('userId', () => userId);
+    Response respData = await post(
+        method: teacherPath.servicePath['createAnnouncement'], requestmap: map,data: announcementDto.toJson());
+    print(respData);
+    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+    if (responseModel.code == 1) {
+      return AnnouncementVo.fromJson(responseModel.data);
+    } else {
+      throw responseModel.errors[0];
+    }
+
+  }
+
+  ///删除公告
+  static Future<bool> delAnnouncement(
+      {String userId, @required String announceId}) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('userId', () => userId);
+    map.putIfAbsent('announceId', () => announceId);
+    Response respData = await post(
+        method: teacherPath.servicePath['delAnnouncement'], requestmap: map,);
+    print(respData);
+    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+    if (responseModel.code == 1) {
+      return (responseModel.data);
+    } else {
+      throw responseModel.errors[0];
+    }
+  }
+
+  ///修改公告
+  static Future<bool> updateAnnouncement(String userId,{@required AnnouncementDto announcementDto})async{
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('userId', () => userId);
+    Response respData = await post(
+      method: teacherPath.servicePath['updateAnnouncement'], requestmap: map,data: announcementDto.toJson());
+    print(respData);
+    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+    if (responseModel.code == 1) {
+      return (responseModel.data);
+    } else {
+      throw responseModel.errors[0];
+    }
+
   }
 
 }

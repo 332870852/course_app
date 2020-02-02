@@ -1,4 +1,4 @@
-const serviceUrl = 'http://192.168.200.104:11001/';
+const serviceUrl = 'http://192.168.200.114:11001/';  //'http://192.168.200.104:11001/'
 
 class studentPath {
   static const servicePath = {
@@ -15,7 +15,10 @@ class userPath{
     'getUserInfo':'getUserInfo',
     'updateUser':'updateUser',
     'uploadFaceFile':'uploadFaceFile',
-    'uploadImage':'uploadImage'
+    'uploadImage':'uploadImage',
+    'getAnnouncementPage':'getAnnouncementPage',
+    'getEveryUserInfo':'getEveryUserInfo',
+    'getReplyListPage':'getCommentAnnPage',
   };
 }
 
@@ -26,5 +29,8 @@ class teacherPath{
     'getCreateCoursesPage':'teacher/getCreateCoursesPage',
     'updateCourse':'teacher/updateCourse',
     'deleteCourse':'teacher/deleteCourse',
+    'createAnnouncement':'createAnnouncement',
+    'updateAnnouncement':'updateAnnouncement',
+    'delAnnouncement':'delAnnouncement',
   };
 }
