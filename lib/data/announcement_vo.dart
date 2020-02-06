@@ -33,7 +33,7 @@ class AnnouncementVo {
     announceTitle = json['announceTitle'];
     announceBody = json['announceBody'];
     annex = json['annex'];
-    date = json['date'];
+    date = json['date'].toString();
     publisherId = json['publisherId'];
     courseId = json['courseId'];
     readeds = json['readeds'].cast<String>();

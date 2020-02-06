@@ -99,6 +99,7 @@ class AnnouncementContentPage extends StatelessWidget {
                           fontSize: ScreenUtil().setSp(35),
                           fontWeight: FontWeight.w600),
                       overflow: TextOverflow.ellipsis,
+                      maxLines: 3,
                     ),
                   ),
                 ],
@@ -107,7 +108,7 @@ class AnnouncementContentPage extends StatelessWidget {
                 leading: CircleAvatar(
                   backgroundImage: (url != null)
                       ? NetworkImage('${url}')
-                      : AssetImage('assets/img/用户.png'),
+                      : AssetImage('assets/img/user.png'),
                 ),
                 title: Text(
                   '${username}',

@@ -1,16 +1,23 @@
-import 'package:course_app/provide/create_course_provider.dart';
-import 'package:course_app/router/application.dart';
-import 'package:course_app/router/routes.dart';
+import 'package:course_app/config/service_url.dart';
+import 'package:course_app/provide/websocket_provide.dart';
+import 'package:course_app/service/websocket_util.dart';
+import 'package:course_app/utils/notifications_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:direct_select/direct_select.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:provide/provide.dart';
+import 'package:web_socket_channel/io.dart';
 
 class ChatPage extends StatelessWidget {
+   // ws://192.168.200.114:18887/chatServer
+//  IOWebSocketChannel channel =
+//      IOWebSocketChannel.connect('ws://192.168.200.114:10090/ws');
+
   @override
   Widget build(BuildContext context) {
+
     final spinkit = SpinKitFadingCircle(
       itemBuilder: (BuildContext context, int index) {
         return DecoratedBox(
@@ -27,18 +34,22 @@ class ChatPage extends StatelessWidget {
           spinkit,
           IconButton(
               icon: Icon(Icons.skip_next),
-              onPressed: () async{
-                Application.router.navigateTo(context, Routes.createCoursePage).whenComplete((){
-                  print("staasdss");
-                  Provide.value<CreateCourseProvide>(context).InitStatus();
-                }).then((onValue){
-                  print("ss           :${onValue}");
-                });
+              onPressed: () async {
+                Provide.value<WebSocketProvide>(context).sendMessage('还嘿嘿嘿');
+                //a.show(3, "1", "5522", platformChannelSpecifics);
               }),
         ],
       ),
     );
   }
+
+  Future onSelectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('000000: ' + payload);
+    }
+
+  }
+
 }
 
 class LiquidLinearProgressIndicatorPage extends StatelessWidget {

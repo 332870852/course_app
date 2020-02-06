@@ -44,6 +44,8 @@ dependencies:
   connectivity: ^0.4.6+2  #网络状态
 #  image_picker: ^0.6.3
   direct_select: ^1.0.0
+#  flutter_jpush: ^0.0.4 #极光推送
+  flutter_local_notifications: ^1.1.5+1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -66,12 +68,16 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/bg_swiper.png
+    - assets/img/appIcon.png
+    - assets/bgk/bgk0.jpg
+    - assets/bgk/bgk1.jpg
+    - assets/bgk/backgroud.jpg
     - assets/img/加载失败.png
     - assets/img/pic_error.png
     - assets/img/网络失败.png
     - assets/img/netpic_error.png
     - assets/img/dpic.png
-    - assets/img/用户.png
+    - assets/img/user.png
     - assets/img/sex0.png
     - assets/img/sex1.png
     - assets/img/性别v.png
@@ -81,7 +87,11 @@ flutter:
     - assets/img/公告-暂无内容.png
     - assets/img/暂无公告.png
     - assets/img/暂无公告icon.png
-    - assets/img/暂无内容@2x.png
+    - assets/img/zanwugg@2x.png
+    - assets/img/nodata1.png
+    - assets/img/nodata2.png
+    - assets/img/nodata3.png
+    - assets/img/nodata4.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

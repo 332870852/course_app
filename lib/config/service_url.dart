@@ -1,5 +1,7 @@
-const serviceUrl = 'http://192.168.200.114:11001/';  //'http://192.168.200.104:11001/'
-
+const serviceUrl = 'http://192.168.200.117:11001/';  //'http://192.168.200.104:11001/'
+//const serviceUrl = 'http://192.168.43.186:11001/';
+//const webSocketUrl = 'ws://192.168.200.117:10090/ws';//wsServer
+const webSocketUrl = 'ws://192.168.200.117:11001/wsServer/123';
 class studentPath {
   static const servicePath = {
     'getCoursePage': 'student/getCoursePage',
@@ -11,6 +13,7 @@ class studentPath {
 class userPath{
   //static String userId="2";
   static const servicePath = {
+    'userLongin':'userLongin',
     'getUserHeadImage': 'getUserHeadImage',
     'getUserInfo':'getUserInfo',
     'updateUser':'updateUser',

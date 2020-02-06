@@ -47,6 +47,15 @@ android {
         versionName flutterVersionName
        // testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+//        manifestPlaceholders = [
+//                JPUSH_PKGNAME : applicationId,
+//                JPUSH_APPKEY : "6b7a2c531cbb8a0893b4c63e", //JPush上注册的包名对应的appkey.
+//                JPUSH_CHANNEL : "developer-default",
+//        ]
+//        ndk{
+//            abiFilters 'armeabi', 'armeabi-v7a'//, 'arm64-v8a'
+//        }
+
     }
     signingConfigs {
         release {

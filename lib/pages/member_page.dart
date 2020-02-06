@@ -272,9 +272,9 @@ class UserItemWidget extends StatelessWidget {
           InkWell(
             onTap: () {
               //TODO 点击头像
-              print("点击了头像");
+              print("点击了头像 ${url}");
               String yulangUrl=url;
-              if((url!=null||url.toString().isNotEmpty)){
+              if((url==null||url.toString().isEmpty)){
                 return ;
               }
               ImagePickers.previewImage(yulangUrl);

@@ -4,6 +4,7 @@ import 'package:course_app/data/announcement_dto.dart';
 import 'package:course_app/data/announcement_vo.dart';
 import 'package:course_app/provide/reply_list_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
+import 'package:course_app/provide/websocket_provide.dart';
 import 'package:course_app/service/teacher_method.dart';
 import 'package:course_app/service/user_method.dart';
 import 'package:course_app/widget/progress_dialog_widget.dart';
@@ -247,6 +248,7 @@ class _CreateAnnouncePageState extends State<CreateAnnouncePage> {
     announcementDto.announceBody = body;
     announcementDto.courseId = widget.courseId;
     announcementDto.annex = annex;
+   // Provide.value<WebSocketProvide>(context).sendMessage(announcementDto.toString());
     TeacherMethod.createAnnouncement(
         userId: Provide
             .value<UserProvide>(context)
@@ -258,7 +260,6 @@ class _CreateAnnouncePageState extends State<CreateAnnouncePage> {
           displayLod = false;
         });
         Provide.value<ReplyListProvide>(context).insertAnnouncement(onValue);
-
         /// insert
       }
     }).whenComplete(() {

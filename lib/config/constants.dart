@@ -18,3 +18,10 @@ class Constants{
   static const DividerColor=0xffd9d9d9;
 }
 
+
+class AppIcons {
+
+  static const  tencent_qq = IconData(0xe61a, fontFamily: Constants.IconFontFamily2);
+  static const  weixin = IconData(0xe60b, fontFamily: Constants.IconFontFamily2);
+}
+

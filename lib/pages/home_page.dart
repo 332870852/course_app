@@ -4,13 +4,18 @@ import 'package:course_app/pages/member_page.dart';
 import 'package:course_app/pages/video_page.dart';
 import 'package:course_app/provide/course_provide.dart';
 import 'package:course_app/provide/currentIndex_provide.dart';
+import 'package:course_app/provide/websocket_provide.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
 import 'package:connectivity/connectivity.dart';
-class HomePage extends StatelessWidget {
 
+import 'join_course_page.dart';
+class HomePage extends StatelessWidget {
+//
+
+  HomePage({Key key}):super(key:key);
   @override
   Widget build(BuildContext context) {
     ScreenUtil.instance = ScreenUtil(width: 750, height: 1300)..init(context);

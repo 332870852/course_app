@@ -2,12 +2,16 @@ import 'package:course_app/model/Course.dart';
 import 'package:course_app/pages/announcement_content_page.dart';
 import 'package:course_app/pages/announcement_page.dart';
 import 'package:course_app/pages/classroom_page.dart';
+import 'package:course_app/pages/home_page.dart';
 import 'package:course_app/pages/join_course_page.dart';
+import 'package:course_app/pages/login_page.dart';
 import 'package:course_app/pages/teacher/create_announce_page.dart';
 import 'package:course_app/pages/teacher/create_course_page.dart';
 import 'package:course_app/pages/user_info_page.dart';
+import 'package:course_app/provide/course_provide.dart';
 import 'package:course_app/provide/reply_list_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
+import 'package:course_app/provide/websocket_provide.dart';
 import 'package:course_app/service/user_method.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +19,21 @@ import 'package:provide/provide.dart';
 
 Handler JoinCourseHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  //String goodsId = params['id'].first;
-  //print('index>details goodsID is ${goodsId}');
   return JoinCoursePage();
+});
+
+///首页
+Handler homeHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+     // Provide.value<CourseProvide>(context).student_getCoursePage(Provide.value<UserProvide>(context).userId);
+      //打开websocket
+  return HomePage();
+});
+
+///登录页
+Handler loginHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return LoginPage();
 });
 
 ///课堂页
@@ -63,7 +79,9 @@ Handler createCourseHanderl = Handler(
 Handler announcementHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   var courseId = (params['courseId'] != null) ? params['courseId'].first : '';
-  var teacherId=(params['teacherId'] != null) ? params['teacherId'].first : '';
+  var teacherId =
+      (params['teacherId'] != null) ? params['teacherId'].first : '';
+
   ///dio
   UserMethod.getAnnouncementPage(
           userId: Provide.value<UserProvide>(context).userId,
@@ -127,7 +145,7 @@ Handler createAnnounceHanderl = Handler(
       (params['announceBody'] != null) ? params['announceBody'].first : '';
   var announceId =
       (params['announceId'] != null) ? params['announceId'].first : '';
-  var fujian=(params['fujian']!=null)?params['fujian'].first:null;
+  var fujian = (params['fujian'] != null) ? params['fujian'].first : null;
   return CreateAnnouncePage(
     courseId: courseId,
     pageTitle: pageTitle,

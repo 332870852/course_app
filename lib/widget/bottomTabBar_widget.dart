@@ -1,4 +1,7 @@
+import 'package:course_app/config/constants.dart';
+import 'package:course_app/data/user_info.dart';
 import 'package:course_app/provide/bottom_tabBar_provide.dart';
+import 'package:course_app/provide/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
@@ -108,6 +111,7 @@ class BottomTabBarWidget extends StatelessWidget {
 class DetailsWeb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    UserInfoVo teacher = Provide.value<UserProvide>(context).tacherInfo;
     return Padding(
       padding: EdgeInsets.only(top: 50),
       child: Provide<BottomTabBarProvide>(
@@ -124,7 +128,7 @@ class DetailsWeb extends StatelessWidget {
                 padding: EdgeInsets.all(10),
                 alignment: Alignment.center,
                 child: Text('暂时没有数据'));
-          } else {
+          } else if (val.currentIndex == 2) {
             return ListView.builder(
               padding: EdgeInsets.only(top: 0),
               itemBuilder: (context, index) {
@@ -132,8 +136,85 @@ class DetailsWeb extends StatelessWidget {
               },
               itemCount: 100,
             );
+          } else {
+            return ListView.builder(
+              padding: EdgeInsets.only(top: 0),
+              itemBuilder: (context, index) {
+                return WaittingItem(
+                  teacher: teacher,
+                );
+              },
+              itemCount: 10,
+            );
           }
         },
+      ),
+    );
+  }
+}
+
+///待办事项
+class WaittingItem extends StatelessWidget {
+  final UserInfoVo teacher;
+
+  WaittingItem({Key key, this.teacher}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        //TODO 点击待办事项
+
+      },
+      child: Container(
+        height: 100,
+        margin: EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 5),
+        padding: EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 5),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(
+              color: Color(Constants.DividerColor),
+              width: Constants.DividerWith),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Text(' 教师(${teacher.identityVo.realName}) 发布了消息'),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Flexible(
+                  child: Text(
+                    ' title000000000000000000000000000900',
+                    style: TextStyle(
+                        fontSize: ScreenUtil().setSp(35),
+                        fontWeight: FontWeight.w500),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    ' 54646666666666666666cadfdsafwdsfwdf00000000000000000 9999999999990000000',
+                    style: TextStyle(
+                        fontSize: ScreenUtil().setSp(35),
+                        fontWeight: FontWeight.w500),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:connectivity/connectivity.dart';
 import 'package:course_app/config/service_url.dart';
 import 'package:course_app/utils/ResponseModel.dart';
 import 'package:course_app/utils/exception.dart';
@@ -35,6 +36,13 @@ Future<Response> get(
     {@required String method,
     Map queryParameters,
     ProgressCallback onReceiveProgress}) async {
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  //TODO network
+  if(connectivityResult==ConnectivityResult.none){
+    Fluttertoast.showToast(msg: '网络不可用,请检查网络');
+    throw '网络不可用,请检查网络';
+  }
+
   var url = serviceUrl + method;
   debugPrint(url);
   Map<String, dynamic> map = new Map();
@@ -83,6 +91,14 @@ Future<Response> post(
     Function connectOutCallBack,
     ProgressCallback onReceiveProgress,
     ProgressCallback onSendProgress}) async {
+
+  //TODO network
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if(connectivityResult==ConnectivityResult.none){
+    Fluttertoast.showToast(msg: '网络不可用,请检查网络');
+    throw '网络不可用,请检查网络';
+  }
+
   var url = serviceUrl + method;
   //var formData = FormData.fromMap(requestmap);
   print(url);

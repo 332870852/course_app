@@ -29,7 +29,7 @@ class UserImageWidget extends StatelessWidget {
       width: 80,
       height: 80,
       child: (url == null || url.toString().isEmpty || url == 'null')
-          ? Image.asset('assets/img/用户.png')
+          ? Image.asset('assets/img/user.png')
           : CachedNetworkImage(
               imageUrl: '${url}',
               placeholder: (context, url) {

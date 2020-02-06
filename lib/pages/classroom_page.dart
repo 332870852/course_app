@@ -1,4 +1,4 @@
-import 'package:course_app/provide/bottom_tabBar_provide.dart';
+
 import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/widget/bottomTabBar_widget.dart';
 import 'package:course_app/widget/class_room_title_widget.dart';

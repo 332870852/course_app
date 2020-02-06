@@ -1,7 +1,9 @@
 import 'package:course_app/config/constants.dart';
+import 'package:course_app/pages/join_course_page.dart';
 import 'package:course_app/pages/teacher/indext_teacher_page.dart';
 import 'package:course_app/provide/course_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
+import 'package:course_app/provide/websocket_provide.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:course_app/widget/course_item_widget.dart';

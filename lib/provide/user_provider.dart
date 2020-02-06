@@ -2,12 +2,16 @@ import 'dart:convert';
 
 import 'package:course_app/data/user_head_image.dart';
 import 'package:course_app/data/user_info.dart';
+import 'package:course_app/data/user_model_vo.dart';
 import 'package:course_app/service/user_method.dart';
 import 'package:course_app/utils/ResponseModel.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvide with ChangeNotifier {
+
+  UserModel user;
+
   List<UserHeadImage> userImageList = [];
  /////////////////////////
   ///userId
@@ -91,7 +95,7 @@ class UserProvide with ChangeNotifier {
       role=userInfoVo.role;
       saveUserInfo(userInfoVo);
     }
-    notifyListeners();
+   // notifyListeners();
     return userInfoVo;
   }
 
@@ -118,6 +122,11 @@ class UserProvide with ChangeNotifier {
     userInfoVo=UserInfoVo.fromJson(json.decode(userInfoString.toString()));
     print("save:  ${userInfoVo}");
     notifyListeners();
+  }
+
+  void InitUser(UserModel userModel) {
+     user=userModel;
+     notifyListeners();
   }
 
 

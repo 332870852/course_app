@@ -77,7 +77,6 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                 ),
                 onPressed: () {
                   Navigator.pop(context);
-                  Provide.value<ReplyListProvide>(context).changDisplay(true);
                 }),
             actions: <Widget>[],
           ),
@@ -116,7 +115,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Image.asset('assets/img/暂无内容@2x.png'),
+                          Image.asset('assets/img/zanwugg@2x.png'),
                           Text('暂无公告',
                               style: TextStyle(
                                 color: Colors.black26,
@@ -173,6 +172,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                           color: Colors.black,
                           fontSize: ScreenUtil().setSp(35)),
                       overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                     ),
                   ),
                   IconButton(

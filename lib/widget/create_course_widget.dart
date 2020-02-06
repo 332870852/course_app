@@ -46,12 +46,22 @@ class _CreateCourseWidgetState extends State<CreateCourseWidget>
       slivers: <Widget>[
         SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
-          return CourseItemWidget(item: widget.courseList[index],role: widget.role,);
+          return CourseItemWidget(
+            item: widget.courseList[index],
+            role: widget.role,
+          );
         }, childCount: widget.courseList.length)),
       ],
       emptyWidget: (widget.courseList.length < 1)
-          ? Center(
-              child: Text('暂时没有数据'),
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset('assets/img/nodata2.png'),
+                Text(
+                  '暂无数据',
+                  style: TextStyle(color: Colors.blue.shade200),
+                ),
+              ],
             )
           : null,
       firstRefresh: true,

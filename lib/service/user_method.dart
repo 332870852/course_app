@@ -4,6 +4,7 @@ import 'package:course_app/data/comment_vo.dart';
 import 'package:course_app/data/user_dto.dart';
 import 'package:course_app/data/user_head_image.dart';
 import 'package:course_app/data/user_info.dart';
+import 'package:course_app/data/user_model_vo.dart';
 import 'package:course_app/model/Course.dart';
 import 'package:course_app/service/service_method.dart';
 import 'package:course_app/utils/ResponseModel.dart';
@@ -15,6 +16,35 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class UserMethod {
+
+  ///登录
+  static Future<UserModel> userLogin(String username,String password,int loginType)async{
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('username', () => username);
+    map.putIfAbsent('pwd', () => password);
+    map.putIfAbsent('loginType', () => loginType);
+    Response respData = await post(
+        method: userPath.servicePath['userLongin'], requestmap: map);
+    UserModel userModel = UserModel.fromJson(respData.data);
+    if (userModel.code == 1) {
+      return userModel;
+    } else {
+      throw userModel.msg;
+    }
+  }
+
+  ///刷新登录
+//  static Future<Response> refreshLogin() async {
+//    Map<String, dynamic> map = new Map();
+//    map.putIfAbsent('username', () => username);
+//    map.putIfAbsent('pwd', () => password);
+//    map.putIfAbsent('loginType', () => loginType);
+//    return await get(method: userPath.servicePath['userLongin'], queryParameters: map)
+//        .catchError((e) {
+//    });
+//  }
+
+
   ///获取头像
   static Future<ResponseModel> getUserHeadImage({@required List userId}) async {
     Map<String, dynamic> map = new Map();

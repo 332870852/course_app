@@ -1,4 +1,4 @@
-class UserInfoVo {
+class UserInfoDto {
   int userId;
   String phoneNumber;
   String nickname;
@@ -13,10 +13,10 @@ class UserInfoVo {
 
   @override
   String toString() {
-    return 'UserInfoVo{userId: $userId, phoneNumber: $phoneNumber, nickname: $nickname, realName: $realName, sex: $sex, faceImage: $faceImage, faceImageBig: $faceImageBig, email: $email, cid: $cid, role: $role, schoolName: $schoolName}';
+    return 'UserInfoDto{userId: $userId, phoneNumber: $phoneNumber, nickname: $nickname, realName: $realName, sex: $sex, faceImage: $faceImage, faceImageBig: $faceImageBig, email: $email, cid: $cid, role: $role, schoolName: $schoolName}';
   }
 
-  UserInfoVo(
+  UserInfoDto(
       {this.userId,
         this.phoneNumber,
         this.nickname,
@@ -29,7 +29,7 @@ class UserInfoVo {
         this.role,
         this.schoolName});
 
-  UserInfoVo.fromJson(Map<String, dynamic> json) {
+  UserInfoDto.fromJson(Map<String, dynamic> json) {
     userId = json['userId'];
     phoneNumber = json['phoneNumber'];
     nickname = json['nickname'];
