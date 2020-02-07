@@ -1,3 +1,4 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:course_app/model/Course.dart';
 import 'package:course_app/pages/announcement_content_page.dart';
 import 'package:course_app/pages/announcement_page.dart';
@@ -33,7 +34,9 @@ Handler homeHanderl = Handler(
 ///登录页
 Handler loginHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  return LoginPage();
+      var username=(ObjectUtil.isNotEmpty(params['username'])?params['username'].first:'');
+      var pwd=(ObjectUtil.isNotEmpty(params['pwd'])?params['pwd'].first:'');
+  return LoginPage(username: username,pwd:pwd);
 });
 
 ///课堂页

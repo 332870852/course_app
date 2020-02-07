@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:course_app/config/service_url.dart';
 import 'package:course_app/data/announcement_vo.dart';
 import 'package:course_app/data/comment_vo.dart';
@@ -34,15 +36,37 @@ class UserMethod {
   }
 
   ///刷新登录
-//  static Future<Response> refreshLogin() async {
-//    Map<String, dynamic> map = new Map();
-//    map.putIfAbsent('username', () => username);
-//    map.putIfAbsent('pwd', () => password);
-//    map.putIfAbsent('loginType', () => loginType);
-//    return await get(method: userPath.servicePath['userLongin'], queryParameters: map)
-//        .catchError((e) {
-//    });
-//  }
+  static Future<UserModel> refreshLogin(String username) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('username', () => username);
+    Response respData = await post(method: userPath.servicePath['refreshLogin'], requestmap: map)
+        .catchError((e) {
+    });
+    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+    if(responseModel.code==1){
+      Map map=responseModel.data;
+      UserModel userModel=UserModel.fromJson(map);
+      return userModel;
+    }else{
+      throw responseModel.errors[0];
+    }
+
+  }
+
+  ///退出登录
+  static Future<bool> userlogout(String username)async{
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('username', () => username);
+    Response respData = await post(method: userPath.servicePath['userlogout'], requestmap: map)
+        .catchError((e) {
+    });
+    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+    if(responseModel.code==1){
+      return responseModel.data;
+    }else{
+      throw responseModel.errors[0];
+    }
+  }
 
 
   ///获取头像

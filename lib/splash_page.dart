@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:common_utils/common_utils.dart';
 import 'package:course_app/data/user_model_vo.dart';
 import 'package:course_app/provide/user_model_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
+import 'package:course_app/service/user_method.dart';
 import 'package:course_app/utils/navigatorUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -53,16 +56,20 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
       DateTime time= DateTime.tryParse(user.loginDate);
       time = time.add(Duration(seconds: user.expire));
       if(DateTime.now().isBefore(time)){///token 是否过期
+        UserMethod.refreshLogin(user.userVo.phoneNumber).then((newUser){///更新 user 时间
+           if(newUser!=null){
+             Application.sp.setString('user', json.encode(newUser.toJson()));
+           }
+        }).catchError((onError){
+          Fluttertoast.showToast(msg: '应用服务失败');
+        });
         NavigatorUtil.goHomePage(context);
         return null;
       }
-//       await NetUtils.refreshLogin(context).then((value){
-//         if(value.data != -1){
-//           NavigatorUtil.goHomePage(context);
-//         }
-//       });
     }
-    NavigatorUtil.goLoginPage(context,);
+    String username=Provide.value<UserModelProvide>(context).username;
+   //String pwd=Provide.value<UserModelProvide>(context).pwd;
+    NavigatorUtil.goLoginPage(context,username: username,);
     //Application.router.navigateTo(context, Routes.loginPage);
   }
 

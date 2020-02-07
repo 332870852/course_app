@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:course_app/config/constants.dart';
+import 'package:course_app/provide/user_model_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
+import 'package:course_app/provide/websocket_provide.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
+import 'package:course_app/utils/navigatorUtil.dart';
 import 'package:course_app/widget/bottom_clipper_widget.dart';
 import 'package:course_app/widget/user_image_widget.dart';
 import 'package:fluro/fluro.dart';
@@ -49,8 +52,13 @@ class MemberPage extends StatelessWidget {
                       color: Colors.red,
                     ),
                     flag: false,
-                    onTap: () {
+                    onTap: () async{
                       //TODO 退出
+                      await Provide.value<UserModelProvide>(context).logout();
+                      Provide.value<WebSocketProvide>(context).close();
+                      String username=Provide.value<UserModelProvide>(context).username;
+                      String pwd=Provide.value<UserModelProvide>(context).pwd;
+                      NavigatorUtil.goLoginPage(context,username: username,pwd: pwd);///返回登录页
                     }),
               ],
             ),

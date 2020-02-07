@@ -14,6 +14,8 @@ class userPath{
   //static String userId="2";
   static const servicePath = {
     'userLongin':'userLongin',
+    'refreshLogin':'refreshLogin',
+    'userlogout':'userlogout',
     'getUserHeadImage': 'getUserHeadImage',
     'getUserInfo':'getUserInfo',
     'updateUser':'updateUser',

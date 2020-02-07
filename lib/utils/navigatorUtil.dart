@@ -10,13 +10,14 @@ class NavigatorUtil {
       {bool replace = false,
       bool clearStack = false,
       Duration transitionDuration = const Duration(milliseconds: 250),
-      RouteTransitionsBuilder transitionBuilder}) {
+      RouteTransitionsBuilder transitionBuilder,
+      Function popCallBack}) {
     Application.router.navigateTo(context, path,
         replace: replace,
         clearStack: clearStack,
         transitionDuration: transitionDuration,
         transitionBuilder: transitionBuilder,
-        transition: TransitionType.material);
+        transition: TransitionType.material).then((back)=>popCallBack);
   }
 
   /// 首页
@@ -25,16 +26,19 @@ class NavigatorUtil {
       context,
       Routes.homePage,
       clearStack: true,
+      popCallBack: (value){
+        Provide.value<WebSocketProvide>(context).close();
+      }
     );
     print("打开websocket");
     Provide.value<WebSocketProvide>(context).create();
   }
 
   ///登录页
-  static void goLoginPage(BuildContext context) {
+  static void goLoginPage(BuildContext context,{String username='',String pwd=''}) {
     _navigateTo(
       context,
-      Routes.loginPage,
+      Routes.loginPage+'?username=${Uri.encodeComponent('$username')}&pwd=${pwd}',
       clearStack: true,
     );
   }

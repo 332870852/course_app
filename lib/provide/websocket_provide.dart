@@ -16,7 +16,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WebSocketProvide with ChangeNotifier {
   Websocket websocket;
 
-
   ///websockt重连次数
   int _tryCount = 0;
 
@@ -45,7 +44,7 @@ class WebSocketProvide with ChangeNotifier {
       var connectivityResult = await (Connectivity().checkConnectivity());
       if (connectivityResult != ConnectivityResult.none) {
         Future.delayed(Duration(seconds: _contimeout), () {
-          websocket.close();
+          this.close();
           create();
           print("aaa ${_tryCount}   ${_contimeout}");
           if (_tryCount < 6) {
@@ -66,7 +65,9 @@ class WebSocketProvide with ChangeNotifier {
   }
 
   Future<WebsocketMessage> doMessage(int id,
-      {String payload, String groupKey,SelectNotificationCallback selectNotificationCallback}) async{
+      {String payload,
+      String groupKey,
+      SelectNotificationCallback selectNotificationCallback}) async {
     WebsocketMessage websocketMessage =
         WebsocketMessage.fromJson(json.decode(message));
     if (websocketMessage.method == "createAnnouncement") {
@@ -84,4 +85,12 @@ class WebSocketProvide with ChangeNotifier {
     return websocketMessage;
   }
 
+  void close() {
+    print("关闭websocket");
+    if (websocket != null) {
+      websocket.getWebSocket().sink.close();
+      websocket.close();
+      websocket=null;
+    }
+  }
 }

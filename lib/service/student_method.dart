@@ -8,7 +8,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class StudentMethod {
-
   ///获取课程
   static Future<ResponseModel> getCoursePage(
       {@required String userId, num pageNo, num pageSize}) async {
@@ -18,37 +17,44 @@ class StudentMethod {
     map.putIfAbsent('pageSize', () => pageSize);
     Response respData = await get(
         method: studentPath.servicePath['getCoursePage'], queryParameters: map);
-   // print(respData.data);
+    // print(respData.data);
     ResponseModel responseModel = ResponseModel.fromJson(respData.data);
     if (responseModel.code == 1) {
-       //print(responseModel.data);
-        return responseModel;
+      //print(responseModel.data);
+      return responseModel;
     } else {
       throw responseModel.errors[0];
     }
   }
 
   ///加课
-  static Future<ResponseModel> JoinCode(String userId,String joinCode)async{
+  static Future<ResponseModel> JoinCode(String userId, String joinCode) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('userId', () => userId);
     map.putIfAbsent('joinCode', () => joinCode);
-    Response respData =await post(method: studentPath.servicePath['joinCourse'],requestmap: map);
-
-    try{
-      ResponseModel responseModel = ResponseModel.fromJson(respData.data);
-      if (responseModel.code != 0) {
-        return responseModel;
-      } else {
-        throw responseModel.errors[0];
-      }
-    }catch (e){
-      print("1111111111${e}");
+    Response respData = await post(
+        method: studentPath.servicePath['joinCourse'], requestmap: map);
+    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+    if (responseModel.code != 0) {
+      return responseModel;
+    } else {
+      throw responseModel.errors[0];
     }
+//    try{
+//      ResponseModel responseModel = ResponseModel.fromJson(respData.data);
+//      if (responseModel.code != 0) {
+//        return responseModel;
+//      } else {
+//        throw responseModel.errors[0];
+//      }
+//    }catch (e){
+//      print("1111111111${e}");
+//    }
   }
 
   ///学生退课
-  static Future<bool> removeCourse({@required String userId,@required String courseId})async{
+  static Future<bool> removeCourse(
+      {@required String userId, @required String courseId}) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('userId', () => userId);
     map.putIfAbsent('courseId', () => courseId);
@@ -64,7 +70,7 @@ class StudentMethod {
       } else {
         throw responseModel.errors[0];
       }
-    }catch (e) {
+    } catch (e) {
       print("removeCourse 系统错误");
     }
     return false;

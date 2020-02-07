@@ -9,14 +9,13 @@ import 'package:course_app/provide/user_model_provide.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:common_utils/common_utils.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provide/provide.dart';
 
 ///登陆页
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key key}) : super(key: key);
 
+  LoginPage({Key key, this.username = '',this.pwd=''}) : super(key: key);
+  String username;
+  String pwd;
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -27,17 +26,17 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 //  var animationStatus = 0;
   TextEditingController usernameController;
   TextEditingController pwdController;
-  var username = '';
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _loginButtonController = new AnimationController(
-        duration: new Duration(milliseconds: 3000), vsync: this);
+        duration: new Duration(milliseconds: 4000), vsync: this);
     usernameController = TextEditingController();
     pwdController = TextEditingController();
-
+    usernameController.text = widget.username;
+    pwdController.text=widget.pwd;
   }
 
   @override
