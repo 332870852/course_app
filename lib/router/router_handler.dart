@@ -84,7 +84,6 @@ Handler announcementHanderl = Handler(
   var courseId = (params['courseId'] != null) ? params['courseId'].first : '';
   var teacherId =
       (params['teacherId'] != null) ? params['teacherId'].first : '';
-
   ///dio
   UserMethod.getAnnouncementPage(
           userId: Provide.value<UserProvide>(context).userId,

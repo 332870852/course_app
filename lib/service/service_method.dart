@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'dart:io';
-
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provide/provide.dart';
 

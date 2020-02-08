@@ -13,6 +13,8 @@ import 'package:course_app/provide/websocket_provide.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:course_app/splash_page.dart';
+import 'package:course_app/utils/navigatorUtil.dart';
+import 'package:course_app/utils/navigator_observer.dart';
 import 'package:course_app/utils/notifications_util.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
@@ -54,22 +56,29 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Application.initGlobalKey();
     final router = Router();
     //_startupJpush();
     Routes.configureRoutes(router);
     Application.router = router;
+
 //    String userId = (Provide.value<UserProvide>(context).userId = '123');
 //    Provide.value<UserProvide>(context).role = 2;
     //Provide.value<CourseProvide>(context).student_getCoursePage(userId);
 //    Provide.value<UserProvide>(context).getUserInfo(userId: userId);
 //    Provide.value<WebSocketProvide>(context).create();
-//    Provide.value<WebSocketProvide>(context).create();
     Provide.value<WebSocketProvide>(context).addListener(() {
-      Provide.value<WebSocketProvide>(context).doMessage(1,selectNotificationCallback: (p){}).then((onValue) {});
+      Provide.value<WebSocketProvide>(context).doMessage(1,selectNotificationCallback: (p){
+        print("lai ba  *******${p} ");
+        //return Application.router.navigateTo(Application.navigatorKey.currentContext, Routes.joinCoursePage);
+        //return Application.navigatorKey.currentState.push(MaterialPageRoute(builder: (context)=>new JoinCoursePage()));
+      },payload: "123444").then((onValue) {});
     });
 
     return Container(
       child: MaterialApp(
+        navigatorKey: Application.navigatorKey,
+        //navigatorObservers: [CustomNavigatorObserver()],
         onGenerateRoute: Application.router.generator,
         title: '智慧课堂辅助App',
         debugShowCheckedModeBanner: false,

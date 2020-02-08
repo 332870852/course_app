@@ -131,6 +131,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
     );
   }
 
+
   ///
   Widget _body(context, {@required AnnouncementVo item}) {
     DateTime dateTime = DateTime.tryParse(item.date);
@@ -328,6 +329,9 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
               Fluttertoast.showToast(msg: '删除成功');
               Provide.value<ReplyListProvide>(context)
                   .removeAnnouncement(item.announceId.toString());
+              if(announceList.length<=3){
+                Provide.value<ReplyListProvide>(context).changDisplay(true);
+              }
             }).catchError((onError) {
               Fluttertoast.showToast(msg: '删除失败');
             });
