@@ -1,11 +1,18 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:course_app/model/Course.dart';
+import 'package:course_app/pages/admin_account_page.dart';
 import 'package:course_app/pages/announcement_content_page.dart';
 import 'package:course_app/pages/announcement_page.dart';
 import 'package:course_app/pages/classroom_page.dart';
 import 'package:course_app/pages/home_page.dart';
 import 'package:course_app/pages/join_course_page.dart';
 import 'package:course_app/pages/login_page.dart';
+import 'package:course_app/pages/pwd_change_page.dart';
+import 'package:course_app/pages/qrcode_page.dart';
+import 'package:course_app/pages/register_page/final_registe_page.dart';
+import 'package:course_app/pages/register_page/next_pegist_page.dart';
+import 'package:course_app/pages/register_page/register_user_page.dart';
+import 'package:course_app/pages/register_page/result_registe_page.dart';
 import 'package:course_app/pages/teacher/create_announce_page.dart';
 import 'package:course_app/pages/teacher/create_course_page.dart';
 import 'package:course_app/pages/user_info_page.dart';
@@ -26,17 +33,53 @@ Handler JoinCourseHanderl = Handler(
 ///首页
 Handler homeHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-     // Provide.value<CourseProvide>(context).student_getCoursePage(Provide.value<UserProvide>(context).userId);
-      //打开websocket
+  // Provide.value<CourseProvide>(context).student_getCoursePage(Provide.value<UserProvide>(context).userId);
+  //打开websocket
   return HomePage();
 });
 
 ///登录页
 Handler loginHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      var username=(ObjectUtil.isNotEmpty(params['username'])?params['username'].first:'');
-      var pwd=(ObjectUtil.isNotEmpty(params['pwd'])?params['pwd'].first:'');
-  return LoginPage(username: username,pwd:pwd);
+  var username = (ObjectUtil.isNotEmpty(params['username'])
+      ? params['username'].first
+      : '');
+  var pwd = (ObjectUtil.isNotEmpty(params['pwd']) ? params['pwd'].first : '');
+  return LoginPage(username: username, pwd: pwd);
+});
+
+///注册页面
+Handler registerUserHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return RegisterUserPage();
+});
+
+///注册第二页
+Handler nextRegistPageHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+//  var username = (ObjectUtil.isNotEmpty(params['username']))
+//      ? params['username'].first
+//      : '';
+//  print('username ${username}');
+  return NextRegistPage(
+//    username: username,
+      );
+});
+
+///注册确认页
+Handler finalRegisteHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return FinalRegistePage();
+});
+
+///注册结果页
+Handler ResultRegistHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  bool isSuccess = (ObjectUtil.isNotEmpty(params['isSuccess'])) ? true : false;
+  var username = (ObjectUtil.isNotEmpty(params['username']))
+      ? params['username'].first
+      : '';
+  return ResultRegistPage(isSuccess: isSuccess, username: username);
 });
 
 ///课堂页
@@ -63,16 +106,24 @@ Handler classRoomHanderl = Handler(
 ///用户资料页
 Handler userInfoHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  //String goodsId = params['id'].first;
-  //print('index>details goodsID is ${goodsId}');
   return UserInfoPage();
 });
 
+///账号与安全页
+Handler adminAccoutHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return AdminAccoutPage();
+});
+
+///密码管理页面
+
+Handler pwdChangeHanderl = Handler(
+handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+return PwdChangePage();
+});
 ///创建课程页
 Handler createCourseHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  //String goodsId = params['id'].first;
-  //print('index>details goodsID is ${goodsId}');
   var titlePage = params['titlePage'].first;
   //print("***********************${titlePage}");
   return CreateCoursePage(titlePage: titlePage.toString());
@@ -84,8 +135,9 @@ Handler announcementHanderl = Handler(
   var courseId = (params['courseId'] != null) ? params['courseId'].first : '';
   var teacherId =
       (params['teacherId'] != null) ? params['teacherId'].first : '';
+
   ///dio
-  UserMethod.getAnnouncementPage(
+  UserMethod.getAnnouncementPage(context,
           userId: Provide.value<UserProvide>(context).userId,
           courseId: courseId)
       .then((value) {
@@ -157,4 +209,10 @@ Handler createAnnounceHanderl = Handler(
     announceId: announceId,
     fujian: fujian,
   );
+});
+
+///二维码名片页
+Handler qrcodeHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return QRcodePage();
 });

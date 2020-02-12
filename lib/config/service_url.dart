@@ -14,8 +14,11 @@ class userPath{
   //static String userId="2";
   static const servicePath = {
     'userLongin':'userLongin',
+    'registerUser':'registerUser',
     'refreshLogin':'refreshLogin',
     'userlogout':'userlogout',
+    'exitsUserName':'exitsUserName',
+    'getUserQRcode':'getUserQRcode',
     'getUserHeadImage': 'getUserHeadImage',
     'getUserInfo':'getUserInfo',
     'updateUser':'updateUser',
@@ -24,6 +27,7 @@ class userPath{
     'getAnnouncementPage':'getAnnouncementPage',
     'getEveryUserInfo':'getEveryUserInfo',
     'getReplyListPage':'getCommentAnnPage',
+    'getUserFriendById':'getUserFriendById',
   };
 }
 

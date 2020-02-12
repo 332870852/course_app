@@ -173,7 +173,7 @@ class _JoinCoursePageState extends State<JoinCoursePage> {
       print('*******');
       Provide.value<CourseProvide>(context).changeCode(codes: Codes.loading);
       Provide.value<CourseProvide>(context)
-          .postJoinCode(Provide.value<UserProvide>(context).userId,value)
+          .postJoinCode(context,Provide.value<UserProvide>(context).userId,value)
           .then((item) {
         //TODO 处理加课
         print(item);

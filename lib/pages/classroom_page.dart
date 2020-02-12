@@ -41,7 +41,7 @@ class _ClassRoomPageState extends State<ClassRoomPage> {
 
   @override
   Widget build(BuildContext context) {
-    Provide.value<UserProvide>(context).getTeacherInfo(teacherId: widget.teacherId);
+    Provide.value<UserProvide>(context).getTeacherInfo(context,teacherId: widget.teacherId);
     return Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomPadding: true,

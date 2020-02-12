@@ -1,14 +1,12 @@
 import 'package:course_app/animation/loginAnimation.dart';
 import 'package:course_app/components/FormContainer.dart';
-import 'package:course_app/components/SignInButton.dart';
-import 'package:course_app/components/SignUpLink.dart';
 import 'package:course_app/components/WhiteTick.dart';
 import 'package:course_app/config/constants.dart';
-import 'package:course_app/data/user_model_vo.dart';
-import 'package:course_app/provide/user_model_provide.dart';
+import 'package:course_app/utils/navigatorUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:provide/provide.dart';
 
 ///登陆页
 class LoginPage extends StatefulWidget {
@@ -175,6 +173,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                       fontFamily: "Poppins-Bold")),
                               onPressed: () {
                                 //todo 注册
+                                NavigatorUtil.goRegisterPage(context);
+                               // NavigatorUtil.goResultRegisterPage(context,isSuccess: true,username: '1213132');
                               },
                             ),
                           ],

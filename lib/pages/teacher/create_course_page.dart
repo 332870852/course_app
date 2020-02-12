@@ -83,7 +83,7 @@ class CreateCoursePage extends StatelessWidget {
         print(courseDo);
         if(!isEditPage){
           //TODO 创建课程
-          Course course = await TeacherMethod.createCourse(courseDo: courseDo)
+          Course course = await TeacherMethod.createCourse(context,courseDo: courseDo)
               .catchError((onError) {
             debugPrint(onError);
             Fluttertoast.showToast(
@@ -98,7 +98,7 @@ class CreateCoursePage extends StatelessWidget {
           //TODO 修改课程
           courseDo.courseId=courseId;
           print("//TODO 修改课程 updateCourse: ${courseDo}");
-          Course course = await TeacherMethod.updateCourse(userId: Provide.value<UserProvide>(context).userId,courseDo: courseDo)
+          Course course = await TeacherMethod.updateCourse(context,userId: Provide.value<UserProvide>(context).userId,courseDo: courseDo)
               .catchError((onError) {
             debugPrint(onError);
             Fluttertoast.showToast(
@@ -296,7 +296,7 @@ class CreateCoursePage extends StatelessWidget {
             ///显示进度条
             Provide.value<CreateCourseProvide>(context)
                 .changeProgress(display: true);
-            UserHeadImage userHeadImage = await UserMethod.uploadImage(
+            UserHeadImage userHeadImage = await UserMethod.uploadImage(context,
                 imagePath: _listImagePaths[0].path,
                 onSendProgress: (int count, int total) {
                   print(

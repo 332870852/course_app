@@ -26,8 +26,8 @@ class CourseProvide with ChangeNotifier {
   Curssor curssor = Curssor(1, 1, 5);
 
   ///获取网络课程数据
-  Future<List<Course>> student_getCoursePage(userId) async {
-    ResponseModel responseModel = await StudentMethod.getCoursePage(
+  Future<List<Course>> student_getCoursePage(BuildContext context,userId) async {
+    ResponseModel responseModel = await StudentMethod.getCoursePage(context,
       userId: userId,
     );
     if (responseModel.data != null) {
@@ -79,9 +79,9 @@ class CourseProvide with ChangeNotifier {
   }
 
   ///加课post请求
-  Future<Course> postJoinCode(userId, String joincode) async {
+  Future<Course> postJoinCode(BuildContext context,userId, String joincode) async {
     ResponseModel responseModel =
-        await StudentMethod.JoinCode(userId, joincode);
+        await StudentMethod.JoinCode(context,userId, joincode);
     Course course;
     if (responseModel.data != null) {
       course = Course.fromJson(responseModel.data);
@@ -97,9 +97,9 @@ class CourseProvide with ChangeNotifier {
   }
 
   ///加载更多
-  Future<bool> getMoreCourseList(userId, {pageSize = 5}) async {
+  Future<bool> getMoreCourseList(BuildContext context,userId, {pageSize = 5}) async {
     print(curssor);
-    ResponseModel responseModel = await StudentMethod.getCoursePage(
+    ResponseModel responseModel = await StudentMethod.getCoursePage(context,
         userId: userId, pageNo: curssor.offset, pageSize: pageSize);
     print(responseModel.data == '');
     List<dynamic> list = responseModel.data;

@@ -221,7 +221,7 @@ class _CreateAnnouncePageState extends State<CreateAnnouncePage> {
           radius: 20.0,
         ));
 
-    UserMethod.uploadImage(imagePath: _listImagePaths[0].path)
+    UserMethod.uploadImage(context,imagePath: _listImagePaths[0].path)
         .then((onValue) {
       setState(() {
         widget.fujian = onValue.faceImageBig;
@@ -249,7 +249,7 @@ class _CreateAnnouncePageState extends State<CreateAnnouncePage> {
     announcementDto.courseId = widget.courseId;
     announcementDto.annex = annex;
    // Provide.value<WebSocketProvide>(context).sendMessage(announcementDto.toString());
-    TeacherMethod.createAnnouncement(
+    TeacherMethod.createAnnouncement(context,
         userId: Provide
             .value<UserProvide>(context)
             .userId,
@@ -283,7 +283,7 @@ class _CreateAnnouncePageState extends State<CreateAnnouncePage> {
     announcementDto.announceBody = body;
     announcementDto.courseId = widget.courseId;
     announcementDto.annex = annex;
-    TeacherMethod.updateAnnouncement(Provide
+    TeacherMethod.updateAnnouncement(context,Provide
         .value<UserProvide>(context)
         .userId,
         announcementDto: announcementDto)

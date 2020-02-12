@@ -35,7 +35,7 @@ class IndexTeacherPage extends StatelessWidget {
               height: 60,
               color: Colors.grey.shade300,
               child: TabBar(
-                unselectedLabelColor: Colors.white,
+                unselectedLabelColor: Colors.black,
                 indicatorColor: Theme.of(context).primaryColor,
                 indicatorSize: TabBarIndicatorSize.label,
                 labelColor: Theme.of(context).primaryColor,
@@ -134,7 +134,7 @@ class IndexTeacherPage extends StatelessWidget {
   ///join- fresh
   joinRefresh(context) async {
     await Provide.value<CourseProvide>(context)
-        .student_getCoursePage(Provide.value<UserProvide>(context).userId)
+        .student_getCoursePage(context,Provide.value<UserProvide>(context).userId)
         .whenComplete(() async {
       _joincontroller.finishRefresh(success: true);
       _joincontroller.resetLoadState();
@@ -147,7 +147,7 @@ class IndexTeacherPage extends StatelessWidget {
   joinOnLoad(context) async {
     Provide.value<CourseProvide>(context).increatePage();
     bool flag = await Provide.value<CourseProvide>(context)
-        .getMoreCourseList(Provide.value<UserProvide>(context).userId,
+        .getMoreCourseList(context,Provide.value<UserProvide>(context).userId,
             pageSize: 5)
         .catchError((onError) {
       ///加载出现异常
@@ -169,7 +169,7 @@ class IndexTeacherPage extends StatelessWidget {
   /// create-fresh
   createRefresh(context) async {
     await Provide.value<CourseTeacherProvide>(context)
-        .teacher_getCoursePage(Provide.value<UserProvide>(context).userId)
+        .teacher_getCoursePage(context,Provide.value<UserProvide>(context).userId)
         .whenComplete(() async {
       _createcontroller.finishRefresh(success: true);
       _createcontroller.resetLoadState();
@@ -182,7 +182,7 @@ class IndexTeacherPage extends StatelessWidget {
   createOnLoad(context) async {
     Provide.value<CourseTeacherProvide>(context).increatePage();
     bool flag = await Provide.value<CourseTeacherProvide>(context)
-        .getMoreCourseList(Provide.value<UserProvide>(context).userId,
+        .getMoreCourseList(context,Provide.value<UserProvide>(context).userId,
             pageSize: 5)
         .catchError((onError) {
       ///加载出现异常

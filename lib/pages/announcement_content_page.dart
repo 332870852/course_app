@@ -35,7 +35,7 @@ class AnnouncementContentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //TODO 获取评论
-    UserMethod.getReplyListPage(
+    UserMethod.getReplyListPage(context,
         announceId, Provide.value<UserProvide>(context).userId);
     return Scaffold(
       appBar: AppBar(

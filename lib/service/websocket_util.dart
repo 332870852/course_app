@@ -5,11 +5,13 @@ import 'package:web_socket_channel/io.dart';
 class Websocket {
   IOWebSocketChannel _channel;
 
-  initWebsocket({String connectUrl}) {
+  initWebsocket({String connectUrl,String token}) {
+    Map<String,dynamic> head=Map();
+    head.putIfAbsent('token', ()=>token);
     if (connectUrl != null && connectUrl.trim().isNotEmpty) {
-      _channel = IOWebSocketChannel.connect('${connectUrl}');
+      _channel = IOWebSocketChannel.connect('${connectUrl}',headers: head);
     } else {
-      _channel = IOWebSocketChannel.connect('${webSocketUrl}');
+      _channel = IOWebSocketChannel.connect('${webSocketUrl}',headers: head);
     }
   }
 

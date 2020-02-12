@@ -22,32 +22,34 @@ class CupertionDialog extends StatelessWidget {
 
   ///确认按钮使用lodaing
   bool isLoding;
-
+  Color contextColor;
+  double contextSize;
   CupertionDialog(
       {Key key,
-        @required this.title,
+        this.title,
         this.content,
         this.onOk,
         this.onCancel,
         this.btnOkColor = Colors.blue,
         this.btnCancelColor = Colors.grey,
+        this.contextColor=Colors.blue,
+        this.contextSize=15,
         this.isLoding = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CupertinoAlertDialog(
-      title: Text('$title}'),
+      title: (title!=null)?Text('$title'):null,
       content: Text(
         '${content}',
-        style: TextStyle(color: Colors.blue),
+        style: TextStyle(color: contextColor,fontSize: contextSize),
       ),
       actions: <Widget>[
         CupertinoDialogAction(
           child: Text('取消'),
           onPressed: () {
             onCancel();
-
             //Navigator.pop(context,0);
           },
           textStyle: TextStyle(color: btnCancelColor),

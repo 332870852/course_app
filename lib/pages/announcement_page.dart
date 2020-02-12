@@ -322,7 +322,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                 );
               });
           if (b == 1) {
-            TeacherMethod.delAnnouncement(
+            TeacherMethod.delAnnouncement(context,
                     announceId: item.announceId.toString(),
                     userId: Provide.value<UserProvide>(context).userId)
                 .then((onValue) {

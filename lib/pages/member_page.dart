@@ -5,86 +5,129 @@ import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/provide/websocket_provide.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
+import 'package:course_app/service/user_method.dart';
 import 'package:course_app/utils/navigatorUtil.dart';
 import 'package:course_app/widget/bottom_clipper_widget.dart';
+import 'package:course_app/widget/cupertion_alert_dialog.dart';
 import 'package:course_app/widget/user_image_widget.dart';
 import 'package:fluro/fluro.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_pickers/image_pickers.dart';
-//import 'package:image_pickers/image_pickers.dart';
 import 'package:provide/provide.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 class MemberPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 //    Provide.value<UserProvide>(context).getUserInfo(userId: '123');
-    Provide.value<UserProvide>(context).getUserInfo_sp();
+    Provide.value<UserProvide>(context).getUserInfo();
     return Scaffold(
         backgroundColor: Colors.grey[300],
-        body: Stack(
-          children: <Widget>[
-            Column(
+        body: Provide<UserProvide>(
+          builder: (context, child, data) {
+            print(data.refreshBtn);
+            return Stack(
               children: <Widget>[
-                ClipPath(
-                  clipper: BottomClipper(),
-                  child: Container(
-                    color: Colors.blueAccent,
-                    height: 200.0,
-                  ),
+                Column(
+                  children: <Widget>[
+                    ClipPath(
+                      clipper: BottomClipper(),
+                      child: Container(
+                        color: Colors.blueAccent,
+                        height: 200.0,
+                      ),
+                    ),
+                    accountNavigator(
+                        title: '账号',
+                        icon: Icon(
+                          Icons.lock,
+                          color: Colors.green,
+                        ),
+                        onTap: () {
+                          //TODO 账号
+                          debugPrint('账号');
+                          NavigatorUtil.goAdminAccoutPage(context);
+                        }),
+                    listNavigator(),
+                    accountNavigator(
+                        title: '退出',
+                        textcolor: Colors.red,
+                        icon: Icon(
+                          Icons.power_settings_new,
+                          color: Colors.red,
+                        ),
+                        flag: false,
+                        onTap: () async {
+                          //TODO 退出
+                          bool b = await showCupertinoDialog(
+                              context: context,
+                              builder: (context) {
+                                return CupertionDialog(
+                                  content: '你确定退出智慧课堂?',
+                                  contextColor: Colors.black,
+                                  contextSize: 20,
+                                  onOk: () {
+                                    Navigator.pop(context, true);
+                                  },
+                                  onCancel: () {
+                                    Navigator.pop(context, false);
+                                  },
+                                  isLoding: false,
+                                );
+                              });
+                           if(b){
+                             Provide.value<WebSocketProvide>(context).close();
+                             await SystemChannels.platform
+                                 .invokeMethod('SystemNavigator.pop');
+                           }
+                          ///返回登录页
+                        }),
+                  ],
                 ),
-                accountNavigator(
-                    title: '账号',
-                    icon: Icon(
-                      Icons.lock,
-                      color: Colors.green,
-                    ),
-                    onTap: () {
-                      //TODO 账号
-                      print('账号');
-                    }),
-                listNavigator(),
-                accountNavigator(
-                    title: '退出',
-                    textcolor: Colors.red,
-                    icon: Icon(
-                      Icons.power_settings_new,
-                      color: Colors.red,
-                    ),
-                    flag: false,
-                    onTap: () async{
-                      //TODO 退出
-                      await Provide.value<UserModelProvide>(context).logout();
-                      Provide.value<WebSocketProvide>(context).close();
-                      String username=Provide.value<UserModelProvide>(context).username;
-                      String pwd=Provide.value<UserModelProvide>(context).pwd;
-                      NavigatorUtil.goLoginPage(context,username: username,pwd: pwd);///返回登录页
-                    }),
+                Positioned(
+                  right: 10,
+                  top: 35,
+                  child: (!data.refreshBtn)?IconButton(
+                      icon: Icon(
+                        Icons.refresh,
+                        color: Colors.white,
+                      ),
+                      onPressed: (data.refreshBtn)?null:() {
+                        Provide.value<UserProvide>(context).changeRefreshBtn(true);
+                        //todo 刷新个人信息
+                        UserMethod.getUserInfo(
+                          context,
+                          userId: Provide
+                              .value<UserProvide>(context)
+                              .userId,
+                        ).then((onValue) {
+                          Provide.value<UserProvide>(context).saveUserInfo(onValue);
+                        }).whenComplete((){
+                          Provide.value<UserProvide>(context).changeRefreshBtn(false);
+                        });
+                      }):SpinKitThreeBounce(color: Colors.white),
+                ),
+                (data.userInfoVo != null)?UserItemWidget(
+                  username: (data.userInfoVo.nickname != null)
+                      ? data.userInfoVo.nickname
+                      : '无',
+                  identity: data.userInfoVo.role,
+                  schoolName: data.userInfoVo.identityVo.schoolName,
+                  url: data.userInfoVo.faceImageBig,
+                ):UserItemWidget(
+                  username: '无',
+                  identity: 3,
+                  schoolName: '',
+                ),
               ],
-            ),
-            Provide<UserProvide>(
-              builder: (context, child, data) {
-                print(data.userInfoVo);
-                if (data.userInfoVo != null) {
-                  return UserItemWidget(
-                    username: (data.userInfoVo.nickname != null)
-                        ? data.userInfoVo.nickname
-                        : '无',
-                    identity: data.userInfoVo.role,
-                    schoolName: data.userInfoVo.identityVo.schoolName,
-                    url: data.userInfoVo.faceImageBig,
-                  );
-                } else {
-                  return UserItemWidget(
-                    username: '无',
-                    identity: 3,
-                    schoolName: '',
-                  );
-                }
-              },
-            ),
-          ],
-        ));
+            );
+          },
+        ),
+    );
   }
 
   ///选项
@@ -189,60 +232,59 @@ class MemberPage extends StatelessWidget {
 
   ///
   ///账号栏
-  Widget accountNavigator(
-      {@required String title,
-      Icon icon,
-      GestureTapCallback onTap,
-      bool flag = true,
-      Color textcolor = Colors.black}) {
+  Widget accountNavigator({@required String title,
+    Icon icon,
+    GestureTapCallback onTap,
+    bool flag = true,
+    Color textcolor = Colors.black}) {
     return Container(
         margin: EdgeInsets.only(top: 10),
         color: Colors.white,
         child: Material(
           child: Ink(
               child: InkWell(
-            child: Container(
-              height: 50,
-              margin: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-              ),
-              //让下划线不占满整个控件
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              decoration: BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-                        width: Constants.DividerWith,
-                        color: Color(Constants.DividerColor))),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: icon,
-                    flex: 1,
+                child: Container(
+                  height: 50,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
                   ),
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: TextStyle(
-                          color: textcolor, fontWeight: FontWeight.w500),
-                    ),
-                    flex: 5,
+                  //让下划线不占满整个控件
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                            width: Constants.DividerWith,
+                            color: Color(Constants.DividerColor))),
                   ),
-                  Expanded(
-                    child: Icon(
-                      Icons.chevron_right,
-                      color: Colors.black26,
-                      size: 30,
-                    ),
-                    flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: icon,
+                        flex: 1,
+                      ),
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                              color: textcolor, fontWeight: FontWeight.w500),
+                        ),
+                        flex: 5,
+                      ),
+                      Expanded(
+                        child: Icon(
+                          Icons.chevron_right,
+                          color: Colors.black26,
+                          size: 30,
+                        ),
+                        flex: 1,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            onTap: onTap,
-          )),
+                ),
+                onTap: onTap,
+              )),
         ));
   }
 }
@@ -254,17 +296,15 @@ class UserItemWidget extends StatelessWidget {
   final int identity;
   final String schoolName;
 
-  UserItemWidget(
-      {Key key,
-      @required this.username,
-      @required this.identity,
-      this.schoolName = '',
-      this.url = ''})
+  UserItemWidget({Key key,
+    @required this.username,
+    @required this.identity,
+    this.schoolName = '',
+    this.url = ''})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -281,13 +321,18 @@ class UserItemWidget extends StatelessWidget {
             onTap: () {
               //TODO 点击头像
               print("点击了头像 ${url}");
-              String yulangUrl=url;
-              if((url==null||url.toString().isEmpty)){
-                return ;
+              String yulangUrl = url;
+              if ((url == null || url
+                  .toString()
+                  .isEmpty)) {
+                return;
               }
               ImagePickers.previewImage(yulangUrl);
             },
-            child: UserImageWidget(url: url,cacheManager: DefaultCacheManager(),),
+            child: UserImageWidget(
+              url: url,
+              cacheManager: DefaultCacheManager(),
+            ),
           ),
           InkWell(
             onTap: () {
@@ -321,7 +366,9 @@ class UserItemWidget extends StatelessWidget {
     if (schoolName.length > 9) {
       schoolName = schoolName.substring(0, 9) + '..';
     }
-    if (schoolName == null || schoolName.toString().length < 1) {
+    if (schoolName == null || schoolName
+        .toString()
+        .length < 1) {
       schoolName = '暂无';
     }
     return Container(

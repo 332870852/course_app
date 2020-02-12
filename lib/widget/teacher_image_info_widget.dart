@@ -23,7 +23,7 @@ class TeacherImageInfoWidget extends StatelessWidget {
 
     return FutureBuilder(
       future:
-          Provide.value<UserProvide>(context).getTeacherInfo(teacherId: teacherId),
+          Provide.value<UserProvide>(context).getTeacherInfo(context,teacherId: teacherId),
       builder: (context, snaphot) {
         if (snaphot.hasData) {
           print(snaphot.data.identityVo);

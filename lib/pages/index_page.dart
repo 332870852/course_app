@@ -71,7 +71,7 @@ class _IndexPageState extends State<IndexPage>
   ///join- fresh
   joinRefresh(context) async {
     await Provide.value<CourseProvide>(context)
-        .student_getCoursePage(Provide.value<UserProvide>(context).userId)
+        .student_getCoursePage(context,Provide.value<UserProvide>(context).userId)
         .whenComplete(() async {
       _controller.finishRefresh(success: true);
       _controller.resetLoadState();
@@ -84,7 +84,7 @@ class _IndexPageState extends State<IndexPage>
   joinOnLoad(context) async {
     Provide.value<CourseProvide>(context).increatePage();
     bool flag = await Provide.value<CourseProvide>(context)
-        .getMoreCourseList(Provide.value<UserProvide>(context).userId,
+        .getMoreCourseList(context,Provide.value<UserProvide>(context).userId,
             pageSize: 5)
         .catchError((onError) {
       ///加载出现异常

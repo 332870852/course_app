@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:connectivity/connectivity.dart';
 import 'package:course_app/data/announcement_vo.dart';
 import 'package:course_app/provide/classroom_notif_provide.dart';
+import 'package:course_app/provide/user_model_provide.dart';
+import 'package:course_app/router/application.dart';
 import 'package:course_app/service/websocket_util.dart';
 import 'package:course_app/utils/notifications_util.dart';
 import 'package:course_app/utils/websocket_message.dart';
@@ -23,11 +25,11 @@ class WebSocketProvide with ChangeNotifier {
   num _contimeout = 1;
   dynamic message;
 
-  create({url}) {
+  create({url, String token}) {
     if (websocket == null) {
       websocket = new Websocket();
     }
-    websocket.initWebsocket(connectUrl: url);
+    websocket.initWebsocket(connectUrl: url, token: '${token}');
     listenMessage();
   }
 
@@ -43,9 +45,10 @@ class WebSocketProvide with ChangeNotifier {
       //TODO  websocket超时重连
       var connectivityResult = await (Connectivity().checkConnectivity());
       if (connectivityResult != ConnectivityResult.none) {
-        Future.delayed(Duration(seconds: _contimeout), () {
+        Future.delayed(Duration(seconds: _contimeout), () async {
           this.close();
-          create();
+          var token = await Application.sp.get('token');
+          create(token: token);
           print("aaa ${_tryCount}   ${_contimeout}");
           if (_tryCount < 6) {
             _contimeout *= 3;
@@ -90,7 +93,7 @@ class WebSocketProvide with ChangeNotifier {
     if (websocket != null) {
       websocket.getWebSocket().sink.close();
       websocket.close();
-      websocket=null;
+      websocket = null;
     }
   }
 }

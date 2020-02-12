@@ -104,7 +104,7 @@ class CourseItemWidget extends StatelessWidget {
           print(b);
           if (b == 1) {
             //TODO 学生退课
-            StudentMethod.removeCourse(
+            StudentMethod.removeCourse(context,
                     userId: Provide.value<UserProvide>(context).userId,
                     courseId: courseId)
                 .then((onValue) {
@@ -168,15 +168,15 @@ class CourseItemWidget extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => CreateCoursePage(
-                        titlePage: '编辑课程',
-                        isEditPage: true,
-                        ///是编辑页
-                        courseId: item.courseId.toString(),
-                        courseTitle: '${item.title}',
-                        selBgkColor: '${item.bgkColor}',
-                        courseNum: '${item.courseNumber}',
-                        imageUrl: '${item.bgkUrl}',
-                      ))).then((onValue) {
+                    titlePage: '编辑课程',
+                    isEditPage: true,
+                    ///是编辑页
+                    courseId: item.courseId.toString(),
+                    courseTitle: '${item.title}',
+                    selBgkColor: '${item.bgkColor}',
+                    courseNum: '${item.courseNumber}',
+                    imageUrl: '${item.bgkUrl}',
+                  ))).then((onValue) {
             if (onValue != null) {
               Course course = onValue;
               ///更新修改的课程
@@ -207,9 +207,9 @@ class CourseItemWidget extends StatelessWidget {
           if (b == 1) {
             ///确定
             //TODO 教师删除课程
-            bool flag = await TeacherMethod.deleteCourse(
-                    courseId: courseId,
-                    userId: Provide.value<UserProvide>(context).userId)
+            bool flag = await TeacherMethod.deleteCourse(context,
+                courseId: courseId,
+                userId: Provide.value<UserProvide>(context).userId)
                 .catchError((onError) {
               Fluttertoast.showToast(msg: '删除失败${onError}');
             });
@@ -367,7 +367,7 @@ class CourseItemWidget extends StatelessWidget {
         children: <Widget>[
           FutureBuilder(
               future:
-                  Provide.value<UserProvide>(context).getUserHeadImage(userIds),
+                  Provide.value<UserProvide>(context).getUserHeadImage(context,userIds),
               builder: (context, snaphot) {
                 if (snaphot.hasData) {
                   Map map = snaphot.data.asMap();

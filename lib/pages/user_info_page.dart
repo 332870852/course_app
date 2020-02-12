@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:course_app/config/constants.dart';
 import 'package:course_app/data/user_dto.dart';
-import 'package:course_app/data/user_head_image.dart';
 import 'package:course_app/data/user_info.dart';
 import 'package:course_app/pages/user_info_page/change_user_info.dart';
+import 'package:course_app/provide/user_model_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
+import 'package:course_app/router/application.dart';
 import 'package:course_app/router/navigator.dart';
+import 'package:course_app/router/routes.dart';
 import 'package:course_app/utils/bean_util.dart';
 import 'package:course_app/widget/progress_dialog_widget.dart';
 import 'package:course_app/widget/select_item_widget.dart';
@@ -138,9 +140,21 @@ class UserInfoPage extends StatelessWidget {
                       color: Colors.black26,
                       size: ScreenUtil().setSp(35),
                     ),
-                    onTap: () {
+                    onTap: () async {
                       //TODO
                       print('二维码名片');
+                      if (ObjectUtil.isEmptyString(data.userInfoVo.cid)) {//二维码cid不存在,请求网络
+                        Provide.value<UserModelProvide>(context)
+                            .getUserQRcode(context)
+                            .then((cid) {
+                          if (cid != null) {
+                            data.userInfoVo.cid = cid;
+                            Provide.value<UserProvide>(context)
+                                .saveUserInfo(data.userInfoVo);
+                          }
+                        });
+                      }
+                      Application.router.navigateTo(context, Routes.qrcodePage);
                     }),
                 userInfoItem(
                     title: '姓名',
@@ -558,7 +572,7 @@ class UserInfoPage extends StatelessWidget {
               (faculty != null ? faculty : ''),
               style: TextStyle(color: Colors.black26, fontSize: 20),
             ),
-            onTap: () async{
+            onTap: () async {
               //TODO
               print('院系');
               bool b = await NavugatorPush(context,
@@ -591,7 +605,7 @@ class UserInfoPage extends StatelessWidget {
               style: TextStyle(color: Colors.black26, fontSize: 20),
               overflow: TextOverflow.ellipsis,
             ),
-            onTap: () async{
+            onTap: () async {
               //TODO
               print('所授课程');
               bool b = await NavugatorPush(context,
@@ -624,7 +638,7 @@ class UserInfoPage extends StatelessWidget {
               style: TextStyle(color: Colors.black26, fontSize: 20),
               overflow: TextOverflow.ellipsis,
             ),
-            onTap: () async{
+            onTap: () async {
               //TODO
               print('专业');
               bool b = await NavugatorPush(context,
@@ -680,7 +694,7 @@ class UserInfoPage extends StatelessWidget {
             radius: 20.0,
           ));
     }
-    bool b = await UserMethod.updateUser(
+    bool b = await UserMethod.updateUser(context,
             userId: Provide.value<UserProvide>(context).userId,
             userSubDto: userSubDto)
         .whenComplete(() {
@@ -689,7 +703,7 @@ class UserInfoPage extends StatelessWidget {
       }
     });
     if (b) {
-       Provide.value<UserProvide>(context).saveUserInfo(newUserInfo);
+      Provide.value<UserProvide>(context).saveUserInfo(newUserInfo);
     }
     return b;
   }
@@ -797,7 +811,8 @@ class UserInfoPage extends StatelessWidget {
     ProgressDialog pr = ProgressDialogWdiget.showProgressStatic(context,
         message: '图片上传', maxProgress: 100);
     // print(_listImagePaths[0].path);
-    UserMethod.uploadFaceFile(Provide.value<UserProvide>(context).userId,
+    UserMethod.uploadFaceFile(
+        context, Provide.value<UserProvide>(context).userId,
         imagePath: _listImagePaths[0].path,
         onSendProgress: (int count, int total) {
       ///更新进度条
@@ -859,12 +874,13 @@ class UserInfoPage extends StatelessWidget {
                     dipalyLoding: false);
                 if (b) {
                   ///再次刷新用户资料
-                  Provide.value<UserProvide>(context).getUserInfo(
-                      userId: Provide.value<UserProvide>(context).userId);
+//                  Provide.value<UserProvide>(context).getUserInfo(context,
+//                      userId: Provide.value<UserProvide>(context).userId);
                   Navigator.pop(context);
                 } else {
                   Provide.value<UserProvide>(context).ChangeDialogState(2);
                 }
+
                 ///加载中
               },
               child: (data.dialogState == 0)

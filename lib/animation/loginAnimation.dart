@@ -1,5 +1,4 @@
 import 'package:common_utils/common_utils.dart';
-import 'package:course_app/pages/home_page.dart';
 import 'package:course_app/provide/user_model_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/utils/navigatorUtil.dart';
@@ -170,10 +169,10 @@ class StaggerAnimation extends StatelessWidget {
       loginType = 0;
       _playAnimation(context);
       Provide.value<UserModelProvide>(context)
-          .login(loginName, pwd, loginType)
+          .login(context,loginName, pwd, loginType)
           .then((onValue) {
         //TODO 个人信息
-        if (onValue != null) {
+        if (onValue != null&&onValue.code==1) {
           Provide.value<UserProvide>(context).saveUserInfo(onValue.userVo);
           Provide.value<UserProvide>(context).userId = onValue.userVo.userId.toString();
           Provide.value<UserProvide>(context).role=onValue.userVo.role;
@@ -187,7 +186,7 @@ class StaggerAnimation extends StatelessWidget {
       loginType = 1;
       _playAnimation(context);
       Provide.value<UserModelProvide>(context)
-          .login(loginName, pwd, loginType)
+          .login(context,loginName, pwd, loginType)
           .then((onValue) {
         if (onValue != null) {
           Provide.value<UserProvide>(context).saveUserInfo(onValue.userVo);

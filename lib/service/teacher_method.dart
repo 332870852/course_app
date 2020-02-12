@@ -12,129 +12,149 @@ import 'package:flutter/material.dart';
 
 class TeacherMethod {
   ///创建课程
-  static Future<Course> createCourse({@required CourseDo courseDo}) async {
+  static Future<Course> createCourse(BuildContext context,
+      {@required CourseDo courseDo}) async {
     print(courseDo);
-    Response respData = await post(
+    ResponseModel responseModel = await post(context,
         method: teacherPath.servicePath['createCourse'],
         data: courseDo.toJson(),
         contentType: ContentType.json);
-    print(respData);
-    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
-    if (responseModel.code == 1) {
-      Course course = Course.fromJson(responseModel.data);
-      return course;
-    } else {
-      throw responseModel.errors[0];
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        Course course = Course.fromJson(responseModel.data);
+        return course;
+      } else {
+        throw responseModel.errors[0];
+      }
     }
+    return null;
   }
 
   ///教师获取创建的课程
-  static Future<ResponseModel> getCoursePage(
+  static Future<ResponseModel> getCoursePage(BuildContext context,
       {@required String userId, num pageNo, num pageSize}) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('userId', () => userId);
     map.putIfAbsent('pageNo', () => pageNo);
     map.putIfAbsent('pageSize', () => pageSize);
     print(userId);
-    Response respData = await get(
+    ResponseModel responseModel = await get(context,
         method: teacherPath.servicePath['getCreateCoursesPage'],
         queryParameters: map);
-    print(respData);
-    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
-    if (responseModel.code == 1) {
-      //print(responseModel.data);
-      return responseModel;
-    } else {
-      throw responseModel.errors[0];
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        //print(responseModel.data);
+        return responseModel;
+      } else {
+        throw responseModel.errors[0];
+      }
     }
+    return null;
   }
 
   //TODO test
   ///老师修改课堂
-  static Future<Course> updateCourse(
+  static Future<Course> updateCourse(BuildContext context,
       {String userId, @required CourseDo courseDo}) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('userId', () => userId);
-    Response respData = await post(
+    ResponseModel responseModel = await post(context,
         method: teacherPath.servicePath['updateCourse'],
         requestmap: map,
         data: courseDo.toJson());
-    print(respData);
-    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
-    if (responseModel.code == 1) {
-      Course course = Course.fromJson(responseModel.data);
-      return course;
-    } else {
-      throw responseModel.errors[0];
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        Course course = Course.fromJson(responseModel.data);
+        return course;
+      } else {
+        throw responseModel.errors[0];
+      }
     }
+    return null;
   }
 
   //TODO test
   ///删除课程
-  static Future<bool> deleteCourse(
+  static Future<bool> deleteCourse(BuildContext context,
       {String userId, @required String courseId}) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('userId', () => userId);
     map.putIfAbsent('courseId', () => courseId);
-    Response respData = await post(
+    ResponseModel responseModel = await post(context,
         method: teacherPath.servicePath['deleteCourse'], requestmap: map);
-    print(respData);
-    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
-    if (responseModel.code == 1) {
-      return responseModel.data;
-    } else {
-      throw responseModel.errors[0];
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
+      } else {
+        throw responseModel.errors[0];
+      }
     }
+    return null;
   }
 
   ///创建公告
-  static Future<AnnouncementVo> createAnnouncement(
+  static Future<AnnouncementVo> createAnnouncement(BuildContext context,
       {String userId, @required AnnouncementDto announcementDto}) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('userId', () => userId);
-    Response respData = await post(
-        method: teacherPath.servicePath['createAnnouncement'], requestmap: map,data: announcementDto.toJson());
-    print(respData);
-    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
-    if (responseModel.code == 1) {
-      return AnnouncementVo.fromJson(responseModel.data);
-    } else {
-      throw responseModel.errors[0];
+    ResponseModel responseModel = await post(context,
+        method: teacherPath.servicePath['createAnnouncement'],
+        requestmap: map,
+        data: announcementDto.toJson());
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return AnnouncementVo.fromJson(responseModel.data);
+      } else {
+        throw responseModel.errors[0];
+      }
     }
-
+    return null;
   }
 
   ///删除公告
-  static Future<bool> delAnnouncement(
+  static Future<bool> delAnnouncement(BuildContext context,
       {String userId, @required String announceId}) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('userId', () => userId);
     map.putIfAbsent('announceId', () => announceId);
-    Response respData = await post(
-        method: teacherPath.servicePath['delAnnouncement'], requestmap: map,);
-    print(respData);
-    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
-    if (responseModel.code == 1) {
-      return (responseModel.data);
-    } else {
-      throw responseModel.errors[0];
+    ResponseModel responseModel = await post(
+      context,
+      method: teacherPath.servicePath['delAnnouncement'],
+      requestmap: map,
+    );
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return (responseModel.data);
+      } else {
+        throw responseModel.errors[0];
+      }
     }
+    return null;
   }
 
   ///修改公告
-  static Future<bool> updateAnnouncement(String userId,{@required AnnouncementDto announcementDto})async{
+  static Future<bool> updateAnnouncement(BuildContext context, String userId,
+      {@required AnnouncementDto announcementDto}) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('userId', () => userId);
-    Response respData = await post(
-      method: teacherPath.servicePath['updateAnnouncement'], requestmap: map,data: announcementDto.toJson());
-    print(respData);
-    ResponseModel responseModel = ResponseModel.fromJson(respData.data);
-    if (responseModel.code == 1) {
-      return (responseModel.data);
-    } else {
-      throw responseModel.errors[0];
+    ResponseModel responseModel = await post(context,
+        method: teacherPath.servicePath['updateAnnouncement'],
+        requestmap: map,
+        data: announcementDto.toJson());
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return (responseModel.data);
+      } else {
+        throw responseModel.errors[0];
+      }
     }
-
+    return null;
   }
-
 }

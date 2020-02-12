@@ -5,15 +5,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SelectItemWidget extends StatelessWidget {
   final double height;
   final String title;
+  bool displayIcon;
   GestureTapCallback onTap;
   Widget widget;
+  Color color;
 
   SelectItemWidget(
       {Key key,
       @required this.title,
       @required this.height,
+      this.color = Colors.black,
       this.widget,
-      this.onTap})
+      this.onTap,
+      this.displayIcon = true})
       : super(key: key);
 
   @override
@@ -42,7 +46,7 @@ class SelectItemWidget extends StatelessWidget {
                     Text(
                       title,
                       style: TextStyle(
-                          color: Colors.black,
+                          color: color,
                           fontSize: ScreenUtil().setSp(40),
                           fontWeight: FontWeight.w500),
                     ),
@@ -50,11 +54,15 @@ class SelectItemWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         (widget != null) ? widget : SizedBox(),
-                        Icon(
-                          Icons.chevron_right,
-                          color: Colors.black26,
-                          size: ScreenUtil().setSp(50),
-                        ),
+                        (displayIcon)
+                            ? Icon(
+                                Icons.chevron_right,
+                                color: Colors.black26,
+                                size: ScreenUtil().setSp(50),
+                              )
+                            : SizedBox(
+                                width: 10,
+                              ),
                       ],
                     ),
                   ],

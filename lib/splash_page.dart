@@ -13,7 +13,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provide/provide.dart';
 
-
 class SplashPage extends StatefulWidget {
   @override
   _SplashPageState createState() => _SplashPageState();
@@ -29,8 +28,8 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     super.initState();
     _scaleTween = Tween(begin: 0, end: 1);
     _logoController =
-    AnimationController(vsync: this, duration: Duration(milliseconds: 500))
-      ..drive(_scaleTween);
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500))
+          ..drive(_scaleTween);
     Future.delayed(Duration(milliseconds: 500), () {
       _logoController.forward();
     });
@@ -39,7 +38,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
     _logoController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        Future.delayed(Duration(milliseconds: 500), () {
+        Future.delayed(Duration(milliseconds: 200), () {
           goPage();
         });
       }
@@ -49,38 +48,40 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   void goPage() async {
     await Application.initSp();
     Provide.value<UserModelProvide>(context).initUser(context);
-    UserModel user = Provide
-        .value<UserModelProvide>(context)
-        .user;
+    UserModel user = Provide.value<UserModelProvide>(context).user;
     if (user != null) {
-      DateTime time= DateTime.tryParse(user.loginDate);
+      DateTime time = DateTime.tryParse(user.loginDate);
       time = time.add(Duration(seconds: user.expire));
-      if(DateTime.now().isBefore(time)){///token 是否过期
-        UserMethod.refreshLogin(user.userVo.phoneNumber).then((newUser){///更新 user 时间
-           if(newUser!=null){
-             Application.sp.setString('user', json.encode(newUser.toJson()));
-           }
-        }).catchError((onError){
-          Fluttertoast.showToast(msg: '应用服务失败');
+      if (DateTime.now().isBefore(time)) {
+        ///token 是否过期
+        UserMethod.refreshLogin(
+                context, Provide.value<UserModelProvide>(context).username)
+            .then((newUser) {
+          ///更新 user 时间
+          if (newUser != null) {
+            Application.sp.setString('user', json.encode(newUser.toJson()));
+          }
+        }).catchError((onError) {
+          Fluttertoast.showToast(msg: onError.toString());
         });
         NavigatorUtil.goHomePage(context);
         return null;
       }
     }
-    String username=Provide.value<UserModelProvide>(context).username;
-   //String pwd=Provide.value<UserModelProvide>(context).pwd;
-    NavigatorUtil.goLoginPage(context,username: username,);
+    String username = Provide.value<UserModelProvide>(context).username;
+    //String pwd=Provide.value<UserModelProvide>(context).pwd;
+    NavigatorUtil.goLoginPage(
+      context,
+      username: username,
+    );
     //Application.router.navigateTo(context, Routes.loginPage);
   }
 
   @override
   Widget build(BuildContext context) {
     //NetUtils.init();
-    ScreenUtil.instance = ScreenUtil(width: 750, height: 1300)
-      ..init(context);
-    final size = MediaQuery
-        .of(context)
-        .size;
+    ScreenUtil.instance = ScreenUtil(width: 750, height: 1300)..init(context);
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -93,15 +94,19 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.asset('assets/img/appIcon.png', fit: BoxFit.contain,
-                    width: ScreenUtil().setWidth(150)
-                    ,
-                    height: ScreenUtil().setHeight(150),),
-                  Text('智慧课堂辅助App', style: TextStyle(
-                      color: Colors.pink, fontSize: ScreenUtil().setSp(50)),),
+                  Image.asset(
+                    'assets/img/appIcon.png',
+                    fit: BoxFit.contain,
+                    width: ScreenUtil().setWidth(150),
+                    height: ScreenUtil().setHeight(150),
+                  ),
+                  Text(
+                    '智慧课堂辅助App',
+                    style: TextStyle(
+                        color: Colors.pink, fontSize: ScreenUtil().setSp(50)),
+                  ),
                 ],
-              )
-          ),
+              )),
         ),
       ),
     );

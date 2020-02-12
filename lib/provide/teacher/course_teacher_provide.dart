@@ -24,10 +24,10 @@ class CourseTeacherProvide with ChangeNotifier {
   Curssor curssor = Curssor(1, 1, 5);
 
   ///获取网络课程数据
-  Future<List<Course>> teacher_getCoursePage(userId) async {
+  Future<List<Course>> teacher_getCoursePage(BuildContext context,userId) async {
 
     curssor = Curssor(1, 1, 5);
-    ResponseModel responseModel = await TeacherMethod.getCoursePage(
+    ResponseModel responseModel = await TeacherMethod.getCoursePage(context,
       userId: userId,
     );
     if (responseModel.data != null) {
@@ -53,10 +53,10 @@ class CourseTeacherProvide with ChangeNotifier {
   }
 
   ///加载更多
-  Future<bool> getMoreCourseList(userId, {pageSize = 5}) async {
+  Future<bool> getMoreCourseList(BuildContext context,userId, {pageSize = 5}) async {
     print(curssor);
     //print(courseList.length);
-    ResponseModel responseModel = await TeacherMethod.getCoursePage(
+    ResponseModel responseModel = await TeacherMethod.getCoursePage(context,
         userId: userId, pageNo: curssor.offset, pageSize: pageSize);
     print(responseModel.data);
     List<dynamic> list = responseModel.data;
