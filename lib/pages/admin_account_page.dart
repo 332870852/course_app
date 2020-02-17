@@ -50,16 +50,19 @@ class AdminAccoutPage extends StatelessWidget {
   }
 
   ///退出当前账号
-  Widget exitItem(context){
+  Widget exitItem(context) {
     return Container(
       padding: EdgeInsets.only(top: 10),
       child: SelectItemWidget(
         title: '退出当前账号',
         color: Colors.red,
-        widget: Icon(Icons.exit_to_app,color: Colors.red,),
+        widget: Icon(
+          Icons.exit_to_app,
+          color: Colors.red,
+        ),
         displayIcon: false,
         height: 50,
-        onTap: () async{
+        onTap: () async {
           //todo 退出当前账号
           var b = await showCupertinoDialog(
               context: context,
@@ -76,20 +79,13 @@ class AdminAccoutPage extends StatelessWidget {
                   isLoding: false,
                 );
               });
-          if(b==1){
-            await Provide.value<UserModelProvide>(context)
-                .logout(context);
+          if (b == 1) {
             Provide.value<WebSocketProvide>(context).close();
-            String username =
-                Provide
-                    .value<UserModelProvide>(context)
-                    .username;
-            String pwd = Provide
-                .value<UserModelProvide>(context)
-                .pwd;
-            //print("pwd: ${pwd}");
-            NavigatorUtil.goLoginPage(context,
-                username: username, pwd: pwd);
+            String username = Provide.value<UserModelProvide>(context).username;
+            String pwd = Provide.value<UserModelProvide>(context).pwd;
+            Provide.value<UserModelProvide>(context)
+                .logout(context)
+                .whenComplete(() {});
           }
         },
       ),
@@ -107,7 +103,8 @@ class AdminAccoutPage extends StatelessWidget {
             height: 50,
             onTap: () {
               //todo 密码管理
-              NavigatorUtil.goPwdChangePgae(context);
+              NavigatorUtil.goPwdChangePgae(context,
+                  username: Provide.value<UserModelProvide>(context).username);
             },
           ),
           SelectItemWidget(
@@ -145,16 +142,21 @@ class AdminAccoutPage extends StatelessWidget {
             SelectItemWidget(
               title: '手机号',
               height: 50,
-              widget: (iphone.isNotEmpty)?Row(
-                children: <Widget>[
-                  Icon(
-                    Icons.lock,
-                    color: Colors.green,
-                    size: ScreenUtil().setSp(35),
-                  ),
-                  Text('${iphone}'),
-                ],
-              ):Text('绑定手机号',style: TextStyle(color: Colors.black26),),
+              widget: (iphone.isNotEmpty)
+                  ? Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.lock,
+                          color: Colors.green,
+                          size: ScreenUtil().setSp(35),
+                        ),
+                        Text('${iphone}'),
+                      ],
+                    )
+                  : Text(
+                      '绑定手机号',
+                      style: TextStyle(color: Colors.black26),
+                    ),
               onTap: () {},
             ),
             SelectItemWidget(

@@ -189,7 +189,7 @@ class _JoinCoursePageState extends State<JoinCoursePage> {
                       '&courseNumber=${item.courseNumber}'
                       '&joinCode=${item.joincode}'
                       '&teacherId=${item.teacherId}'
-                      '&courseId=${item.courseId}');
+                      '&courseId=${item.courseId}&cid=${Uri.encodeComponent(item.cid)}');
         }
       });
     } else {

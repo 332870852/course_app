@@ -168,17 +168,19 @@ class CourseItemWidget extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => CreateCoursePage(
-                    titlePage: '编辑课程',
-                    isEditPage: true,
-                    ///是编辑页
-                    courseId: item.courseId.toString(),
-                    courseTitle: '${item.title}',
-                    selBgkColor: '${item.bgkColor}',
-                    courseNum: '${item.courseNumber}',
-                    imageUrl: '${item.bgkUrl}',
-                  ))).then((onValue) {
+                        titlePage: '编辑课程',
+                        isEditPage: true,
+
+                        ///是编辑页
+                        courseId: item.courseId.toString(),
+                        courseTitle: '${item.title}',
+                        selBgkColor: '${item.bgkColor}',
+                        courseNum: '${item.courseNumber}',
+                        imageUrl: '${item.bgkUrl}',
+                      ))).then((onValue) {
             if (onValue != null) {
               Course course = onValue;
+
               ///更新修改的课程
               Provide.value<CourseTeacherProvide>(context).updateCourse(course);
             }
@@ -208,21 +210,20 @@ class CourseItemWidget extends StatelessWidget {
             ///确定
             //TODO 教师删除课程
             bool flag = await TeacherMethod.deleteCourse(context,
-                courseId: courseId,
-                userId: Provide.value<UserProvide>(context).userId)
+                    courseId: courseId,
+                    userId: Provide.value<UserProvide>(context).userId)
                 .catchError((onError) {
               Fluttertoast.showToast(msg: '删除失败${onError}');
             });
-            if(flag){
-              Provide.value<CourseTeacherProvide>(context).deleteCourse(courseId);
+            if (flag) {
+              Provide.value<CourseTeacherProvide>(context)
+                  .deleteCourse(courseId);
             }
           }
           break;
         }
     }
   }
-
-
 
   ///首部
   Widget _headItem(
@@ -311,7 +312,7 @@ class CourseItemWidget extends StatelessWidget {
                     //  '&teacherName=${Uri.encodeComponent(item.teacherName)}'
                     //  '&teacherUrl=${(item.teacherUrl != null) ? Uri.encodeComponent(item.teacherUrl) : ''}'
                     '&teacherId=${item.teacherId}'
-                    '&courseId=${item.courseId}');
+                    '&courseId=${item.courseId}&cid=${Uri.encodeComponent('${item.cid}')}');
       },
     );
   }
@@ -366,8 +367,8 @@ class CourseItemWidget extends StatelessWidget {
       child: Row(
         children: <Widget>[
           FutureBuilder(
-              future:
-                  Provide.value<UserProvide>(context).getUserHeadImage(context,userIds),
+              future: Provide.value<UserProvide>(context)
+                  .getUserHeadImage(context, userIds),
               builder: (context, snaphot) {
                 if (snaphot.hasData) {
                   Map map = snaphot.data.asMap();

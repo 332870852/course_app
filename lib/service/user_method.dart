@@ -388,14 +388,14 @@ class UserMethod {
 
 
   ///查找用户
-  static Future<UserInfoVo> getUserFriendById(
+  static Future<UserInfoVo> getUserFriend(
       BuildContext context, String username,{String freindId,int findType=1}) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('username', () => username);
     map.putIfAbsent('freindId', () => freindId);
     map.putIfAbsent('findType', () => findType);
     ResponseModel responseModel = await get(context,
-        method: userPath.servicePath['getUserFriendById'], queryParameters: map);
+        method: userPath.servicePath['getUserFriend'], queryParameters: map);
     if (responseModel != null) {
       if (responseModel.code == 1) {
         UserInfoVo userInfoVo=UserInfoVo.fromJson(responseModel.data);
@@ -406,4 +406,25 @@ class UserMethod {
     }
     return null;
   }
+
+  ///modify password
+  static Future<bool> userPwdChange(
+      BuildContext context, String username,String oldPwd,String newPwd) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('username', () => username);
+    map.putIfAbsent('oldPwd', () => oldPwd);
+    map.putIfAbsent('newPwd', () => newPwd);
+    ResponseModel responseModel = await post(context,
+        method: userPath.servicePath['userPwdChange'], requestmap: map);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
+      } else {
+        throw responseModel.errors[0].message;
+      }
+    }
+    return null;
+  }
+
+
 }

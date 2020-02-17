@@ -46,6 +46,10 @@ dependencies:
   direct_select: ^1.0.0
 #  flutter_jpush: ^0.0.4 #极光推送
   flutter_local_notifications: ^1.1.5+1
+  flutter_qr_reader: ^1.0.3 #二维码扫描
+  permission_handler: ^4.2.0+hotfix.3 #权限库
+  latlong: ^0.6.1  #地点计算
+  amap_location_fluttify: 0.8.6+356f11c #高德地图
 dev_dependencies:
   flutter_test:
     sdk: flutter

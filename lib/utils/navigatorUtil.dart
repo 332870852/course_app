@@ -1,3 +1,4 @@
+import 'package:course_app/model/Course.dart';
 import 'package:course_app/provide/register_page_provide.dart';
 import 'package:course_app/provide/websocket_provide.dart';
 import 'package:course_app/router/application.dart';
@@ -85,7 +86,35 @@ class NavigatorUtil {
   }
 
   ///密码设置页
-  static void goPwdChangePgae(BuildContext context) {
-    _navigateTo(context, Routes.pwdChangePgae);
+  static void goPwdChangePgae(BuildContext context,
+      {@required String username}) {
+    _navigateTo(
+        context,
+        Routes.pwdChangePgae +
+            '?username=${Uri.encodeComponent('${username}')}');
+  }
+
+  ///学生考勤页面
+  static void goAttendanceStuPage(BuildContext context) {
+    _navigateTo(context, Routes.attendanceStuPage);
+  }
+
+  ///classroom页面
+  static void goClassRoomPage(BuildContext context, {@required Course course}) {
+    _navigateTo(
+        context,
+        Routes.classRoomPage +
+            '?' +
+            'studentNums=${course.member}'
+                '&classtitle=${Uri.encodeComponent(course.title)}'
+                '&courseNumber=${course.courseNumber}'
+                '&joinCode=${course.joincode}'
+                '&teacherId=${course.teacherId}'
+                '&courseId=${course.courseId}&cid=${Uri.encodeComponent(course.cid)}');
+  }
+
+  ///教师考勤管理页面
+  static void goAttendancePage(BuildContext context) {
+    _navigateTo(context, Routes.attendancePagePage);
   }
 }

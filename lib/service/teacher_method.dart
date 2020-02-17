@@ -157,4 +157,46 @@ class TeacherMethod {
     }
     return null;
   }
+
+
+  ///获取课堂二维码
+  static Future<String> getCourseQRcode(BuildContext context, String courseId,) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('courseId', () => courseId);
+    ResponseModel responseModel = await post(context,
+        method: teacherPath.servicePath['getCourseQRcode'],
+        requestmap: map,);
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return (responseModel.data);
+      } else {
+        throw responseModel.errors[0];
+      }
+    }
+    return null;
+  }
+
+
+  ///获取考勤记录
+  static Future<String> getAttendanceList(BuildContext context, String courseId,) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('courseId', () => courseId);
+    ResponseModel responseModel = await get(context,
+      method: teacherPath.servicePath['getAttendanceList'],
+      queryParameters: map,);
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+          List<dynamic>list=responseModel.data;
+          list.forEach((item){
+
+          });
+      } else {
+        throw responseModel.errors[0];
+      }
+    }
+    return null;
+  }
+
 }

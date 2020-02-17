@@ -13,9 +13,11 @@ import 'package:course_app/pages/register_page/final_registe_page.dart';
 import 'package:course_app/pages/register_page/next_pegist_page.dart';
 import 'package:course_app/pages/register_page/register_user_page.dart';
 import 'package:course_app/pages/register_page/result_registe_page.dart';
+import 'package:course_app/pages/teacher/attendance_page.dart';
 import 'package:course_app/pages/teacher/create_announce_page.dart';
 import 'package:course_app/pages/teacher/create_course_page.dart';
 import 'package:course_app/pages/user_info_page.dart';
+import 'package:course_app/pages/student/attendance_stu_page.dart';
 import 'package:course_app/provide/course_provide.dart';
 import 'package:course_app/provide/reply_list_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
@@ -85,12 +87,14 @@ Handler ResultRegistHanderl = Handler(
 ///课堂页
 Handler classRoomHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      print('classRoomHanderl');
   var studentNums = int.parse(params['studentNums'].first);
   var classtitle = params['classtitle'].first;
   var joinCode = params['joinCode'].first;
   var teacherId = params['teacherId'].first;
   var courseId = params['courseId'].first;
   var courseNumber = params['courseNumber'].first;
+  var cid = params['cid'].first;
   print(studentNums);
 
   return ClassRoomPage(
@@ -100,6 +104,7 @@ Handler classRoomHanderl = Handler(
     joinCode: joinCode,
     teacherId: teacherId,
     courseNumber: courseNumber,
+    cid: cid,
   );
 });
 
@@ -116,11 +121,14 @@ Handler adminAccoutHanderl = Handler(
 });
 
 ///密码管理页面
-
 Handler pwdChangeHanderl = Handler(
-handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-return PwdChangePage();
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  var username = (params['username'] != null) ? params['username'].first : '';
+  return PwdChangePage(
+    username: username,
+  );
 });
+
 ///创建课程页
 Handler createCourseHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -216,3 +224,16 @@ Handler qrcodeHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return QRcodePage();
 });
+
+///学生考勤页面
+
+Handler attendanceStuHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return AttendanceStuPage();
+});
+
+///教师考勤管理
+Handler attendancePageHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return AttendancePage();
+    });

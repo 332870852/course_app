@@ -5,6 +5,7 @@ import 'package:course_app/data/user_model_vo.dart';
 import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/service/user_method.dart';
+import 'package:course_app/utils/navigatorUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provide/provide.dart';
@@ -69,18 +70,20 @@ class UserModelProvide with ChangeNotifier {
 
   ///删除sp的用户信息
   Future<void> deleteUserInfo() async {
+    user=null;
     if (Application.sp.containsKey('user')) {
       Application.sp.remove('user');
     }
     if (Application.sp.containsKey('token')) {
       Application.sp.remove('token');
     }
+    notifyListeners();
   }
 
   ///退出登录
   Future<bool> logout(BuildContext context) async {
     String username = '';
-    print(user);
+    //print(user);
     if (user.loginType == 0) {
       username = user.userVo.phoneNumber;
     } else if (user.loginType == 1) {
@@ -91,6 +94,7 @@ class UserModelProvide with ChangeNotifier {
     if (!ObjectUtil.isEmptyString(username)) {
       UserMethod.userlogout(context, username).whenComplete(() {
         ///不管退出成功与否，都要本地删除，退出
+        NavigatorUtil.goLoginPage(context, username: username, pwd: pwd);
         deleteUserInfo();
       });
     }

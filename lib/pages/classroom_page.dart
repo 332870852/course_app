@@ -17,12 +17,14 @@ class ClassRoomPage extends StatefulWidget {
   final classtitle;
   final joinCode;
   final teacherId;
+  final cid;
 
   ClassRoomPage(this.courseId, {Key key,
     @required this.studentNums,
     @required this.classtitle,
     @required this.joinCode,
     @required this.teacherId,
+    @required this.cid,
     this.courseNumber,})
       : super(key: key);
 
@@ -91,6 +93,9 @@ class _ClassRoomPageState extends State<ClassRoomPage> {
                   ? '${widget.classtitle}(${widget.courseNumber})'
                   : widget.classtitle,
               joinCode: widget.joinCode,
+              teacherId:widget.teacherId,
+              courseId: widget.courseId,
+              courseCid: widget.cid,
             ),
 
             ClassRoomTopNavigatorWidget(courseId: widget.courseId,teacherId: widget.teacherId,),

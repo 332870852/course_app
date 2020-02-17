@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:common_utils/common_utils.dart';
 import 'package:course_app/config/constants.dart';
 import 'package:course_app/pages/join_course_page.dart';
 import 'package:course_app/pages/teacher/indext_teacher_page.dart';
@@ -6,15 +9,27 @@ import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/provide/websocket_provide.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
+import 'package:course_app/service/service_method.dart';
+import 'package:course_app/test/scanViewDemo.dart';
+import 'package:course_app/utils/QRcodeScanUtil.dart';
 import 'package:course_app/widget/course_item_widget.dart';
 import 'package:course_app/widget/create_course_widget.dart';
+import 'package:course_app/widget/progress_dialog_widget.dart';
 import 'package:fluro/fluro.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_pickers/Media.dart';
+import 'package:image_pickers/UIConfig.dart';
+import 'package:image_pickers/image_pickers.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provide/provide.dart';
 import 'package:course_app/config/service_url.dart';
+import 'package:flutter_qr_reader/flutter_qr_reader.dart';
 
 class IndexPage extends StatefulWidget {
   @override
@@ -71,7 +86,8 @@ class _IndexPageState extends State<IndexPage>
   ///join- fresh
   joinRefresh(context) async {
     await Provide.value<CourseProvide>(context)
-        .student_getCoursePage(context,Provide.value<UserProvide>(context).userId)
+        .student_getCoursePage(
+            context, Provide.value<UserProvide>(context).userId)
         .whenComplete(() async {
       _controller.finishRefresh(success: true);
       _controller.resetLoadState();
@@ -84,7 +100,7 @@ class _IndexPageState extends State<IndexPage>
   joinOnLoad(context) async {
     Provide.value<CourseProvide>(context).increatePage();
     bool flag = await Provide.value<CourseProvide>(context)
-        .getMoreCourseList(context,Provide.value<UserProvide>(context).userId,
+        .getMoreCourseList(context, Provide.value<UserProvide>(context).userId,
             pageSize: 5)
         .catchError((onError) {
       ///加载出现异常
@@ -122,13 +138,13 @@ class _IndexPageState extends State<IndexPage>
           ),
           PopupMenuItem(
             child: _buildPopupMenuItem(0xe60a, "扫一扫", color: Colors.blueAccent),
-            value: "saoyisao",
+            value: "sao_yisao",
           ),
         ];
       },
       icon: Icon(Icons.add),
       //(Icons.add),
-      onSelected: (String selected) {
+      onSelected: (String selected) async {
         switch (selected) {
           case 'join_course':
             {
@@ -141,8 +157,45 @@ class _IndexPageState extends State<IndexPage>
             {
               break;
             }
-          case 'saoyisao':
+          case 'sao_yisao':
             {
+              Map<PermissionGroup, PermissionStatus> permissions =
+              await PermissionHandler()
+                  .requestPermissions([PermissionGroup.camera]);
+              if (permissions[PermissionGroup.camera] ==
+                  PermissionStatus.granted) {
+                String url = await Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ScanViewDemo()));
+                if(ObjectUtil.isEmptyString(url)){
+                  break;
+                }
+                ProgressDialog pr =
+                ProgressDialogWdiget.showProgressStatic(context,
+                    message: '请求中,请稍后..',
+                    type: ProgressDialogType.Normal,
+                    progressWidget: CupertinoActivityIndicator(
+                      radius: 20.0,
+                    ));
+                // print(url);
+                getSys(context, url).then((onValue) async{
+                  if(onValue.code!=1){
+                    Fluttertoast.showToast(msg: onValue.result);
+                  }else{
+                    if(url.contains('joinCode=')){
+                      pr.dismiss();
+                      QRCodeScanUtil.doResult(context, 1, onValue.data);
+                    } else{
+                      Fluttertoast.showToast(msg: '二维码错误');
+                    }
+                  }
+                }).catchError((onError){
+                  Fluttertoast.showToast(msg: onError.toString());
+                }).whenComplete((){
+                  if(pr.isShowing()){
+                    pr.dismiss();
+                  }
+                });
+              }
               break;
             }
         }
@@ -171,7 +224,6 @@ class _IndexPageState extends State<IndexPage>
       ],
     );
   }
-
 
   //  Widget _ProvideData() {
 //    return Provide<CourseProvide>(builder: (context, child, data) {

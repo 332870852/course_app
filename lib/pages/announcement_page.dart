@@ -105,7 +105,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                 ? ListView.builder(
                     controller: _scrollController,
                     itemBuilder: (context, index) {
-                      return _bodycontent(context, announceList[index]);
+                      return _bodycontent(context, announceList[index],roleDis);
                     },
                     itemCount: announceList.length,
                   )
@@ -133,7 +133,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
 
 
   ///
-  Widget _body(context, {@required AnnouncementVo item}) {
+  Widget _body(context, bool display,{@required AnnouncementVo item}) {
     DateTime dateTime = DateTime.tryParse(item.date);
     String time =
         '${dateTime.month}月${dateTime.day}日 ${dateTime.hour}:${dateTime.minute}';
@@ -176,7 +176,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                       maxLines: 2,
                     ),
                   ),
-                  IconButton(
+                  (display)? IconButton(
                       icon: Icon(Icons.more_vert),
                       onPressed: () {
                         //TODO
@@ -184,7 +184,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                           context,
                           item,
                         );
-                      })
+                      }):SizedBox()
                 ],
               ),
               Row(
@@ -250,7 +250,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
   }
 
   ///公告内容
-  Widget _bodycontent(context, AnnouncementVo item) {
+  Widget _bodycontent(context, AnnouncementVo item,bool display) {
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10, bottom: 5),
       padding: EdgeInsets.only(left: 10, bottom: 5, right: 5),
@@ -259,7 +259,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
         color: Colors.white,
         border: Border.all(color: Colors.black26),
       ),
-      child: _body(context, item: item),
+      child: _body(context,display, item: item),
     );
   }
 

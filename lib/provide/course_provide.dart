@@ -137,6 +137,12 @@ class CourseProvide with ChangeNotifier {
     }
   }
 
+  ///add
+
+  bool insertCourse(Course course) {
+    courseList.insert(0, course);
+    notifyListeners();
+  }
   void increatePage() async {
     curssor.offset = curssor.offset + 1;
     //print("increatePage${curssor.offset}");

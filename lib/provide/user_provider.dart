@@ -121,6 +121,8 @@ class UserProvide with ChangeNotifier {
 
   ///保存个人信息
   saveUserInfo(UserInfoVo newUserInfo) async {
+    role=newUserInfo.role;
+    userId=newUserInfo.userId.toString();
     ///初始化SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
 

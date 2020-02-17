@@ -1,3 +1,8 @@
+import 'package:common_utils/common_utils.dart';
+import 'package:course_app/service/user_method.dart';
+import 'package:course_app/utils/navigatorUtil.dart';
+import 'package:course_app/widget/cupertion_alert_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,7 +10,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 ///修改密码页面
 class PwdChangePage extends StatefulWidget {
-  PwdChangePage({Key key}) : super(key: key);
+  PwdChangePage({Key key, @required this.username}) : super(key: key);
+  final String username;
 
   @override
   _PwdChangePageState createState() => _PwdChangePageState();
@@ -18,6 +24,7 @@ class _PwdChangePageState extends State<PwdChangePage> {
   FocusNode oldNode;
   FocusNode newNode;
   FocusNode focusNode;
+  bool displayLoading;
 
   @override
   void initState() {
@@ -29,6 +36,7 @@ class _PwdChangePageState extends State<PwdChangePage> {
     oldNode = FocusNode();
     newNode = FocusNode();
     focusNode = FocusNode();
+    displayLoading = false;
   }
 
   @override
@@ -52,10 +60,48 @@ class _PwdChangePageState extends State<PwdChangePage> {
     String newPwd = newcontroller.value.text.trim();
     String surePwd = surecontroller.value.text.trim();
     if (oldPwd.length < 6 || newPwd.length < 6 || surePwd.length < 6) {
-      Fluttertoast.showToast(msg: '新旧密码长度至少要大于6位数',);
+      Fluttertoast.showToast(
+        msg: '新旧密码长度至少要大于6位数',
+      );
+      return null;
     }
     if (newPwd != surePwd) {
-      Fluttertoast.showToast(msg: '两次输入的新密码不一致',);
+      Fluttertoast.showToast(
+        msg: '两次输入的新密码不一致',
+      );
+      return null;
+    }
+    setState(() {
+      displayLoading = true;
+    });
+    bool b =
+        await UserMethod.userPwdChange(context, widget.username, oldPwd, newPwd)
+            .catchError((onError) {
+      Fluttertoast.showToast(msg: onError.toString());
+    }).whenComplete(() {
+      setState(() {
+        displayLoading = false;
+      });
+    });
+    if (b) {
+      var sure = await showCupertinoDialog(
+          context: context,
+          builder: (context) {
+            return CupertionDialog(
+              title: '密码修改成功',
+              content: '请返回登录页面重新登录',
+              onOk: () {
+                Navigator.pop(context, true);
+              },
+              onCancel: () {
+                Navigator.pop(context, false);
+              },
+              isLoding: false,
+            );
+          });
+      if (sure) {
+        NavigatorUtil.goLoginPage(context, username: widget.username);
+      }
     }
   }
 
@@ -79,8 +125,8 @@ class _PwdChangePageState extends State<PwdChangePage> {
               color: Colors.green,
               disabledColor: Colors.grey.withOpacity(0.7),
               disabledTextColor: Colors.black45,
-              onPressed: () => onSubmit(),
-              child: Text('完成'),
+              onPressed: (!displayLoading)?() => onSubmit():null,
+              child: (!displayLoading)?Text('完成'):CupertinoActivityIndicator(),
             ),
           )
         ],

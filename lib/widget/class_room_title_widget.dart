@@ -1,28 +1,46 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:common_utils/common_utils.dart';
 import 'package:course_app/config/constants.dart';
+import 'package:course_app/provide/user_provider.dart';
+import 'package:course_app/service/teacher_method.dart';
+import 'package:course_app/widget/cupertion_alert_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provide/provide.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 ///课堂页信息头部
 class ClassRoomTitleWidget extends StatelessWidget {
   final classtitle;
   final joinCode;
   final studentNums;
+  final teacherId;
+  final courseId;
+  final String courseCid;
 
-  ClassRoomTitleWidget(
-      {Key key,
-      @required this.classtitle,
-      @required this.joinCode,
-      @required this.studentNums})
+  ClassRoomTitleWidget({Key key,
+    @required this.classtitle,
+    @required this.joinCode,
+    @required this.studentNums,
+    @required this.teacherId,
+    @required this.courseId,
+    @required this.courseCid})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+//    bool r = Provide
+//        .value<UserProvide>(context)
+//        .userId == teacherId;
     return Padding(
       padding: EdgeInsets.only(left: 1, right: 25, top: 40),
       child: Column(
         children: <Widget>[
           _titleBar(context, classtitle: classtitle),
-          _classRommInfo(joinCode: joinCode, studentNums: studentNums),
+          _classRommInfo(context,
+              joinCode: joinCode, studentNums: studentNums,),
         ],
       ),
     );
@@ -74,24 +92,36 @@ class ClassRoomTitleWidget extends StatelessWidget {
     );
   }
 
+
   ///加课码等房间信息
-  Widget _classRommInfo({@required joinCode, @required studentNums}) {
+  Widget _classRommInfo(BuildContext context,
+      {@required joinCode, @required studentNums}) {
     return Container(
       margin: EdgeInsets.only(top: 0, left: 15),
       height: 30,
       //color: Colors.red,
       child: Row(
         children: <Widget>[
-          _iconStrItem(
-              Icon(
-                IconData(
-                  0xe608,
-                  fontFamily: Constants.IconFontFamily,
+          GestureDetector(
+            onTap: () async {
+              print("点击加课二维码");
+              print(courseCid);
+              if (!ObjectUtil.isEmptyString(courseCid)) {
+                //showOverlay(context, cid: courseCid);
+                showQRcode(context, cid: courseCid);
+              }
+            },
+            child: _iconStrItem(
+                Icon(
+                  IconData(
+                    0xe608,
+                    fontFamily: Constants.IconFontFamily,
+                  ),
+                  color: Colors.white,
+                  size: ScreenUtil().setSp(35),
                 ),
-                color: Colors.white,
-                size: ScreenUtil().setSp(35),
-              ),
-              '加课码: ${joinCode}'),
+                '加课码: ${joinCode}'),
+          ),
           Text(
             ' | ',
             style: TextStyle(color: Colors.white54),
@@ -139,5 +169,79 @@ class ClassRoomTitleWidget extends StatelessWidget {
         style: TextStyle(color: Colors.white),
       )
     ]);
+  }
+
+  void showQRcode(BuildContext context, {String cid}) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: Text('${classtitle}'),
+            content: Container(
+              width: 300,
+              height: 365,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  CachedNetworkImage(
+                    imageUrl: '${cid}',
+                    width: 300,
+                    height: 300,
+                    placeholder: (context, url) {
+                      return SpinKitFadingFour(
+                        color: Colors.grey,
+                      );
+                    },
+                    cacheManager: DefaultCacheManager(),
+                    errorWidget:
+                        (BuildContext context, String url, Object error) {
+                      print("assets/img/网络失败.png        ${url}");
+                      return Image.asset('assets/img/网络失败.png');
+                    },
+                  ),
+                  Flexible(
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                '${joinCode}',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: ScreenUtil().setSp(40)),
+                              )
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                '扫描上面二维码加入课堂',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: ScreenUtil().setSp(25)),
+                              )
+                            ],
+                          ),
+                        ],
+                      )),
+                  Flexible(
+                    child: FlatButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.clear,
+                        color: Colors.black26,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            insetAnimationCurve: Curves.fastOutSlowIn,
+          );
+        });
   }
 }

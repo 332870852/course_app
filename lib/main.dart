@@ -1,5 +1,7 @@
+import 'package:amap_location_fluttify/amap_location_fluttify.dart';
 import 'package:course_app/pages/home_page.dart';
 import 'package:course_app/pages/join_course_page.dart';
+import 'package:course_app/provide/attendance_provide.dart';
 import 'package:course_app/provide/bottom_tabBar_provide.dart';
 import 'package:course_app/provide/classroom_notif_provide.dart';
 import 'package:course_app/provide/course_provide.dart';
@@ -14,24 +16,22 @@ import 'package:course_app/provide/websocket_provide.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:course_app/splash_page.dart';
-import 'package:course_app/utils/navigatorUtil.dart';
-import 'package:course_app/utils/navigator_observer.dart';
-import 'package:course_app/utils/notifications_util.dart';
-import 'package:course_app/widget/cupertion_alert_dialog.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:provide/provide.dart';
 import 'package:course_app/config/service_url.dart';
 
-void main() {
+void main() async {
+  ///高德地图插件
+  WidgetsFlutterBinding.ensureInitialized();
+  await AmapCore.init('21f35eb097c0cd048f7668194525ba7a');
+
+  ///状态管理
   var providers = Providers();
   var currentIndexProvide = CurrentIndexProvide();
 
   ///控制当前页面
-  //var joinCourseProvide = JoinCourseProvide();
-
   ///
   var userModelProvide = UserModelProvide();
   var bottomTabBarProvide = BottomTabBarProvide();
@@ -43,6 +43,7 @@ void main() {
   var webSocketProvide = WebSocketProvide();
   var classRoomNotifProvide = ClassRoomNotifProvide();
   var registeProvide = RegisteProvide();
+  var attendProvide = AttendProvide();
   providers
     ..provide(Provider<CurrentIndexProvide>.value(currentIndexProvide))
     ..provide(Provider<BottomTabBarProvide>.value(bottomTabBarProvide))
@@ -54,6 +55,7 @@ void main() {
     ..provide(Provider<ClassRoomNotifProvide>.value(classRoomNotifProvide))
     ..provide(Provider<UserModelProvide>.value(userModelProvide))
     ..provide(Provider<RegisteProvide>.value(registeProvide))
+    ..provide(Provider<AttendProvide>.value(attendProvide))
     ..provide(Provider<CourseProvide>.value(courseProvide));
   runApp(ProviderNode(child: MyApp(), providers: providers));
 }

@@ -6,6 +6,7 @@ import 'package:course_app/data/user_model_vo.dart';
 import 'package:course_app/pages/login_page.dart';
 import 'package:course_app/provide/user_model_provide.dart';
 import 'package:course_app/router/application.dart';
+import 'package:course_app/utils/QRcodeScanUtil.dart';
 import 'package:course_app/utils/ResponseModel.dart';
 import 'package:course_app/utils/exception.dart';
 import 'package:course_app/utils/navigatorUtil.dart';
@@ -54,6 +55,56 @@ final List<String> whileUrl = [
   serviceUrl + userPath.servicePath['userlogout'],
 ];
 
+
+Future<ResponseModel> getSys(
+  BuildContext context,
+  String url, {
+  Map queryParameters,
+  ProgressCallback onReceiveProgress,
+  Function sendTimeOutCallBack,
+  Function receiveTimeOutCallBack,
+  Function connectOutCallBack,
+}) async {
+  Dio dio = new Dio();
+  dio.interceptors.add(InterceptorsWrapper(onRequest: (options) {
+    dio.interceptors.requestLock.lock();
+    var token = Application.sp.get("token");
+    options.headers.addAll({'token': token});
+    dio.interceptors.requestLock.unlock();
+    return options;
+  }));
+  dio.options.connectTimeout = 7 * 1000;
+  dio.options.contentType = ContentType.json.value;
+  Response response = await dio.get(url,
+       onReceiveProgress: onReceiveProgress);
+  try {
+    if (response.statusCode == 200) {
+      // print(response);
+      ResponseModel responseModel = ResponseModel.fromJson(response.data);
+      if (ObjectUtil.isNotEmpty(responseModel.errors) &&
+          responseModel.errors[0].code == 400) {
+        ///未登录
+        await notLogin(context);
+        throw responseModel.errors[0].message;
+      }
+      return responseModel;
+    } else {
+      print('code: ${response.statusCode},data:${response.data}');
+    }
+  } on DioError catch (e) {
+    if (e.error is SocketException) {
+      print("网络错误： ${e.message}");
+      throw e.message;
+    }
+    dioErrorTip(
+        e, sendTimeOutCallBack, receiveTimeOutCallBack, connectOutCallBack);
+  } catch (e) {
+    print("get *********$e}");
+    throw e;
+  }
+  return null;
+}
+
 Future<ResponseModel> get(
   BuildContext context, {
   @required String method,
@@ -86,7 +137,7 @@ Future<ResponseModel> get(
   }
   Response response;
   try {
-    dio.options.connectTimeout = 7*1000;
+    dio.options.connectTimeout = 7 * 1000;
     dio.options.contentType = ContentType.json.value;
     response = await dio.get(url,
         queryParameters: map, onReceiveProgress: onReceiveProgress);
@@ -223,7 +274,6 @@ dioErrorTip(DioError e, Function sendTimeOutCallBack,
             gravity: ToastGravity.BOTTOM,
           );
           throw e.message;
-
         }
       }
       break;
@@ -254,7 +304,6 @@ dioErrorTip(DioError e, Function sendTimeOutCallBack,
             gravity: ToastGravity.BOTTOM,
           );
           throw e.message;
-
         }
       }
       break;

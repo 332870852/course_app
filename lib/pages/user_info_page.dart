@@ -270,23 +270,6 @@ class UserInfoPage extends StatelessWidget {
                 newUserInfo.identityVo.schoolName = schoolName;
                 _changUserinfo(context, newUserInfo, userSubDto);
               }
-//              Navigator.push(
-//                  context,
-//                  MaterialPageRoute(
-//                      builder: (context) => ChangeUserInfoPage(
-//                            appBarText: '更改学校',
-//                            defaultvalue: schoolName,
-//                            info: '完善学校信息可以让更多校友认识你',
-//                            textInputFormat: [
-//                              WhitelistingTextInputFormatter(
-//                                  RegExp("[a-zA-Z]|[\u4e00-\u9fa5]")),
-//                              LengthLimitingTextInputFormatter(20),
-//                            ],
-//                          ))).then((onValue) {
-//                //TODO value
-//                print(onValue);
-//              }
-//              );
             }),
         userInfoItem(
             title: '学号',
@@ -874,6 +857,8 @@ class UserInfoPage extends StatelessWidget {
                     dipalyLoding: false);
                 if (b) {
                   ///再次刷新用户资料
+                  Provide.value<UserProvide>(context).saveUserInfo(newUserInfo);
+                  //Provide.value<UserProvide>(context).updateRole(newRole: modint);
 //                  Provide.value<UserProvide>(context).getUserInfo(context,
 //                      userId: Provide.value<UserProvide>(context).userId);
                   Navigator.pop(context);
