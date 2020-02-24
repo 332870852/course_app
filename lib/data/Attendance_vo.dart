@@ -11,24 +11,26 @@ class AttendanceVo {
   int expire;
   String createTime;
   List<AttendanceStudents> attendanceStudents;
+  Map<int, List<AttendanceStudents>> map = Map();
 
   AttendanceVo(
       {this.attendanceId,
-        this.courseId,
-        this.publisherId,
-        this.attendCode,
-        this.longitude,
-        this.latitude,
-        this.distance,
-        this.address,
-        this.type,
-        this.expire,
-        this.createTime,
-        this.attendanceStudents});
+      this.courseId,
+      this.publisherId,
+      this.attendCode,
+      this.longitude,
+      this.latitude,
+      this.distance,
+      this.address,
+      this.type,
+      this.expire,
+      this.createTime,
+      this.attendanceStudents,
+      this.map});
 
   @override
   String toString() {
-    return 'AttendanceVo{attendanceId: $attendanceId, courseId: $courseId, publisherId: $publisherId, attendCode: $attendCode, longitude: $longitude, latitude: $latitude, distance: $distance, address: $address, type: $type, expire: $expire, createTime: $createTime, attendanceStudents: $attendanceStudents}';
+    return 'AttendanceVo{attendanceId: $attendanceId, courseId: $courseId, publisherId: $publisherId, attendCode: $attendCode, longitude: $longitude, latitude: $latitude, distance: $distance, address: $address, type: $type, expire: $expire, createTime: $createTime, attendanceStudents: $attendanceStudents, map: $map}';
   }
 
   AttendanceVo.fromJson(Map<String, dynamic> json) {
@@ -72,43 +74,95 @@ class AttendanceVo {
   }
 }
 
+//class AttendanceStudents {
+//  int attendanceStudentId;
+//  String studentId;
+//  int status;
+//  double longitude;
+//  double latitude;
+//  int distance;
+//  String address;
+//  String time;
+//  String attendanceId;
+//
+//  AttendanceStudents(
+//      {this.attendanceStudentId,
+//      this.studentId,
+//      this.status,
+//      this.longitude,
+//      this.latitude,
+//      this.distance,
+//      this.address,
+//      this.time,
+//      this.attendanceId});
+//
+//  @override
+//  String toString() {
+//    return 'AttendanceStudents{attendanceStudentId: $attendanceStudentId, studentId: $studentId, status: $status, longitude: $longitude, latitude: $latitude, distance: $distance, address: $address, time: $time, attendanceId: $attendanceId}';
+//  }
+//
+//  AttendanceStudents.fromJson(Map<String, dynamic> json) {
+//    attendanceStudentId = json['attendanceStudentId'];
+//    studentId = json['studentId'];
+//    status = json['status'];
+//    longitude = json['longitude'];
+//    latitude = json['latitude'];
+//    distance = json['distance'];
+//    address = json['address'];
+//    time = json['time'];
+//    attendanceId = json['attendanceId'];
+//  }
+//
+//  Map<String, dynamic> toJson() {
+//    final Map<String, dynamic> data = new Map<String, dynamic>();
+//    data['attendanceStudentId'] = this.attendanceStudentId;
+//    data['studentId'] = this.studentId;
+//    data['status'] = this.status;
+//    data['longitude'] = this.longitude;
+//    data['latitude'] = this.latitude;
+//    data['distance'] = this.distance;
+//    data['address'] = this.address;
+//    data['time'] = this.time;
+//    data['attendanceId'] = this.attendanceId;
+//    return data;
+//  }
+//}
+
+
 class AttendanceStudents {
   int attendanceStudentId;
   String studentId;
   int status;
   double longitude;
   double latitude;
-  int distance;
+  num distance;
   String address;
+  int type;
   String time;
   String attendanceId;
 
-  AttendanceStudents(
-      {this.attendanceStudentId,
-        this.studentId,
-        this.status,
-        this.longitude,
-        this.latitude,
-        this.distance,
-        this.address,
-        this.time,
-        this.attendanceId});
+
+  AttendanceStudents({this.attendanceStudentId, this.studentId, this.status,
+    this.longitude, this.latitude, this.distance, this.address, this.type,
+    this.time, this.attendanceId});
+
 
   @override
   String toString() {
-    return 'AttendanceStudents{attendanceStudentId: $attendanceStudentId, studentId: $studentId, status: $status, longitude: $longitude, latitude: $latitude, distance: $distance, address: $address, time: $time, attendanceId: $attendanceId}';
+    return 'AttendanceStudents{attendanceStudentId: $attendanceStudentId, studentId: $studentId, status: $status, longitude: $longitude, latitude: $latitude, distance: $distance, address: $address, type: $type, time: $time, attendanceId: $attendanceId}';
   }
 
   AttendanceStudents.fromJson(Map<String, dynamic> json) {
     attendanceStudentId = json['attendanceStudentId'];
-    studentId = json['studentId'];
+    studentId = json['studentId'].toString();
     status = json['status'];
     longitude = json['longitude'];
     latitude = json['latitude'];
     distance = json['distance'];
-    address = json['address'];
-    time = json['time'];
-    attendanceId = json['attendanceId'];
+    address = json['address'].toString();
+    type=json['type'];
+    time = json['time'].toString();
+    attendanceId = json['attendanceId'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -120,6 +174,7 @@ class AttendanceStudents {
     data['latitude'] = this.latitude;
     data['distance'] = this.distance;
     data['address'] = this.address;
+    data['type'] = this.type;
     data['time'] = this.time;
     data['attendanceId'] = this.attendanceId;
     return data;

@@ -4,6 +4,7 @@ import 'package:common_utils/common_utils.dart';
 import 'package:course_app/data/user_model_vo.dart';
 import 'package:course_app/provide/user_model_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
+import 'package:course_app/provide/websocket_provide.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:course_app/service/user_method.dart';
@@ -43,6 +44,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
         });
       }
     });
+
   }
 
   void goPage() async {

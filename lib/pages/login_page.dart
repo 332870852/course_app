@@ -163,7 +163,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                       fontFamily: "Poppins-Bold")),
                               onPressed: () {
                                 //todo 忘记密码
-                                NavigatorUtil.goAttendanceStuPage(context);
                               },
                             ),
                             Text('|'),

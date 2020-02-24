@@ -28,8 +28,7 @@ import 'package:image_pickers/image_pickers.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provide/provide.dart';
-import 'package:course_app/config/service_url.dart';
-import 'package:flutter_qr_reader/flutter_qr_reader.dart';
+
 
 class IndexPage extends StatefulWidget {
   @override

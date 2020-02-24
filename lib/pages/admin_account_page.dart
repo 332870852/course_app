@@ -81,8 +81,8 @@ class AdminAccoutPage extends StatelessWidget {
               });
           if (b == 1) {
             Provide.value<WebSocketProvide>(context).close();
-            String username = Provide.value<UserModelProvide>(context).username;
-            String pwd = Provide.value<UserModelProvide>(context).pwd;
+//            String username = Provide.value<UserModelProvide>(context).username;
+//            String pwd = Provide.value<UserModelProvide>(context).pwd;
             Provide.value<UserModelProvide>(context)
                 .logout(context)
                 .whenComplete(() {});

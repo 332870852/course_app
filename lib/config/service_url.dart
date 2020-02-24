@@ -1,12 +1,14 @@
-const serviceUrl = 'http://47.102.97.30:11001/';  //'http://192.168.200.104:11001/'
+const serviceUrl = 'http://192.168.200.117:11001/';  //'http://192.168.200.104:11001/'
 //const serviceUrl = 'http://192.168.43.186:11001/';
 //const webSocketUrl = 'ws://192.168.200.117:10090/ws';//wsServer
-const webSocketUrl = 'ws://47.102.97.30:11001/wsServer/123';
+const webSocketUrl = 'ws://192.168.200.117:11001/wsServer/';
 class studentPath {
   static const servicePath = {
     'getCoursePage': 'student/getCoursePage',
     'joinCourse': 'student/joinCourse',
      'removeCourse':'student/removeCourse',
+    'findAttendanceStudentScore':'findAttendanceStudentScore',
+    'AttendanceStudentCheck':'AttendanceStudentCheck',
   };
 }
 
@@ -28,7 +30,8 @@ class userPath{
     'getEveryUserInfo':'getEveryUserInfo',
     'getReplyListPage':'getCommentAnnPage',
     'getUserFriend':'getUserFriend',
-    'userPwdChange':'userPwdChange'
+    'userPwdChange':'userPwdChange',
+    'getStudentInfo':'getStudentInfo'
   };
 }
 
@@ -44,5 +47,8 @@ class teacherPath{
     'delAnnouncement':'delAnnouncement',
     'getCourseQRcode':'getCourseQRcode',
     'getAttendanceList':'teacher/getAttendanceList',
+    'createAttendance':'teacher/createAttendance',
+    'updateAttendanceStudent':'teacher/updateAttendanceStudent',
+    'delAttendance':'teacher/delAttendance',
   };
 }

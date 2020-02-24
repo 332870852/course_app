@@ -8,8 +8,9 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 
 class SwiperDiy extends StatefulWidget {
   final Future getHomePageContent;
+  final double height;
 
-  SwiperDiy({this.getHomePageContent});
+  SwiperDiy({this.getHomePageContent, this.height = 200});
 
   @override
   _SwiperDiyState createState() => _SwiperDiyState();
@@ -25,48 +26,91 @@ class _SwiperDiyState extends State<SwiperDiy> {
 
   @override
   Widget build(BuildContext context) {
-
+    ///初始化尺寸
     return Container(
-        height: ScreenUtil().setHeight(333),
-        width: ScreenUtil().setWidth(750),
+        //padding: EdgeInsets.only(left: 5, right: 5),
+        margin: EdgeInsets.only(left: 5, right: 5),
+        height: widget.height,
+        width: ScreenUtil.screenHeight,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Colors.red
+        ),
         child: Swiper(
           itemBuilder: (BuildContext context, int index) {
             return FutureBuilder(
               future: widget.getHomePageContent,
               builder: (context, snaphot) {
-                if(snaphot.hasData){
-                  if(index==0){
-                    return FadeInImage.assetNetwork(
-                      placeholder: 'assets/img/bg_swiper.png',
-                      image: 'http://d-pic-image.yesky.com/' + snaphot.data,
-                      imageScale: 1.0,
-                      fit: BoxFit.cover,
-                      fadeInCurve: Curves.easeInSine,
+                if (snaphot.hasData) {
+                  if (index == 0) {
+                    return Container(
+                      child: FadeInImage.assetNetwork(
+                        placeholder: 'assets/img/bg_swiper.png',
+                        image:
+                            'http://pic31.nipic.com/20130730/789607_232633343194_2.jpg',
+                        imageScale: 1.0,
+                        fit: BoxFit.cover,
+                        fadeInCurve: Curves.easeInSine,
+                      ),
                     );
-                  }else if(index==1){
+                  } else if (index == 1) {
                     return Image.asset(
-                      'assets/images/yanxi3.jpg',
+                      'assets/bgk/bgk0.jpg',
                       fit: BoxFit.fill,
                     );
-                  }else{
+                  } else {
                     return Image.asset(
-                      'assets/images/yanxi2.jpg',
+                      'assets/bgk/bgk1.jpg',
                       fit: BoxFit.cover,
                     );
                   }
-                }else{
+                } else {
                   return Image.asset(
-                    'assets/images/yanxi3.jpg',
+                    'assets/bgk/bgk0.jpg',
                     fit: BoxFit.cover,
                   );
                 }
               },
             );
           },
-          itemCount: 1,
-          pagination: SwiperPagination(),
+          itemCount: 3,
+          pagination: SwiperPagination(alignment: Alignment.bottomCenter),
           autoplay: true,
+          scrollDirection: Axis.horizontal,
         ));
   }
 }
 
+/*
+FutureBuilder(
+          future: widget.getHomePageContent,
+          builder: (context, snaphot) {
+            if (snaphot.hasData) {
+              return Swiper(
+                itemBuilder: (BuildContext context, int index) {
+                  return FadeInImage.assetNetwork(
+                    placeholder: 'assets/img/bg_swiper.png',
+                    image: serviceUrl + servicePath['meinu'],
+                    imageScale: 1.0,
+                    fit: BoxFit.cover,
+                  );
+                },
+                itemCount: 1,
+                pagination: SwiperPagination(),
+                autoplay: true,
+              );
+            } else {
+              return Swiper(
+                itemBuilder: (BuildContext context, int index) {
+                  return Image.asset(
+                    'assets/img/bg_swiper.png',
+                    fit: BoxFit.cover,
+                  );
+                },
+                itemCount: 3,
+                pagination: SwiperPagination(),
+                autoplay: true,
+              );
+            }
+          }),
+ */

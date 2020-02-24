@@ -1,7 +1,9 @@
 import 'package:course_app/config/constants.dart';
 import 'package:course_app/provide/reply_list_provide.dart';
+import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
+import 'package:course_app/utils/navigatorUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
@@ -10,8 +12,9 @@ import 'package:provide/provide.dart';
 class ClassRoomTopNavigatorWidget extends StatelessWidget {
   final String courseId;
   final String teacherId;
+  final int studentNums;
   ClassRoomTopNavigatorWidget(
-      {Key key, @required this.courseId,@required this.teacherId})
+      {Key key, @required this.courseId,@required this.teacherId,this.studentNums})
       : super(key: key);
 
   @override
@@ -108,6 +111,14 @@ class ClassRoomTopNavigatorWidget extends StatelessWidget {
                   context, Routes.announcementPage + '?courseId=${courseId}&teacherId=${teacherId}');
               break;
             }
+          case 3:{
+            if( Provide.value<UserProvide>(context).userId==teacherId){///教师
+              NavigatorUtil.goAttendancePage(context,courseId: courseId,studentNums: studentNums);
+            }else{
+              NavigatorUtil.goAttendanceStuPage(context,courseId);
+            }
+            break;
+          }
         }
       },
       child: Column(

@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:common_utils/common_utils.dart';
+import 'package:course_app/data/Attendance_vo.dart';
 import 'package:course_app/model/Course.dart';
+import 'package:course_app/pages/about_page.dart';
 import 'package:course_app/pages/admin_account_page.dart';
 import 'package:course_app/pages/announcement_content_page.dart';
 import 'package:course_app/pages/announcement_page.dart';
@@ -13,6 +17,8 @@ import 'package:course_app/pages/register_page/final_registe_page.dart';
 import 'package:course_app/pages/register_page/next_pegist_page.dart';
 import 'package:course_app/pages/register_page/register_user_page.dart';
 import 'package:course_app/pages/register_page/result_registe_page.dart';
+import 'package:course_app/pages/student/attendance_check_page.dart';
+import 'package:course_app/pages/teacher/attendance_detail_page.dart';
 import 'package:course_app/pages/teacher/attendance_page.dart';
 import 'package:course_app/pages/teacher/create_announce_page.dart';
 import 'package:course_app/pages/teacher/create_course_page.dart';
@@ -87,7 +93,7 @@ Handler ResultRegistHanderl = Handler(
 ///课堂页
 Handler classRoomHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      print('classRoomHanderl');
+  print('classRoomHanderl');
   var studentNums = int.parse(params['studentNums'].first);
   var classtitle = params['classtitle'].first;
   var joinCode = params['joinCode'].first;
@@ -226,7 +232,6 @@ Handler qrcodeHanderl = Handler(
 });
 
 ///学生考勤页面
-
 Handler attendanceStuHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return AttendanceStuPage();
@@ -235,5 +240,57 @@ Handler attendanceStuHanderl = Handler(
 ///教师考勤管理
 Handler attendancePageHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return AttendancePage();
-    });
+  num nums = (ObjectUtil.isNotEmpty(params['studentNums']))
+      ? num.parse(params['studentNums'].first)
+      : 0;
+  String courseId = (ObjectUtil.isNotEmpty(params['courseId']))
+      ? params['courseId'].first
+      : '';
+  return AttendancePage(
+    studentNums: nums,
+    courseId: courseId,
+  );
+});
+
+///
+Handler attendanceCheckHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  int attendanceStudentId =
+      (ObjectUtil.isNotEmpty(params['attendanceStudentId'].first))
+          ? int.parse(params['attendanceStudentId'].first)
+          : 0;
+  int type = (ObjectUtil.isNotEmpty(params['type'].first))
+      ? int.parse(params['type'].first)
+      : 0;
+  var address = (ObjectUtil.isNotEmpty(params['address'].first))
+      ? params['address'].first
+      : '';
+  var time =
+      (ObjectUtil.isNotEmpty(params['time'].first)) ? params['time'].first : '';
+  var attendanceId = (ObjectUtil.isNotEmpty(params['attendanceId'].first))
+      ? params['attendanceId'].first
+      : '';
+  return AttendanceCheckPage(
+    type: type,
+    attendanceStudentId: attendanceStudentId,
+    attendanceId: attendanceId,
+    address: address,
+    time: time,
+  );
+});
+
+Handler attendDetailHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  int index = (ObjectUtil.isNotEmpty(params['index'].first))
+      ? int.parse(params['index'].first)
+      : 0;
+  return AttendDetailPage(
+    index: index,
+  );
+});
+
+///about
+Handler aboutHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return AboutPage();
+});

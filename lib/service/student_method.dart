@@ -1,4 +1,7 @@
 import 'package:course_app/config/service_url.dart';
+import 'package:course_app/data/Attendance_student_dto.dart';
+import 'package:course_app/data/Attendance_student_vo.dart';
+import 'package:course_app/data/Attendance_vo.dart';
 import 'package:course_app/model/Course.dart';
 import 'package:course_app/service/service_method.dart';
 import 'package:course_app/utils/ResponseModel.dart';
@@ -82,4 +85,57 @@ class StudentMethod {
     }
     return false;
   }
+
+  ///考勤
+  static Future<List<AttendanceStudents>> findAttendanceStudentScore(
+      BuildContext context,
+      {@required String courseId}) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('courseId', () => courseId);
+    try {
+      ResponseModel responseModel = await post(
+        context,
+        method: studentPath.servicePath['findAttendanceStudentScore'],
+        requestmap: map,
+      );
+      if (responseModel != null) {
+        if (responseModel.code == 1) {
+          List<dynamic> list = responseModel.data;
+          List<AttendanceStudents> temp = [];
+          list.forEach((item) {
+            AttendanceStudents attendanceStudentVo =
+                AttendanceStudents.fromJson(item);
+            temp.add(attendanceStudentVo);
+          });
+          return temp;
+        } else {
+          throw responseModel.errors[0];
+        }
+      }
+    } catch (e) {
+      print("findAttendanceStudentScore 系统错误");
+    }
+    return null;
+  }
+
+  ///考勤
+  static Future<int> AttendanceStudentCheck(BuildContext context,
+      {@required AttendanceStudentDto attendanceStudentDto}) async {
+    print(attendanceStudentDto);
+    ResponseModel responseModel = await post(
+      context,
+      method: studentPath.servicePath['AttendanceStudentCheck'],
+      data: attendanceStudentDto.toJson(),
+    );
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        //print(responseModel.data);
+        return responseModel.data;
+      } else {
+        throw responseModel.errors[0];
+      }
+    }
+    return -1;
+  }
+
 }

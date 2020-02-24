@@ -1,6 +1,13 @@
 import 'package:course_app/config/constants.dart';
+import 'package:course_app/data/Attendance_student_vo.dart';
+import 'package:course_app/data/Attendance_vo.dart';
+import 'package:course_app/provide/attendance_student_provide.dart';
+import 'package:course_app/provide/showAttend_provide.dart';
+import 'package:course_app/utils/navigatorUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provide/provide.dart';
+import 'package:flutter/cupertino.dart';
 
 ///学生考勤页面
 class AttendanceStuPage extends StatefulWidget {
@@ -23,67 +30,92 @@ class _AttendanceStuPageState extends State<AttendanceStuPage> {
               Navigator.pop(context);
             }),
       ),
-      body: Container(
-        width: ScreenUtil.screenWidth,
-        height: ScreenUtil.screenHeight,
-        child: Column(
-          children: <Widget>[
-            diplayAccount(
-                absfrequency: 33,
-                latfrequency: 0,
-                leafrequency: 1,
-                attfrequency: 5,
-                takfrequency: 0),
-            Flexible(
-              child: myListRecord(testlist),
-            )
-          ],
-        ),
+      body: Provide<AttendStudentProvide>(
+        builder: (context, child, data) {
+          return FutureBuilder(
+            future: Provide.value<AttendStudentProvide>(context)
+                .getAttendanceStuList(),
+            builder: (context, sna) {
+              if (sna.connectionState == ConnectionState.waiting) {
+                return CupertinoActivityIndicator();
+              }
+              if (sna.hasData) {
+                List<AttendanceStudents> attendanceStuList = sna.data;
+                return Container(
+                  width: ScreenUtil.screenWidth,
+                  height: ScreenUtil.screenHeight,
+                  child: Column(
+                    children: <Widget>[
+                      diplayAccount(
+                          chuqin: data.absfrequency,
+                          chidao: data.latfrequency,
+                          zaotui: data.leafrequency,
+                          kuangke: data.attfrequency,
+                          qingjia: data.takfrequency),
+                      (attendanceStuList.isNotEmpty)
+                          ? Flexible(
+                              child: myListRecord(attendanceStuList),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.only(top: 50),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Image.asset('assets/img/nodata2.png'),
+                                  Text(
+                                    '暂无数据',
+                                    style:
+                                        TextStyle(color: Colors.blue.shade200),
+                                  ),
+                                ],
+                              ),
+                            ),
+                    ],
+                  ),
+                );
+              } else {
+                return Center(
+                  child: Text('暂无数据'),
+                );
+              }
+            },
+          );
+        },
       ),
     );
   }
 
-  List testlist = [
-    {'date': '${DateTime.now().toString()}', 'kTyoe': 0, 'status': 0},
-    {'date': '${DateTime.now().toString()}', 'kTyoe': 1, 'status': 4},
-    {'date': '${DateTime.now().toString()}', 'kTyoe': 0, 'status': 2},
-    {'date': '${DateTime.now().toString()}', 'kTyoe': 0, 'status': 1},
-    {'date': '${DateTime.now().toString()}', 'kTyoe': 0, 'status': 1},
-    {'date': '${DateTime.now().toString()}', 'kTyoe': 1, 'status': 3},
-  ];
-
   ///记录列表
-  Widget myListRecord(List list) {
+  Widget myListRecord(List<AttendanceStudents> list) {
     return ListView.builder(
         itemCount: list.length, //list.length,
         itemBuilder: (context, index) {
-          return everyItem(
-              date: list[index]['date'],
-              ktype: list[index]['ktype'],
-              status: list[index]['status']);
+          return everyItem(data: list[index]);
         });
   }
 
-  Widget everyItem({@required String date, int ktype = 0, int status = 0}) {
+  Widget everyItem({@required AttendanceStudents data}) {
     //assert(ktype>-1&&ktype<2);
     //assert(status>-1&&status<6);
-    String dateTitle = date.substring(0, 10);
-    String dateSub = date.substring(10, date.length - 1);
-    String tip = (ktype == 0) ? 'gps考勤' : '数字考勤';
+    var time = data.time;
+    var status = data.status;
+    String dateTitle = time.substring(0, 11);
+    String dateSub = time.substring(10, time.length);
+    String tip = (data.type == 1) ? 'gps考勤' : '数字考勤';
     String statusMsg = '';
     Color color = Colors.green;
-    if (status == 1) {
+    if (status == 0) {
       statusMsg = '出勤';
-    } else if (status == 2) {
+    } else if (status == 1) {
       statusMsg = '迟到';
       color = Colors.orangeAccent;
-    } else if (status == 3) {
+    } else if (status == 2) {
       statusMsg = '早退';
       color = Colors.orangeAccent;
-    } else if (status == 4) {
+    } else if (status == 3) {
       statusMsg = '旷课';
       color = Colors.red;
-    } else if (status == 5) {
+    } else if (status == 4) {
       statusMsg = '请假';
     }
     return Container(
@@ -105,9 +137,16 @@ class _AttendanceStuPageState extends State<AttendanceStuPage> {
               ),
             ],
           ),
-          (status == 0)
+          (status == -1)
               ? FlatButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    //todo
+                    Provide.value<ShowAttendProvide>(context).initStatus();
+                    NavigatorUtil.goAttendanceCheckPage(context,
+                        attendanceStudentId: data.attendanceStudentId,
+                        attendanceId: data.attendanceId,
+                        type: data.type,address: data.address,time: time);
+                  },
                   child: Text('考勤签到'),
                   color: Colors.green,
                   textColor: Colors.white,
@@ -123,11 +162,11 @@ class _AttendanceStuPageState extends State<AttendanceStuPage> {
 
   ///数据统计
   Widget diplayAccount(
-      {@required int attfrequency,
-      @required int latfrequency,
-      @required int leafrequency,
-      @required int absfrequency,
-      @required int takfrequency}) {
+      {@required int chuqin,
+      @required int chidao,
+      @required int zaotui,
+      @required int kuangke,
+      @required int qingjia}) {
     return Container(
       padding: EdgeInsets.only(left: 20, right: 20, top: 20),
       height: 100,
@@ -139,11 +178,11 @@ class _AttendanceStuPageState extends State<AttendanceStuPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          DataItem(label: '出勤', color: Colors.green, data: attfrequency),
-          DataItem(label: '迟到', color: Colors.orangeAccent, data: latfrequency),
-          DataItem(label: '早退', color: Colors.orangeAccent, data: leafrequency),
-          DataItem(label: '旷课', color: Colors.red, data: absfrequency),
-          DataItem(label: '请假', color: Colors.green, data: takfrequency),
+          DataItem(label: '出勤', color: Colors.green, data: chuqin),
+          DataItem(label: '迟到', color: Colors.orangeAccent, data: chidao),
+          DataItem(label: '早退', color: Colors.orangeAccent, data: zaotui),
+          DataItem(label: '旷课', color: Colors.red, data: kuangke),
+          DataItem(label: '请假', color: Colors.green, data: qingjia),
         ],
       ),
     );

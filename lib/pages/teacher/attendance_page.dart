@@ -1,27 +1,76 @@
 import 'dart:async';
 
 import 'package:amap_location_fluttify/amap_location_fluttify.dart';
+import 'package:common_utils/common_utils.dart';
 import 'package:course_app/config/constants.dart';
+import 'package:course_app/data/Attendance_dto.dart';
+import 'package:course_app/data/Attendance_vo.dart';
+import 'package:course_app/pages/teacher/attendance_detail_page.dart';
 import 'package:course_app/provide/attendance_provide.dart';
+import 'package:course_app/provide/expire_timer_provide.dart';
+import 'package:course_app/provide/showAttend_provide.dart';
+import 'package:course_app/provide/teacher/attend_stu_provide.dart';
+import 'package:course_app/router/application.dart';
+import 'package:course_app/service/teacher_method.dart';
+import 'package:course_app/utils/navigatorUtil.dart';
 import 'package:course_app/utils/permission_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provide/provide.dart';
 
 ///教师考勤页
 
 class AttendancePage extends StatefulWidget {
+  num studentNums;
+  final String courseId;
+
+  AttendancePage({Key key, @required this.studentNums, @required this.courseId})
+      : super(key: key);
+
   @override
   _AttendancePageState createState() => _AttendancePageState();
 }
 
 class _AttendancePageState extends State<AttendancePage> {
-  Duration time;
+  //Duration time;
   var seconds = 0;
-  Timer countdownTimer;
-  LatLng latLng;
+  var subscription;
+  var subscription1;
+
+  //Timer countdownTimer;
+  //LatLng latLng;
   int distance = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    subscription = Application.eventBus
+        .respond<List<AttendanceStudents>>((List<AttendanceStudents> list) {
+      debugPrint("event bus list AttendancePage");
+      if (list.isNotEmpty) {
+        Provide.value<AttendProvide>(context)
+            .insertAttendanceStudents(context, list);
+      }
+    });
+    subscription1 = Application.eventBus
+        .respond<AttendanceStudents>((AttendanceStudents attendanceStudents) {
+      debugPrint("event bus list AttendancePage");
+      List<AttendanceStudents> list = [];
+      list.add(attendanceStudents);
+      Provide.value<AttendProvide>(context)
+          .insertAttendanceStudents(context, list);
+    });
+  }
+
+  @override
+  void dispose() {
+    subscription.dispose();
+    subscription1.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,23 +88,74 @@ class _AttendancePageState extends State<AttendancePage> {
           child: Icon(Icons.send),
           onPressed: () {
             //todo 发布考勤任务
-            Provide.value<AttendProvide>(context).initStatus();
+            Provide.value<ShowAttendProvide>(context).initStatus();
             showAttendOverlay(context);
           }),
       body: Container(
-        width: ScreenUtil.screenWidth,
-        height: ScreenUtil.screenHeight,
-        padding: EdgeInsets.only(top: 20),
-        child: ListView.builder(
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return AttendanceItem();
-            }),
-      ),
+          width: ScreenUtil.screenWidth,
+          height: ScreenUtil.screenHeight,
+          padding: EdgeInsets.only(top: 20),
+          child: Provide<AttendProvide>(builder: (context, child, data) {
+            if (data.attendanceVoList.isEmpty) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset('assets/img/nodata2.png'),
+                  Text(
+                    '暂无考勤记录',
+                    style: TextStyle(color: Colors.blue.shade200),
+                  ),
+                ],
+              );
+            }
+            return ListView.builder(
+                itemCount: data.attendanceVoList.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      //todo click
+//                      Navigator.push(context, MaterialPageRoute(builder: (context)=>
+//                          AttendDetailPage(index:index,)));
+                      NavigatorUtil.goAttendDetailPage(context,index);
+                    },
+                    child: AttendanceItem(data.attendanceVoList[index],
+                        data: data),
+                  );
+                });
+//            return FutureBuilder(
+//                future: data.getAttendanceList(context),
+//                builder: (context, snapshot) {
+//                  //print("hahhaha  ${snapshot.hasData}");
+//                  if(snapshot.connectionState==ConnectionState.waiting){
+//                    return CupertinoActivityIndicator();
+//                  }else{
+//                    List<AttendanceVo> attendanceVoList = snapshot.data;
+//                    if(attendanceVoList.isEmpty){
+//                      return Column(
+//                        mainAxisAlignment: MainAxisAlignment.center,
+//                        children: <Widget>[
+//                          Image.asset('assets/img/nodata2.png'),
+//                          Text(
+//                            '暂无考勤记录',
+//                            style: TextStyle(color: Colors.blue.shade200),
+//                          ),
+//                        ],
+//                      );
+//                    }
+//                    return ListView.builder(
+//                        itemCount: attendanceVoList.length,
+//                        itemBuilder: (context, index) {
+//                          //print(attendanceVoList[index].map.length);
+//                          return AttendanceItem(attendanceVoList[index],
+//                              data: data);
+//                        });
+//                  }
+//                });
+          })),
     );
   }
 
-  Widget AttendanceItem() {
+  Widget AttendanceItem(AttendanceVo attendanceVo, {data}) {
     //todo
     return Container(
       margin: EdgeInsets.all(10),
@@ -67,48 +167,77 @@ class _AttendancePageState extends State<AttendancePage> {
             spreadRadius: 1,
             offset: Offset(0, 1)),
       ]),
-      height: 200,
-      child: Provide<AttendProvide>(builder: (context, child, data) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            titleRow(
-                createtime: DateTime.now().toString().substring(0, 19),
-                type: 1),
-            attendCodeRow(
-                attendCode: 'ASD5WQ',
-                time: data.counterTimegg,
-                m: data.minutes,
-                s: data.second),
-
-            ///
-            diplayAccount(50,
-                attfrequency: 1,
-                leafrequency: 1,
-                latfrequency: 0,
-                absfrequency: 0,
-                takfrequency: 2),
-            bottomRow('广西桂林'),
-          ],
-        );
-      }),
+      height: 215,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          titleRow(
+              createtime: '${attendanceVo.createTime}',
+              type: attendanceVo.type),
+          Provide<ExpireTimerProvide>(
+            builder: (context, child, data) {
+              int id = attendanceVo.attendanceId;
+              if (data.timeExpire[id] != null) {
+                return attendCodeRow(
+                    attendCode: '${attendanceVo.attendCode}',
+                    time: data.timerMap[id],
+                    m: data.timeExpire[id].minutes,
+                    s: data.timeExpire[id].second);
+              } else {
+                // print('打印： ${data.timerMap[id]}');
+                return attendCodeRow(
+                    attendCode: '${attendanceVo.attendCode}',
+                    time: data.timerMap[id],
+                    m: 0,
+                    s: 0);
+              }
+            },
+          ),
+          ///
+          (attendanceVo.map.length < 1)
+              ? diplayAccount(widget.studentNums,
+                  attfrequency: 0,
+                  leafrequency: 0,
+                  latfrequency: 0,
+                  absfrequency: 0,
+                  takfrequency: 0)
+              : diplayAccount(widget.studentNums,
+                  attfrequency: attendanceVo.map[0].length,
+                  leafrequency: attendanceVo.map[1].length,
+                  latfrequency: attendanceVo.map[2].length,
+                  absfrequency: attendanceVo.map[3].length,
+                  takfrequency: attendanceVo.map[4].length),
+          (attendanceVo.type == 1)
+              ? bottomRow('${attendanceVo.address}')
+              : SizedBox(),
+        ],
+      ),
     );
   }
 
   Widget bottomRow(String address) {
     return Flexible(
+        flex: 2,
         child: Row(
-      children: <Widget>[
-        Text(
-          '考勤地点: ${address}',
-          style: TextStyle(color: Colors.grey),
-        )
-      ],
-    ));
+          children: <Widget>[
+            Icon(
+              Icons.location_city,
+              color: Colors.grey,
+            ),
+            Flexible(
+              child: Text(
+                ' ${address}',
+                style: TextStyle(color: Colors.grey),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            )
+          ],
+        ));
   }
 
   Widget attendCodeRow(
-      {@required attendCode, @required num time, double m, int s}) {
+      {@required attendCode, @required time, double m, int s}) {
     return Expanded(
       flex: 3,
       child: Row(
@@ -133,7 +262,7 @@ class _AttendancePageState extends State<AttendancePage> {
                     Icons.alarm,
                     color: Colors.black26,
                   ),
-                  (time > 0)
+                  (time != null)
                       ? Text(
                           '${m.toInt()}:${s}',
                           style: TextStyle(
@@ -263,7 +392,8 @@ class _AttendancePageState extends State<AttendancePage> {
                 ),
               ],
             ),
-            content: Provide<AttendProvide>(builder: (context, child, data) {
+            content:
+                Provide<ShowAttendProvide>(builder: (context, child, data) {
               return Container(
                 height: 320,
                 child: Column(
@@ -283,7 +413,7 @@ class _AttendancePageState extends State<AttendancePage> {
                                   value: 0,
                                   groupValue: data.type,
                                   onChanged: (T) {
-                                    Provide.value<AttendProvide>(context)
+                                    Provide.value<ShowAttendProvide>(context)
                                         .changeType(T);
                                   }),
                               Text('数字考勤'),
@@ -297,7 +427,7 @@ class _AttendancePageState extends State<AttendancePage> {
                                   value: 1,
                                   groupValue: data.type,
                                   onChanged: (T) {
-                                    Provide.value<AttendProvide>(context)
+                                    Provide.value<ShowAttendProvide>(context)
                                         .changeType(T);
                                   }),
                               Text('gps考勤'),
@@ -317,15 +447,17 @@ class _AttendancePageState extends State<AttendancePage> {
                                             //todo 获取地点定位
                                             if (await PermissionUtil
                                                 .requestAmapPermission()) {
-                                              Provide.value<AttendProvide>(
+                                              Provide.value<ShowAttendProvide>(
                                                       context)
                                                   .changAddressBtn(false);
+                                              Provide.value<ShowAttendProvide>(
+                                                  context).changeAddress(address: '获取中..');
                                               final location =
                                                   await AmapLocation
                                                       .fetchLocation();
-                                              print(location);
+                                              //print(location);
                                               //_location = location;
-                                              Provide.value<AttendProvide>(
+                                              Provide.value<ShowAttendProvide>(
                                                       context)
                                                   .changeAddress(
                                                       address: await location
@@ -333,7 +465,8 @@ class _AttendancePageState extends State<AttendancePage> {
                                                       latLng:
                                                           await location.latLng)
                                                   .whenComplete(() {
-                                                Provide.value<AttendProvide>(
+                                                Provide.value<
+                                                            ShowAttendProvide>(
                                                         context)
                                                     .changAddressBtn(true);
                                               });
@@ -443,14 +576,69 @@ class _AttendancePageState extends State<AttendancePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CupertinoButton(
-                            child: Text('发布'),
+                            child: (data.displaycreateBnt)
+                                ? CupertinoActivityIndicator()
+                                : Text('发布'),
                             color: Colors.blue,
-                            onPressed: () {
-                              //todo 发布
-                              Provide.value<AttendProvide>(context)
-                                  .startCountdownTimer(data.timer);
-                              Navigator.pop(context);
-                            })
+                            onPressed: (data.displaycreateBnt)
+                                ? null
+                                : () {
+                                    //todo 发布
+                                    Duration d =
+                                        Provide.value<ShowAttendProvide>(
+                                                context)
+                                            .timer;
+                                    print(d.inSeconds);
+                                    int type = Provide.value<ShowAttendProvide>(
+                                            context)
+                                        .type;
+                                    AttendanceDto attendance = AttendanceDto(
+                                        courseId: '${widget.courseId}',
+                                        expire: d.inSeconds,
+                                        createTime:
+                                            DateTime.now().toIso8601String(),
+                                        type: type);
+                                    if (type == 1) {
+                                      //gps考勤
+                                      LatLng latLng =
+                                          Provide.value<ShowAttendProvide>(
+                                                  context)
+                                              .latLng;
+                                      String address =
+                                          Provide.value<ShowAttendProvide>(
+                                                  context)
+                                              .address;
+                                      if (ObjectUtil.isEmpty(latLng)) {
+                                        Fluttertoast.showToast(msg: '地点定位不能为空');
+                                        return null;
+                                      }
+                                      attendance.latitude = latLng.latitude;
+                                      attendance.longitude = latLng.longitude;
+                                      attendance.address = address;
+                                      attendance.distance =
+                                          Provide.value<ShowAttendProvide>(
+                                                  context)
+                                              .distance;
+                                     // print('${latLng}  ${address}');
+                                    }
+
+                                    ///禁用按钮，显示进度
+                                    Provide.value<ShowAttendProvide>(context)
+                                        .changeCreateBtn(true);
+                                    TeacherMethod.createAttendance(
+                                            context, attendance)
+                                        .then((onValue) {
+                                      if (ObjectUtil.isNotEmpty(onValue)) {
+                                        Provide.value<AttendProvide>(context)
+                                            .insertAtten(context, onValue);
+                                      }
+                                    }).whenComplete(() {
+                                      //恢复按钮
+                                      Provide.value<ShowAttendProvide>(context)
+                                          .changeCreateBtn(false);
+                                      Navigator.pop(context);
+                                    });
+                                  })
                       ],
                     ),
                   ],
@@ -494,8 +682,10 @@ class _AttendancePageState extends State<AttendancePage> {
                         ),
                         FlatButton(
                           onPressed: () {
-                            Provide.value<AttendProvide>(context)
-                                .changeDisplayTimer(time);
+                            Provide.value<ShowAttendProvide>(context)
+                                .changeDisplayTimer(
+                                    Provide.value<ShowAttendProvide>(context)
+                                        .timer);
                             Navigator.pop(context);
                           },
                           child: Text(
@@ -512,17 +702,17 @@ class _AttendancePageState extends State<AttendancePage> {
                       secondInterval: 60,
                       mode: CupertinoTimerPickerMode.ms,
                       onTimerDurationChanged: (Duration newTimer) {
-                        setState(() {
-                          time = newTimer;
-                          seconds = time.inSeconds;
-                        });
-                        print(seconds);
+                        Provide.value<ShowAttendProvide>(context).timer =
+                            newTimer;
+                        //seconds = time.inSeconds;
+                        //print(seconds);
                       }),
                 ],
               ));
         });
   }
 
+  ///选择距离
   void DistancePicker() {
     num u = 50;
     List<Widget> items = List<Widget>.generate(u, (index) {
@@ -558,7 +748,7 @@ class _AttendancePageState extends State<AttendancePage> {
                       ),
                       FlatButton(
                         onPressed: () {
-                          Provide.value<AttendProvide>(context)
+                          Provide.value<ShowAttendProvide>(context)
                               .changeDistance(distance);
                           Navigator.pop(context);
                         },

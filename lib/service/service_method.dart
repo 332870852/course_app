@@ -10,7 +10,6 @@ import 'package:course_app/utils/QRcodeScanUtil.dart';
 import 'package:course_app/utils/ResponseModel.dart';
 import 'package:course_app/utils/exception.dart';
 import 'package:course_app/utils/navigatorUtil.dart';
-import 'package:course_app/utils/navigator_observer.dart';
 import 'package:course_app/widget/cupertion_alert_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

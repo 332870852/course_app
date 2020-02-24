@@ -24,6 +24,9 @@ class Routes {
   static String pwdChangePgae = '/pwd_change_page';
   static String attendanceStuPage = '/attendanceStu_page';
   static String attendancePagePage = '/attendance_page';
+  static String attendanceCheckPage = '/attendance_check_page';
+  static String attendDetailPage = '/attend_detail_page';
+  static String aboutPage='/about_page';
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(
@@ -48,5 +51,8 @@ class Routes {
     router.define(pwdChangePgae, handler: pwdChangeHanderl);
     router.define(attendanceStuPage, handler: attendanceStuHanderl);
     router.define(attendancePagePage, handler: attendancePageHanderl);
+    router.define(attendanceCheckPage, handler: attendanceCheckHanderl);
+    router.define(attendDetailPage, handler: attendDetailHanderl);
+    router.define(aboutPage, handler: aboutHanderl);
   }
 }

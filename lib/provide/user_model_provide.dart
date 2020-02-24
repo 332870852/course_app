@@ -82,21 +82,25 @@ class UserModelProvide with ChangeNotifier {
 
   ///退出登录
   Future<bool> logout(BuildContext context) async {
+    debugPrint('logout');
     String username = '';
     //print(user);
     if (user.loginType == 0) {
       username = user.userVo.phoneNumber;
     } else if (user.loginType == 1) {
       username = user.userVo.email;
-    } else {
-      username = null;
     }
+    print('${!ObjectUtil.isEmptyString(username)}');
     if (!ObjectUtil.isEmptyString(username)) {
+
       UserMethod.userlogout(context, username).whenComplete(() {
         ///不管退出成功与否，都要本地删除，退出
         NavigatorUtil.goLoginPage(context, username: username, pwd: pwd);
         deleteUserInfo();
       });
+    }else{
+      NavigatorUtil.goLoginPage(context, username: '', pwd: pwd);
+      deleteUserInfo();
     }
     return true;
   }

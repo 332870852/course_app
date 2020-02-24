@@ -68,7 +68,7 @@ class UserMethod {
     ResponseModel responseModel = await post(context,
             method: userPath.servicePath['userlogout'], requestmap: map)
         .catchError((e) {});
-    if(responseModel!=null){
+    if (responseModel != null) {
       if (responseModel.code == 1) {
         return responseModel.data;
       } else {
@@ -88,7 +88,7 @@ class UserMethod {
     map.putIfAbsent('userId', () => str);
     ResponseModel responseModel = await get(context,
         method: userPath.servicePath['getUserHeadImage'], queryParameters: map);
-    if(responseModel!=null){
+    if (responseModel != null) {
       if (responseModel.code == 1) {
         //print(responseModel.data);
         return responseModel;
@@ -109,7 +109,7 @@ class UserMethod {
     if (responseModel != null) {
       if (responseModel.code == 1) {
         //print(responseModel.data);
-        UserInfoVo userInfoVo=UserInfoVo.fromJson(responseModel.data);
+        UserInfoVo userInfoVo = UserInfoVo.fromJson(responseModel.data);
         return userInfoVo;
       } else {
         throw responseModel.errors[0];
@@ -386,10 +386,9 @@ class UserMethod {
     return null;
   }
 
-
   ///查找用户
-  static Future<UserInfoVo> getUserFriend(
-      BuildContext context, String username,{String freindId,int findType=1}) async {
+  static Future<UserInfoVo> getUserFriend(BuildContext context, String username,
+      {String freindId, int findType = 1}) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('username', () => username);
     map.putIfAbsent('freindId', () => freindId);
@@ -398,7 +397,7 @@ class UserMethod {
         method: userPath.servicePath['getUserFriend'], queryParameters: map);
     if (responseModel != null) {
       if (responseModel.code == 1) {
-        UserInfoVo userInfoVo=UserInfoVo.fromJson(responseModel.data);
+        UserInfoVo userInfoVo = UserInfoVo.fromJson(responseModel.data);
         return userInfoVo;
       } else {
         throw responseModel.errors[0].message;
@@ -408,8 +407,8 @@ class UserMethod {
   }
 
   ///modify password
-  static Future<bool> userPwdChange(
-      BuildContext context, String username,String oldPwd,String newPwd) async {
+  static Future<bool> userPwdChange(BuildContext context, String username,
+      String oldPwd, String newPwd) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('username', () => username);
     map.putIfAbsent('oldPwd', () => oldPwd);
@@ -426,5 +425,31 @@ class UserMethod {
     return null;
   }
 
-
+  ///批量获取用户信息
+  static Future<List<UserInfoVo>> getStudentInfo(
+      BuildContext context, List<String> studentId) async {
+    List<UserInfoVo> result = [];
+    if(studentId.isEmpty){
+      return result;
+    }
+    Map<String, dynamic> map = new Map();
+    String str=studentId.toString().replaceAll('[', '');
+    str=str.replaceAll(']', '');
+    map.putIfAbsent('studentId', () => str);
+    ResponseModel responseModel = await get(context,
+        method: userPath.servicePath['getStudentInfo'], queryParameters: map);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        List<dynamic> list = responseModel.data;
+        list.forEach((item) {
+          UserInfoVo userInfoVo = UserInfoVo.fromJson(item);
+          result.add(userInfoVo);
+        });
+        return result;
+      } else {
+        throw responseModel.errors[0].message;
+      }
+    }
+    return null;
+  }
 }

@@ -2,12 +2,16 @@ import 'package:amap_location_fluttify/amap_location_fluttify.dart';
 import 'package:course_app/pages/home_page.dart';
 import 'package:course_app/pages/join_course_page.dart';
 import 'package:course_app/provide/attendance_provide.dart';
+import 'package:course_app/provide/attendance_student_provide.dart';
 import 'package:course_app/provide/bottom_tabBar_provide.dart';
 import 'package:course_app/provide/classroom_notif_provide.dart';
 import 'package:course_app/provide/course_provide.dart';
 import 'package:course_app/provide/create_course_provider.dart';
 import 'package:course_app/provide/currentIndex_provide.dart';
+import 'package:course_app/provide/expire_timer_provide.dart';
 import 'package:course_app/provide/register_page_provide.dart';
+import 'package:course_app/provide/showAttend_provide.dart';
+import 'package:course_app/provide/teacher/attend_stu_provide.dart';
 import 'package:course_app/provide/teacher/course_teacher_provide.dart';
 import 'package:course_app/provide/reply_list_provide.dart';
 import 'package:course_app/provide/user_model_provide.dart';
@@ -44,6 +48,10 @@ void main() async {
   var classRoomNotifProvide = ClassRoomNotifProvide();
   var registeProvide = RegisteProvide();
   var attendProvide = AttendProvide();
+  var expireTimerProvide = ExpireTimerProvide();
+  var showAttendProvide = ShowAttendProvide();
+  var attendStudentProvide = AttendStudentProvide();
+  var attendStuProvide = AttendStuProvide();
   providers
     ..provide(Provider<CurrentIndexProvide>.value(currentIndexProvide))
     ..provide(Provider<BottomTabBarProvide>.value(bottomTabBarProvide))
@@ -56,6 +64,10 @@ void main() async {
     ..provide(Provider<UserModelProvide>.value(userModelProvide))
     ..provide(Provider<RegisteProvide>.value(registeProvide))
     ..provide(Provider<AttendProvide>.value(attendProvide))
+    ..provide(Provider<ExpireTimerProvide>.value(expireTimerProvide))
+    ..provide(Provider<ShowAttendProvide>.value(showAttendProvide))
+    ..provide(Provider<AttendStudentProvide>.value(attendStudentProvide))
+    ..provide(Provider<AttendStuProvide>.value(attendStuProvide))
     ..provide(Provider<CourseProvide>.value(courseProvide));
   runApp(ProviderNode(child: MyApp(), providers: providers));
 }
@@ -69,20 +81,19 @@ class MyApp extends StatelessWidget {
     Routes.configureRoutes(router);
     Application.router = router;
 
-//    String userId = (Provide.value<UserProvide>(context).userId = '123');
-//    Provide.value<UserProvide>(context).role = 2;
-    //Provide.value<CourseProvide>(context).student_getCoursePage(userId);
-//    Provide.value<UserProvide>(context).getUserInfo(userId: userId);
-//    Provide.value<WebSocketProvide>(context).create();
-    Provide.value<WebSocketProvide>(context).addListener(() {
-      Provide.value<WebSocketProvide>(context).doMessage(1,
-          selectNotificationCallback: (p) async {
-        print("lai ba  *******${p} ");
-        //return Application.router.navigateTo(Application.navigatorKey.currentContext, Routes.joinCoursePage);
-        //return Application.navigatorKey.currentState.push(MaterialPageRoute(builder: (context)=>new JoinCoursePage()));
-      }, payload: "123444").then((onValue) {});
-    });
+//    Provide.value<WebSocketProvide>(context).addListener(() {
+//      Provide.value<WebSocketProvide>(context).doMessage(1,
+//          selectNotificationCallback: (p) async {
+//        print("lai ba  *******${p} ");
+//        //return Application.router.navigateTo(Application.navigatorKey.currentContext, Routes.joinCoursePage);
+//        //return Application.navigatorKey.currentState.push(MaterialPageRoute(builder: (context)=>new JoinCoursePage()));
+//      }, payload: "123444").then((onValue) {});
+//    });
 
+    Provide.value<WebSocketProvide>(context).addListener(() {
+      print("websocket-----------");
+      Provide.value<WebSocketProvide>(context).listenMessage();
+    });
     return Container(
       child: MaterialApp(
         navigatorKey: Application.navigatorKey,

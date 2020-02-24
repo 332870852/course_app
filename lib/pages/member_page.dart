@@ -52,7 +52,7 @@ class MemberPage extends StatelessWidget {
                           debugPrint('账号');
                           NavigatorUtil.goAdminAccoutPage(context);
                         }),
-                    listNavigator(),
+                    listNavigator(context),
                     accountNavigator(
                         title: '退出',
                         textcolor: Colors.red,
@@ -183,7 +183,7 @@ class MemberPage extends StatelessWidget {
   }
 
   ///用户列表
-  Widget listNavigator() {
+  Widget listNavigator(context) {
     return Container(
       margin: EdgeInsets.only(top: 10),
       color: Colors.white,
@@ -215,6 +215,7 @@ class MemberPage extends StatelessWidget {
               ),
               onTap: () {
                 //TODO
+                NavigatorUtil.goAboutPage(context);
               }),
           ListItem(
               title: '设置',

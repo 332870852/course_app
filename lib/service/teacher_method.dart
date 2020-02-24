@@ -1,4 +1,6 @@
 import 'package:course_app/config/service_url.dart';
+import 'package:course_app/data/Attendance_dto.dart';
+import 'package:course_app/data/Attendance_vo.dart';
 import 'package:course_app/data/announcement_dto.dart';
 import 'package:course_app/data/announcement_vo.dart';
 import 'package:course_app/data/course_do.dart';
@@ -158,14 +160,18 @@ class TeacherMethod {
     return null;
   }
 
-
   ///获取课堂二维码
-  static Future<String> getCourseQRcode(BuildContext context, String courseId,) async {
+  static Future<String> getCourseQRcode(
+    BuildContext context,
+    String courseId,
+  ) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('courseId', () => courseId);
-    ResponseModel responseModel = await post(context,
-        method: teacherPath.servicePath['getCourseQRcode'],
-        requestmap: map,);
+    ResponseModel responseModel = await post(
+      context,
+      method: teacherPath.servicePath['getCourseQRcode'],
+      requestmap: map,
+    );
     print(responseModel);
     if (responseModel != null) {
       if (responseModel.code == 1) {
@@ -177,21 +183,97 @@ class TeacherMethod {
     return null;
   }
 
-
-  ///获取考勤记录
-  static Future<String> getAttendanceList(BuildContext context, String courseId,) async {
-    Map<String, dynamic> map = new Map();
-    map.putIfAbsent('courseId', () => courseId);
-    ResponseModel responseModel = await get(context,
-      method: teacherPath.servicePath['getAttendanceList'],
-      queryParameters: map,);
+  static Future<AttendanceVo> createAttendance(
+      BuildContext context, AttendanceDto attendanceDto) async {
+    ResponseModel responseModel = await post(context,
+        method: teacherPath.servicePath['createAttendance'],
+        data: attendanceDto.toJson());
     print(responseModel);
     if (responseModel != null) {
       if (responseModel.code == 1) {
-          List<dynamic>list=responseModel.data;
-          list.forEach((item){
+        AttendanceVo attendanceVo = AttendanceVo.fromJson(responseModel.data);
+        return attendanceVo;
+      } else {
+        throw responseModel.errors[0];
+      }
+    }
+    return null;
+  }
 
-          });
+  ///获取考勤记录
+  static Future<List<AttendanceVo>> getAttendanceList(
+      BuildContext context,
+      String courseId,
+      ) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('courseId', () => courseId);
+    ResponseModel responseModel = await get(
+      context,
+      method: teacherPath.servicePath['getAttendanceList'],
+      queryParameters: map,
+    );
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        List<dynamic> list = responseModel.data;
+        List<AttendanceVo> result = [];
+        list.forEach((item) {
+          AttendanceVo attendanceVo = AttendanceVo.fromJson(item);
+          result.add(attendanceVo);
+        });
+        return result;
+      } else {
+        throw responseModel.errors[0];
+      }
+    }
+    return null;
+  }
+
+  ///修改学生考勤
+  static Future<bool> updateAttendanceStudent(
+      BuildContext context,
+      String attendanceStudentId,
+      String attendanceId,
+      int status
+      ) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('attendanceStudentId', () => attendanceStudentId);
+    map.putIfAbsent('attendanceId', () => attendanceId);
+    map.putIfAbsent('status', () => status);
+    ResponseModel responseModel = await post(
+      context,
+      method: teacherPath.servicePath['updateAttendanceStudent'],
+      requestmap: map,
+    );
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
+      } else {
+        throw responseModel.errors[0];
+      }
+    }
+    return null;
+  }
+
+///
+  static Future<bool> delAttendance(
+      BuildContext context,
+      String courseId,
+      String attendanceId,
+      ) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('courseId', () => courseId);
+    map.putIfAbsent('attendanceId', () => attendanceId);
+    ResponseModel responseModel = await post(
+      context,
+      method: teacherPath.servicePath['delAttendance'],
+      requestmap: map,
+    );
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
       } else {
         throw responseModel.errors[0];
       }

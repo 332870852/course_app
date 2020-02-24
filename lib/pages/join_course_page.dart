@@ -34,7 +34,9 @@ class _JoinCoursePageState extends State<JoinCoursePage> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    _controller.dispose();
     _controller = null;
+    _focusNode.dispose();
   }
 
   @override

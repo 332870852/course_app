@@ -10,7 +10,7 @@ class NotificationsUtil {
   FlutterLocalNotificationsPlugin init(
       {SelectNotificationCallback onSelectNotificationMy}) {
     var initializationSettingsAndroid =
-        new AndroidInitializationSettings('@mipmap/ic_launcher');
+        new AndroidInitializationSettings('@mipmap/appicon');
     var initializationSettingsIOS = IOSInitializationSettings();
     var initializationSettings = InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);

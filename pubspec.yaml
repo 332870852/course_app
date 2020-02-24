@@ -50,6 +50,8 @@ dependencies:
   permission_handler: ^4.2.0+hotfix.3 #权限库
   latlong: ^0.6.1  #地点计算
   amap_location_fluttify: 0.8.6+356f11c #高德地图
+  flutter_event_bus: ^0.0.2
+  #package_info 0.4.0+14
 dev_dependencies:
   flutter_test:
     sdk: flutter
