@@ -10,7 +10,7 @@ import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:course_app/service/service_method.dart';
 import 'package:course_app/test/scan.dart';
-import 'package:course_app/test/scanViewDemo.dart';
+import 'package:course_app/pages/scanViewDemo.dart';
 import 'package:course_app/utils/QRcodeScanUtil.dart';
 import 'package:course_app/utils/navigatorUtil.dart';
 import 'package:course_app/utils/permission_util.dart';

@@ -2,6 +2,7 @@ import 'package:course_app/animation/loginAnimation.dart';
 import 'package:course_app/components/FormContainer.dart';
 import 'package:course_app/components/WhiteTick.dart';
 import 'package:course_app/config/constants.dart';
+import 'package:course_app/test/webrtc_demo.dart';
 import 'package:course_app/utils/navigatorUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -163,6 +164,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                       fontFamily: "Poppins-Bold")),
                               onPressed: () {
                                 //todo 忘记密码
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => new P2PDemo(
+                                          url: 'ws://192.168.200.117:10090/ws',
+                                        )));
                               },
                             ),
                             Text('|'),

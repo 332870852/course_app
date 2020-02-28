@@ -347,6 +347,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_webrtc:
+    dependency: "direct main"
+    description:
+      name: flutter_webrtc
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.2.6"
   fluttertoast:
     dependency: "direct main"
     description:
@@ -634,6 +641,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.5"
+  random_string:
+    dependency: "direct main"
+    description:
+      name: random_string
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.1.0"
   rational:
     dependency: transitive
     description:

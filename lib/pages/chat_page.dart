@@ -1,6 +1,7 @@
 import 'package:course_app/config/service_url.dart';
 import 'package:course_app/provide/websocket_provide.dart';
 import 'package:course_app/service/websocket_util.dart';
+import 'package:course_app/test/webrtc_demo.dart';
 import 'package:course_app/utils/navigatorUtil.dart';
 import 'package:course_app/utils/notifications_util.dart';
 import 'package:course_app/utils/permission_util.dart';
@@ -16,8 +17,6 @@ import 'package:web_socket_channel/io.dart';
 import 'package:amap_location_fluttify/amap_location_fluttify.dart';
 
 class ChatPage extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     final spinkit = SpinKitFadingCircle(
@@ -43,6 +42,12 @@ class ChatPage extends StatelessWidget {
           RaisedButton(
             child: Text('获取单次定位'),
             onPressed: () async {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => new P2PDemo(
+                            url: 'ws://192.168.200.117:10090/ws',
+                          )));
               Toast.toast(context, 'aaa');
             },
           ),
@@ -54,7 +59,6 @@ class ChatPage extends StatelessWidget {
 //              }
 //            },
 //          ),
-
         ],
       ),
     );
@@ -66,8 +70,6 @@ class ChatPage extends StatelessWidget {
     }
   }
 }
-
-
 
 class LiquidLinearProgressIndicatorPage extends StatelessWidget {
   @override

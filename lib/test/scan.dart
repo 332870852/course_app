@@ -1,4 +1,4 @@
-import 'package:course_app/test/scanViewDemo.dart';
+import 'package:course_app/pages/scanViewDemo.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_qr_reader/flutter_qr_reader.dart';

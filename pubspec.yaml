@@ -51,6 +51,8 @@ dependencies:
   latlong: ^0.6.1  #地点计算
   amap_location_fluttify: 0.8.6+356f11c #高德地图
   flutter_event_bus: ^0.0.2
+  flutter_webrtc: ^0.2.6   #webrtc
+  random_string: ^1.1.0
   #package_info 0.4.0+14
 dev_dependencies:
   flutter_test:
