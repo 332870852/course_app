@@ -7,6 +7,7 @@ import 'package:course_app/utils/notifications_util.dart';
 import 'package:course_app/utils/permission_util.dart';
 import 'package:course_app/utils/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:direct_select/direct_select.dart';
 import 'package:flutter/material.dart';
@@ -16,60 +17,90 @@ import 'package:provide/provide.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:amap_location_fluttify/amap_location_fluttify.dart';
 
-class ChatPage extends StatelessWidget {
+import 'contact_page.dart';
+import 'user_info_page/msg_page.dart';
+
+class ChatPage extends StatefulWidget {
+  @override
+  _ChatPageState createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin{
+
+  TabController _tabController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _tabController = new TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final spinkit = SpinKitFadingCircle(
-      itemBuilder: (BuildContext context, int index) {
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            color: index.isEven ? Colors.red : Colors.green,
-          ),
-        );
-      },
-    );
-
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          spinkit,
-          IconButton(
-              icon: Icon(Icons.skip_next),
-              onPressed: () async {
-                //Provide.value<WebSocketProvide>(context).sendMessage('还嘿嘿嘿');
-                //a.show(3, "1", "5522", platformChannelSpecifics);
-              }),
-          RaisedButton(
-            child: Text('获取单次定位'),
-            onPressed: () async {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => new P2PDemo(
-                            url: 'ws://192.168.200.117:10090/ws',
-                          )));
-              Toast.toast(context, 'aaa');
-            },
-          ),
-//          RaisedButton(
-//            child: Text('获取连续定位'),
-//            onPressed: () async {
-//              if (await requestPermission()) {
-//                await for (final location in AmapLocation.listenLocation()) {}
-//              }
-//            },
-//          ),
-        ],
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              width: 180,
+              color: Colors.white,
+              alignment: Alignment.center,
+              child: TabBar(
+                controller: _tabController,
+                tabs: [
+                  Tab(
+                    child: Text(
+                      '消息',
+                    ),
+                  ),
+                  Tab(
+                    child: Wrap(
+                      direction: Axis.vertical,
+                      alignment: WrapAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          '联系人',
+                        ),
+                        SpinKitWave(
+                          color: Colors.red,
+                          type: SpinKitWaveType.start,
+                          size: ScreenUtil().setSp(30),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+                //indicatorWeight: 0.0,
+                indicatorColor: Colors.red,
+                labelColor: Colors.black,
+                unselectedLabelColor: Colors.black26,
+                indicatorSize: TabBarIndicatorSize.label,
+              ),
+            ),
+          ],
+        ),
       ),
+      body: TabBarView(controller: _tabController, children: [
+        ContactPage(),
+        MsgPage(),
+      ]),
     );
-  }
-
-  Future onSelectNotification(String payload) async {
-    if (payload != null) {
-      debugPrint('000000: ' + payload);
-    }
   }
 }
+
+
+
 
 class LiquidLinearProgressIndicatorPage extends StatelessWidget {
   @override

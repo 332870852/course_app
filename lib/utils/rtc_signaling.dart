@@ -57,7 +57,7 @@ class RTCSignaling {
       {
         'urls': 'turn:47.102.97.30:3478',
         'username': 'coturn',
-        'credential':'332870852',
+        'credential': '332870852',
       },
       {
         'urls': 'stun:47.102.97.30:3478',
@@ -91,7 +91,7 @@ class RTCSignaling {
     _channel = IOWebSocketChannel.connect(url);
     print('listen...');
     _channel.stream.listen((msg) {
-     // print('收到的内容: $msg');
+      // print('收到的内容: $msg');
       onMessage(msg);
     }, onDone: () {
       print('closed by server');
@@ -216,7 +216,7 @@ class RTCSignaling {
         {
           //收到对端后选者，并添加候选者
           String id = data['from'];
-          Map<String,dynamic> candidateMap = data['candidate'];
+          Map<String, dynamic> candidateMap = data['candidate'];
           RTCPeerConnection pc = _peerConnections[id];
           RTCIceCandidate candidate = RTCIceCandidate(candidateMap['candidate'],
               candidateMap['sdpMid'], candidateMap['sdpMLineIndex']);
@@ -326,10 +326,12 @@ class RTCSignaling {
 
   void send(event, data) {
     data['type'] = event;
-    DataContent dataContent=DataContent(action: ActionEnum.VIDEO_1V1.index,data: data);
+    DataContent dataContent = DataContent(
+        action: ActionEnum.VIDEO_1V1.index,
+        subAction: ChatActionEnum.CONNECT.index,
+        data: data);
     _channel?.sink.add(_encoder.convert(dataContent));
 //    _channel?.sink.add(_encoder.convert(data));
 //    print('${_encoder.convert(data)}');
-
   }
 }
