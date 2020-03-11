@@ -1,7 +1,7 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:course_app/provide/user_model_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
-import 'package:course_app/utils/navigatorUtil.dart';
+import 'package:course_app/router/navigatorUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:async';

@@ -1,12 +1,15 @@
-import 'package:course_app/pages/chat_page.dart';
+import 'package:course_app/pages/chat/chat_page.dart';
 import 'package:course_app/pages/index_page.dart';
 import 'package:course_app/pages/member_page.dart';
 import 'package:course_app/pages/video_page.dart';
+import 'package:course_app/provide/chat/chat_message_provide.dart';
+import 'package:course_app/provide/chat/flush_bar_util.dart';
 import 'package:course_app/provide/course_provide.dart';
 import 'package:course_app/provide/currentIndex_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/provide/websocket_provide.dart';
 import 'package:course_app/router/application.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,8 +25,10 @@ class HomePage extends StatelessWidget {
 
   HomePage({Key key}) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
+
     ScreenUtil.instance = ScreenUtil(width: 750, height: 1300)..init(context);
     ///loading course
     return WillPopScope(

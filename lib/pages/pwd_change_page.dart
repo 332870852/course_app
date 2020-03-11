@@ -1,6 +1,6 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:course_app/service/user_method.dart';
-import 'package:course_app/utils/navigatorUtil.dart';
+import 'package:course_app/router/navigatorUtil.dart';
 import 'package:course_app/widget/cupertion_alert_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

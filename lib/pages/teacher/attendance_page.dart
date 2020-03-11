@@ -12,7 +12,7 @@ import 'package:course_app/provide/showAttend_provide.dart';
 import 'package:course_app/provide/teacher/attend_stu_provide.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/service/teacher_method.dart';
-import 'package:course_app/utils/navigatorUtil.dart';
+import 'package:course_app/router/navigatorUtil.dart';
 import 'package:course_app/utils/permission_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

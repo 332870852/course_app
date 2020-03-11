@@ -3,7 +3,7 @@ import 'package:course_app/config/constants.dart';
 import 'package:course_app/pages/register_page/register_user_page.dart';
 import 'package:course_app/provide/register_page_provide.dart';
 import 'package:course_app/router/application.dart';
-import 'package:course_app/utils/navigatorUtil.dart';
+import 'package:course_app/router/navigatorUtil.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -281,4 +281,29 @@ class TeacherMethod {
     return null;
   }
 
+  ///查询课堂学生id
+  static Future<List<String>>getStudentListId(BuildContext context,String coureId)async{
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('coureId', () => coureId);
+    ResponseModel responseModel = await post(
+      context,
+      method: teacherPath.servicePath['getStudentListId'],
+      requestmap: map,
+    );
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+         List<dynamic> list=responseModel.data;
+         if(list!=null){
+           return  List<String>.generate(list.length, (i)=>list[i].toString());
+         }
+        return responseModel.data;
+      } else {
+        throw responseModel.errors[0];
+      }
+    }
+    return null;
+  }
+
+
 }

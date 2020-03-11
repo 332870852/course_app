@@ -1,15 +1,18 @@
 import 'package:amap_location_fluttify/amap_location_fluttify.dart';
-import 'package:course_app/pages/home_page.dart';
-import 'package:course_app/pages/join_course_page.dart';
 import 'package:course_app/provide/attendance_provide.dart';
 import 'package:course_app/provide/attendance_student_provide.dart';
 import 'package:course_app/provide/bottom_tabBar_provide.dart';
+import 'package:course_app/provide/chat/chat_contact_provide.dart';
+import 'package:course_app/provide/chat/chat_detail_provide.dart';
+import 'package:course_app/provide/chat/chat_message_provide.dart';
+import 'package:course_app/provide/chat/chat_page_provide.dart';
 import 'package:course_app/provide/classroom_notif_provide.dart';
 import 'package:course_app/provide/course_provide.dart';
 import 'package:course_app/provide/create_course_provider.dart';
 import 'package:course_app/provide/currentIndex_provide.dart';
 import 'package:course_app/provide/expire_timer_provide.dart';
 import 'package:course_app/provide/register_page_provide.dart';
+import 'package:course_app/provide/chat/request_friend_provide.dart';
 import 'package:course_app/provide/showAttend_provide.dart';
 import 'package:course_app/provide/teacher/attend_stu_provide.dart';
 import 'package:course_app/provide/teacher/course_teacher_provide.dart';
@@ -19,12 +22,14 @@ import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/provide/websocket_provide.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
+import 'package:course_app/service/chat_service.dart';
 import 'package:course_app/splash_page.dart';
+import 'package:course_app/utils/notifications_util.dart';
+import 'package:course_app/utils/video_image_thumb_util.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
-import 'package:course_app/config/service_url.dart';
 
 void main() async {
   ///高德地图插件
@@ -52,6 +57,12 @@ void main() async {
   var showAttendProvide = ShowAttendProvide();
   var attendStudentProvide = AttendStudentProvide();
   var attendStuProvide = AttendStuProvide();
+  var chatContactProvide = ChatContactProvide();
+  var requestFriendProvide = RequestFriendProvide();
+  var chatPageProvide = ChatPageProvide();
+  var chatMessageProvide = ChatMessageProvide();
+  var chatDetailProvide = ChatDetailProvide();
+
   providers
     ..provide(Provider<CurrentIndexProvide>.value(currentIndexProvide))
     ..provide(Provider<BottomTabBarProvide>.value(bottomTabBarProvide))
@@ -68,6 +79,11 @@ void main() async {
     ..provide(Provider<ShowAttendProvide>.value(showAttendProvide))
     ..provide(Provider<AttendStudentProvide>.value(attendStudentProvide))
     ..provide(Provider<AttendStuProvide>.value(attendStuProvide))
+    ..provide(Provider<ChatContactProvide>.value(chatContactProvide))
+    ..provide(Provider<RequestFriendProvide>.value(requestFriendProvide))
+    ..provide(Provider<ChatPageProvide>.value(chatPageProvide))
+    ..provide(Provider<ChatMessageProvide>.value(chatMessageProvide))
+    ..provide(Provider<ChatDetailProvide>.value(chatDetailProvide))
     ..provide(Provider<CourseProvide>.value(courseProvide));
   runApp(ProviderNode(child: MyApp(), providers: providers));
 }
@@ -76,19 +92,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Application.initGlobalKey();
+    Application.initNettyWebSocket();
     final router = Router();
     //_startupJpush();
     Routes.configureRoutes(router);
     Application.router = router;
 
-//    Provide.value<WebSocketProvide>(context).addListener(() {
-//      Provide.value<WebSocketProvide>(context).doMessage(1,
-//          selectNotificationCallback: (p) async {
-//        print("lai ba  *******${p} ");
-//        //return Application.router.navigateTo(Application.navigatorKey.currentContext, Routes.joinCoursePage);
-//        //return Application.navigatorKey.currentState.push(MaterialPageRoute(builder: (context)=>new JoinCoursePage()));
-//      }, payload: "123444").then((onValue) {});
-//    });
+    //do chat message
+    ChatService.doReceiveNotf(context);
+    //切换网络重连netty
+    Application.nettyWebSocket.reConnect();
+    //todo clear cache gif
+    //VideoCompressUtil.clearCacheGif();
 
     Provide.value<WebSocketProvide>(context).addListener(() {
       print("websocket-----------");

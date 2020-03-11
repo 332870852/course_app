@@ -2,19 +2,24 @@ import 'package:course_app/animation/loginAnimation.dart';
 import 'package:course_app/components/FormContainer.dart';
 import 'package:course_app/components/WhiteTick.dart';
 import 'package:course_app/config/constants.dart';
+import 'package:course_app/config/service_url.dart';
+import 'package:course_app/provide/chat/flush_bar_util.dart';
+import 'package:course_app/router/application.dart';
 import 'package:course_app/test/webrtc_demo.dart';
-import 'package:course_app/utils/navigatorUtil.dart';
+import 'package:course_app/router/navigatorUtil.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provide/provide.dart';
 
 ///登陆页
 class LoginPage extends StatefulWidget {
-
-  LoginPage({Key key, this.username = '',this.pwd=''}) : super(key: key);
+  LoginPage({Key key, this.username = '', this.pwd = ''}) : super(key: key);
   String username;
   String pwd;
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -35,7 +40,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     usernameController = TextEditingController();
     pwdController = TextEditingController();
     usernameController.text = widget.username;
-    pwdController.text=widget.pwd;
+    pwdController.text = widget.pwd;
+
   }
 
   @override
@@ -54,27 +60,44 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     } on TickerCanceled {}
   }
 
+  int _lastClickTime = 0;
+
   Future<bool> _onWillPop() {
-    return showDialog(
-          context: context,
-          child: new AlertDialog(
-            title: new Text('Are you sure?'),
-            actions: <Widget>[
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('No'),
-              ),
-              new FlatButton(
-                onPressed: () async {
-                  await SystemChannels.platform
-                      .invokeMethod('SystemNavigator.pop');
-                },
-                child: new Text('Yes'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
+    // 双击退出应用
+
+    int nowTime = new DateTime.now().microsecondsSinceEpoch;
+
+    if (_lastClickTime != 0 && nowTime - _lastClickTime > 1500) {
+      return new Future.value(true);
+    } else {
+      Fluttertoast.showToast(msg: '再次点击退出应用');
+      _lastClickTime = new DateTime.now().microsecondsSinceEpoch;
+      new Future.delayed(const Duration(milliseconds: 1500), () {
+        _lastClickTime = 0;
+      });
+
+      return new Future.value(false);
+    }
+//    return showDialog(
+//          context: context,
+//          child: new AlertDialog(
+//            title: new Text('Are you sure?'),
+//            actions: <Widget>[
+//              new FlatButton(
+//                onPressed: () => Navigator.of(context).pop(false),
+//                child: new Text('No'),
+//              ),
+//              new FlatButton(
+//                onPressed: () async {
+//                  await SystemChannels.platform
+//                      .invokeMethod('SystemNavigator.pop');
+//                },
+//                child: new Text('Yes'),
+//              ),
+//            ],
+//          ),
+//        ) ??
+//        false;
   }
 
   @override
@@ -140,7 +163,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                               Color(0xFF00eaf8),
                             ],
                             iconData: AppIcons.tencent_qq,
-                            onPressed: () {},
+                            onPressed: () {
+                              Fluttertoast.showToast(msg: '暂不支持该功能');
+                            },
                           ),
                           SocialIcon(
                             colors: [
@@ -148,7 +173,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                               Colors.greenAccent,
                             ],
                             iconData: AppIcons.weixin,
-                            onPressed: () {},
+                            onPressed: () {
+                              Fluttertoast.showToast(msg: '暂不支持该功能');
+                            },
                           ),
                         ],
                       ),
@@ -164,12 +191,13 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                       fontFamily: "Poppins-Bold")),
                               onPressed: () {
                                 //todo 忘记密码
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => new P2PDemo(
-                                          url: 'ws://192.168.200.117:10090/ws',
-                                        )));
+//                                Application.nettyWebSocket
+//                                    .getRTCSignaling()
+//                                    .connect();
+//                                Navigator.push(
+//                                    context,
+//                                    MaterialPageRoute(
+//                                        builder: (context) => new P2PPage()));
                               },
                             ),
                             Text('|'),
@@ -181,7 +209,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                               onPressed: () {
                                 //todo 注册
                                 NavigatorUtil.goRegisterPage(context);
-                               // NavigatorUtil.goResultRegisterPage(context,isSuccess: true,username: '1213132');
+                                // NavigatorUtil.goResultRegisterPage(context,isSuccess: true,username: '1213132');
                               },
                             ),
                           ],

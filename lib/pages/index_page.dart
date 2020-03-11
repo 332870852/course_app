@@ -9,6 +9,7 @@ import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/provide/websocket_provide.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
+import 'package:course_app/utils/scan_util.dart';
 import 'package:course_app/service/service_method.dart';
 import 'package:course_app/pages/scanViewDemo.dart';
 import 'package:course_app/utils/QRcodeScanUtil.dart';
@@ -158,43 +159,44 @@ class _IndexPageState extends State<IndexPage>
             }
           case 'sao_yisao':
             {
-              Map<PermissionGroup, PermissionStatus> permissions =
-              await PermissionHandler()
-                  .requestPermissions([PermissionGroup.camera]);
-              if (permissions[PermissionGroup.camera] ==
-                  PermissionStatus.granted) {
-                String url = await Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ScanViewDemo()));
-                if(ObjectUtil.isEmptyString(url)){
-                  break;
-                }
-                ProgressDialog pr =
-                ProgressDialogWdiget.showProgressStatic(context,
-                    message: '请求中,请稍后..',
-                    type: ProgressDialogType.Normal,
-                    progressWidget: CupertinoActivityIndicator(
-                      radius: 20.0,
-                    ));
-                // print(url);
-                getSys(context, url).then((onValue) async{
-                  if(onValue.code!=1){
-                    Fluttertoast.showToast(msg: onValue.result);
-                  }else{
-                    if(url.contains('joinCode=')){
-                      pr.dismiss();
-                      QRCodeScanUtil.doResult(context, 1, onValue.data);
-                    } else{
-                      Fluttertoast.showToast(msg: '二维码错误');
-                    }
-                  }
-                }).catchError((onError){
-                  Fluttertoast.showToast(msg: onError.toString());
-                }).whenComplete((){
-                  if(pr.isShowing()){
-                    pr.dismiss();
-                  }
-                });
-              }
+              CommentMethod.scanMethodUtil(context);
+//              Map<PermissionGroup, PermissionStatus> permissions =
+//              await PermissionHandler()
+//                  .requestPermissions([PermissionGroup.camera]);
+//              if (permissions[PermissionGroup.camera] ==
+//                  PermissionStatus.granted) {
+//                String url = await Navigator.push(context,
+//                    MaterialPageRoute(builder: (context) => ScanViewDemo()));
+//                if(ObjectUtil.isEmptyString(url)){
+//                  break;
+//                }
+//                ProgressDialog pr =
+//                ProgressDialogWdiget.showProgressStatic(context,
+//                    message: '请求中,请稍后..',
+//                    type: ProgressDialogType.Normal,
+//                    progressWidget: CupertinoActivityIndicator(
+//                      radius: 20.0,
+//                    ));
+//                // print(url);
+//                getSys(context, url).then((onValue) async{
+//                  if(onValue.code!=1){
+//                    Fluttertoast.showToast(msg: onValue.result);
+//                  }else{
+//                    if(url.contains('joinCode=')){
+//                      pr.dismiss();
+//                      QRCodeScanUtil.doResult(context, 1, onValue.data);
+//                    } else{
+//                      Fluttertoast.showToast(msg: '二维码错误');
+//                    }
+//                  }
+//                }).catchError((onError){
+//                  Fluttertoast.showToast(msg: onError.toString());
+//                }).whenComplete((){
+//                  if(pr.isShowing()){
+//                    pr.dismiss();
+//                  }
+//                });
+//              }
               break;
             }
         }

@@ -49,6 +49,8 @@ class NavigatorUtil {
       debugPrint("首页退出");
       Provide.value<WebSocketProvide>(context).close();
     });
+    print("打开netty websocket");
+    Application.nettyWebSocket.connect();
     print("打开websocket");
     var token = await Application.sp.get('token');
     String userId = Provide.value<UserProvide>(context).userId;
@@ -177,19 +179,37 @@ class NavigatorUtil {
                 '&type=${type}&address=${Uri.encodeComponent('${address}')}&time=${time}&attendanceId=${attendanceId}');
   }
 
-  static void goAttendDetailPage(
-      BuildContext context, int index) {
-    _navigateTo(
-        context,
-        Routes.attendDetailPage +
-            '?index=${index}');
+  static void goAttendDetailPage(BuildContext context, int index) {
+    _navigateTo(context, Routes.attendDetailPage + '?index=${index}');
   }
 
   //about
-  static void goAboutPage(
-      BuildContext context) {
+  static void goAboutPage(BuildContext context) {
+    _navigateTo(context, Routes.aboutPage);
+  }
+
+  ///search
+  static void goSearchFriendPage(BuildContext context) {
+    _navigateTo(context, Routes.searchFriendPage);
+  }
+
+  static void goChatHomePage(BuildContext context) {
+    _navigateTo(context, Routes.chatHomePage);
+  }
+
+  ///预览图片
+  static void goImageViewPage(BuildContext context, String urlPath,
+      {String isNetUrl = 'false'}) {
     _navigateTo(
         context,
-        Routes.aboutPage);
+        Routes.imageViewPage +
+            '?urlPath=${Uri.encodeComponent('${urlPath}')}&isNetUrl=${isNetUrl}');
+  }
+
+  ///观看视频
+
+  static void goVideoViewPage(BuildContext context, String urlPath) {
+    _navigateTo(context,
+        Routes.videoViewPage + '?urlPath=${Uri.encodeComponent('${urlPath}')}');
   }
 }

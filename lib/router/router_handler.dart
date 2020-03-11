@@ -7,6 +7,10 @@ import 'package:course_app/pages/about_page.dart';
 import 'package:course_app/pages/admin_account_page.dart';
 import 'package:course_app/pages/announcement_content_page.dart';
 import 'package:course_app/pages/announcement_page.dart';
+import 'package:course_app/pages/chat/chat_home.dart';
+import 'package:course_app/pages/chat/pic_view.dart';
+import 'package:course_app/pages/chat/search_friend.dart';
+import 'package:course_app/pages/chat/video_view_page.dart';
 import 'package:course_app/pages/classroom_page.dart';
 import 'package:course_app/pages/home_page.dart';
 import 'package:course_app/pages/join_course_page.dart';
@@ -294,3 +298,45 @@ Handler aboutHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   return AboutPage();
 });
+
+///search
+Handler searchFriendHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return SearchFriendPage();
+});
+
+///chat home
+Handler chatHomeHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  return ChatHome();
+});
+
+///ImageViewPage
+Handler imageViewHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  var urlPath = (ObjectUtil.isNotEmpty(params['urlPath'].first))
+      ? params['urlPath'].first
+      : '';
+  String isNetUrl = (ObjectUtil.isNotEmpty(params['isNetUrl'].first))
+      ? params['isNetUrl'].first
+      : 'false';
+  bool b = false;
+  if (isNetUrl == 'false') {
+  } else {
+    b = true;
+  }
+  return ImageViewPage(
+    isNetUrl: b,
+    urlPath: urlPath,
+  );
+});
+
+///video view
+Handler videoViewHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      var urlPath = (ObjectUtil.isNotEmpty(params['urlPath'].first))
+          ? params['urlPath'].first
+          : '';
+      return VideoViewPage(urlPath: urlPath,);
+    });
+

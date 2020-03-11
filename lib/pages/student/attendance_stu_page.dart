@@ -3,7 +3,7 @@ import 'package:course_app/data/Attendance_student_vo.dart';
 import 'package:course_app/data/Attendance_vo.dart';
 import 'package:course_app/provide/attendance_student_provide.dart';
 import 'package:course_app/provide/showAttend_provide.dart';
-import 'package:course_app/utils/navigatorUtil.dart';
+import 'package:course_app/router/navigatorUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';

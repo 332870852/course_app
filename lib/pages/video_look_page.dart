@@ -14,47 +14,54 @@ Future<String> getHome() async {
 }
 
 class _VideoLookPageState extends State<VideoLookPage> {
-  List item = [
-    {
-      'url':
-      'https://img02.sogoucdn.com/net/a/04/link?url=https%3A%2F%2Fi02piccdn.sogoucdn.com%2Febb4736d2d73a30e&appid=122',
-      't': '臭姐姐',
-      'subTitle': '直播',
-      'number': 99
-    },
-    {
-      'url':
-      'https://img02.sogoucdn.com/net/a/04/link?url=https%3A%2F%2Fi02piccdn.sogoucdn.com%2F8c540c395563a0e5&appid=122',
-      't': '将夜',
-      'subTitle': '即将大结局',
-      'number': 100
-    },
-    {
-      'url': 'https://i01piccdn.sogoucdn.com/3659dbfe3414752d',
-      't': '美女',
-      'subTitle': '上次观看到41',
-      'number': 11
-    },
-    {
-      'url':
-      'https://img03.sogoucdn.com/app/a/100520093/e222e3d1e5293cd2-85cec76a9227617a-c8b5dc33323ac928553d2f7dbf35fbdf.jpg',
-      't': '老体',
-      'subTitle': '很好',
-      'number': 3
-    },
-    {
-      'url': 'https://i01piccdn.sogoucdn.com/c28a939493da88a0',
-      't': '博人转',
-      'subTitle': '！',
-      'number': 2
-    },
-    {
-      'url': 'https://i01piccdn.sogoucdn.com/4d8bc3623d0f8169',
-      't': '同老爷',
-      'subTitle': '来把',
-      'number': 1
-    },
-  ];
+  List item ;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    item=[
+      {
+        'url':
+        'https://img02.sogoucdn.com/net/a/04/link?url=https%3A%2F%2Fi02piccdn.sogoucdn.com%2Febb4736d2d73a30e&appid=122',
+        't': '臭姐姐',
+        'subTitle': '直播',
+        'number': 99
+      },
+      {
+        'url':
+        'https://img02.sogoucdn.com/net/a/04/link?url=https%3A%2F%2Fi02piccdn.sogoucdn.com%2F8c540c395563a0e5&appid=122',
+        't': '将夜',
+        'subTitle': '即将大结局',
+        'number': 100
+      },
+      {
+        'url': 'https://i01piccdn.sogoucdn.com/3659dbfe3414752d',
+        't': '美女',
+        'subTitle': '上次观看到41',
+        'number': 11
+      },
+      {
+        'url':
+        'https://img03.sogoucdn.com/app/a/100520093/e222e3d1e5293cd2-85cec76a9227617a-c8b5dc33323ac928553d2f7dbf35fbdf.jpg',
+        't': '老体',
+        'subTitle': '很好',
+        'number': 3
+      },
+      {
+        'url': 'https://i01piccdn.sogoucdn.com/c28a939493da88a0',
+        't': '博人转',
+        'subTitle': '！',
+        'number': 2
+      },
+      {
+        'url': 'https://i01piccdn.sogoucdn.com/4d8bc3623d0f8169',
+        't': '同老爷',
+        'subTitle': '来把',
+        'number': 1
+      },
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +73,6 @@ class _VideoLookPageState extends State<VideoLookPage> {
           return null;
         },
         slivers: <Widget>[
-
           SliverAppBar(
             title: Icon(
               Icons.settings_input_svideo,

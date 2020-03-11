@@ -8,7 +8,7 @@ import 'package:course_app/data/user_model_vo.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:course_app/service/websocket_util.dart';
-import 'package:course_app/utils/navigatorUtil.dart';
+import 'package:course_app/router/navigatorUtil.dart';
 import 'package:course_app/utils/notifications_util.dart';
 import 'package:course_app/utils/websocket_message.dart';
 import 'package:flutter/material.dart';

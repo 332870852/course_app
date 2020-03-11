@@ -6,7 +6,7 @@ import 'package:course_app/provide/websocket_provide.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:course_app/service/user_method.dart';
-import 'package:course_app/utils/navigatorUtil.dart';
+import 'package:course_app/router/navigatorUtil.dart';
 import 'package:course_app/widget/bottom_clipper_widget.dart';
 import 'package:course_app/widget/cupertion_alert_dialog.dart';
 import 'package:course_app/widget/user_image_widget.dart';
@@ -21,6 +21,8 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class MemberPage extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
 //    Provide.value<UserProvide>(context).getUserInfo(userId: '123');
@@ -80,6 +82,7 @@ class MemberPage extends StatelessWidget {
                                 );
                               });
                            if(b){
+                             Application.nettyWebSocket.close();
                              Provide.value<WebSocketProvide>(context).close();
                              await SystemChannels.platform
                                  .invokeMethod('SystemNavigator.pop');

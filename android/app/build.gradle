@@ -36,6 +36,9 @@ android {
 
     lintOptions {
         disable 'InvalidPackage'
+        //flutter-video-compress 打包失败
+        checkReleaseBuilds false
+        abortOnError false
     }
 
     defaultConfig {
@@ -57,6 +60,7 @@ android {
 //        }
 
     }
+
     //webrtc
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -71,6 +75,11 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
+    // Reduce your application size with this configuration  flutter_video_compress问题
+    aaptOptions {
+        ignoreAssetsPattern "!x86:!*ffprobe"
+    }
+
     buildTypes {
         release {
             signingConfig signingConfigs.release
@@ -97,3 +106,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
 }
+
+
+
+

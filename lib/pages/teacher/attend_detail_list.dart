@@ -67,7 +67,7 @@ class _DetailListState extends State<DetailList>
     Provide
         .value<AttendStudentProvide>(context)
         .mapAtt[widget.index];
-    print('aa  ${widget.index} ${attendanceStudents}');
+    //print('aa  ${widget.index} ${attendanceStudents}');
     list = [];
     map = Map();
     statusL = Map();

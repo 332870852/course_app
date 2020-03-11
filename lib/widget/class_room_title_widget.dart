@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:course_app/config/constants.dart';
+import 'package:course_app/pages/class_stu_list_page.dart';
 import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/service/teacher_method.dart';
 import 'package:course_app/widget/cupertion_alert_dialog.dart';
@@ -20,13 +21,14 @@ class ClassRoomTitleWidget extends StatelessWidget {
   final courseId;
   final String courseCid;
 
-  ClassRoomTitleWidget({Key key,
-    @required this.classtitle,
-    @required this.joinCode,
-    @required this.studentNums,
-    @required this.teacherId,
-    @required this.courseId,
-    @required this.courseCid})
+  ClassRoomTitleWidget(
+      {Key key,
+      @required this.classtitle,
+      @required this.joinCode,
+      @required this.studentNums,
+      @required this.teacherId,
+      @required this.courseId,
+      @required this.courseCid})
       : super(key: key);
 
   @override
@@ -39,8 +41,11 @@ class ClassRoomTitleWidget extends StatelessWidget {
       child: Column(
         children: <Widget>[
           _titleBar(context, classtitle: classtitle),
-          _classRommInfo(context,
-              joinCode: joinCode, studentNums: studentNums,),
+          _classRommInfo(
+            context,
+            joinCode: joinCode,
+            studentNums: studentNums,
+          ),
         ],
       ),
     );
@@ -92,7 +97,6 @@ class ClassRoomTitleWidget extends StatelessWidget {
     );
   }
 
-
   ///加课码等房间信息
   Widget _classRommInfo(BuildContext context,
       {@required joinCode, @required studentNums}) {
@@ -130,6 +134,13 @@ class ClassRoomTitleWidget extends StatelessWidget {
             onTap: () {
               ///TODO 点击同学
               print('点击同学');
+              //TeacherMethod
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => ClassStuListPgae(
+                            courseId: courseId,
+                          )));
             },
             child: _iconStrItem(
                 Icon(
@@ -201,31 +212,29 @@ class ClassRoomTitleWidget extends StatelessWidget {
                   ),
                   Flexible(
                       child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                '${joinCode}',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: ScreenUtil().setSp(40)),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                '扫描上面二维码加入课堂',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: ScreenUtil().setSp(25)),
-                              )
-                            ],
-                          ),
+                          Text(
+                            '${joinCode}',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: ScreenUtil().setSp(40)),
+                          )
                         ],
-                      )),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            '扫描上面二维码加入课堂',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: ScreenUtil().setSp(25)),
+                          )
+                        ],
+                      ),
+                    ],
+                  )),
                   Flexible(
                     child: FlatButton(
                       onPressed: () {

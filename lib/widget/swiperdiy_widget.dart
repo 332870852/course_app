@@ -45,7 +45,7 @@ class _SwiperDiyState extends State<SwiperDiy> {
                   if (index == 0) {
                     return Container(
                       child: FadeInImage.assetNetwork(
-                        placeholder: 'assets/img/bg_swiper.png',
+                        placeholder: 'assets/bg_swiper.png',
                         image:
                             'http://pic31.nipic.com/20130730/789607_232633343194_2.jpg',
                         imageScale: 1.0,

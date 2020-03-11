@@ -12,7 +12,7 @@ import 'package:course_app/service/service_method.dart';
 import 'package:course_app/test/scan.dart';
 import 'package:course_app/pages/scanViewDemo.dart';
 import 'package:course_app/utils/QRcodeScanUtil.dart';
-import 'package:course_app/utils/navigatorUtil.dart';
+import 'package:course_app/router/navigatorUtil.dart';
 import 'package:course_app/utils/permission_util.dart';
 import 'package:course_app/widget/progress_dialog_widget.dart';
 import 'package:fluro/fluro.dart';

@@ -26,7 +26,11 @@ class Routes {
   static String attendancePagePage = '/attendance_page';
   static String attendanceCheckPage = '/attendance_check_page';
   static String attendDetailPage = '/attend_detail_page';
-  static String aboutPage='/about_page';
+  static String aboutPage = '/about_page';
+  static String searchFriendPage = '/search_friend_page';
+  static String chatHomePage = 'chat_home_page';
+  static String imageViewPage = '/image_view_page';
+  static String videoViewPage = '/video_view_page';
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(
@@ -54,5 +58,9 @@ class Routes {
     router.define(attendanceCheckPage, handler: attendanceCheckHanderl);
     router.define(attendDetailPage, handler: attendDetailHanderl);
     router.define(aboutPage, handler: aboutHanderl);
+    router.define(searchFriendPage, handler: searchFriendHanderl);
+    router.define(chatHomePage, handler: chatHomeHanderl);
+    router.define(imageViewPage, handler: imageViewHanderl);
+    router.define(videoViewPage, handler: videoViewHanderl);
   }
 }

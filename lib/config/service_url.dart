@@ -1,7 +1,8 @@
-const serviceUrl = 'http://192.168.200.117:11001/';  //'http://192.168.200.104:11001/'
+const serviceUrl = 'http://192.168.200.159:11001/';  //'http://192.168.200.104:11001/'
 //const serviceUrl = 'http://192.168.43.186:11001/';
-//const webSocketUrl = 'ws://192.168.200.117:10090/ws';//wsServer
-const webSocketUrl = 'ws://192.168.200.117:11001/wsServer/';
+//const webSocketUrl = 'ws://192.168.200.159:10090/ws';//wsServer  47.102.97.30
+const webSocketUrl = 'ws://192.168.200.159:11001/wsServer/';
+const nettyUrl='ws://192.168.200.159:10090/ws';
 class studentPath {
   static const servicePath = {
     'getCoursePage': 'student/getCoursePage',
@@ -13,7 +14,6 @@ class studentPath {
 }
 
 class userPath{
-  //static String userId="2";
   static const servicePath = {
     'userLongin':'userLongin',
     'registerUser':'registerUser',
@@ -31,7 +31,13 @@ class userPath{
     'getReplyListPage':'getCommentAnnPage',
     'getUserFriend':'getUserFriend',
     'userPwdChange':'userPwdChange',
-    'getStudentInfo':'getStudentInfo'
+    'getStudentInfo':'getStudentInfo',
+    'getFriendsUserInfo':'getFriendsUserInfo',
+    'getAllMyFriends':'getAllMyFriends',
+    'IsMyFriend':'IsMyFriend',
+    'agreeFriend':'agreeFriend',
+    'uploadChatImageBase64':'uploadChatImageBase64',
+    'uploadChatVideo':'uploadChatVideo',
   };
 }
 
@@ -50,5 +56,6 @@ class teacherPath{
     'createAttendance':'teacher/createAttendance',
     'updateAttendanceStudent':'teacher/updateAttendanceStudent',
     'delAttendance':'teacher/delAttendance',
+    'getStudentListId':'course/getStudentListId',
   };
 }

@@ -2,7 +2,8 @@ import 'package:common_utils/common_utils.dart';
 import 'package:course_app/provide/user_model_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/provide/websocket_provide.dart';
-import 'package:course_app/utils/navigatorUtil.dart';
+import 'package:course_app/router/application.dart';
+import 'package:course_app/router/navigatorUtil.dart';
 import 'package:course_app/widget/cupertion_alert_dialog.dart';
 import 'package:course_app/widget/select_item_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -81,11 +82,14 @@ class AdminAccoutPage extends StatelessWidget {
               });
           if (b == 1) {
             Provide.value<WebSocketProvide>(context).close();
+            Application.nettyWebSocket.close();
 //            String username = Provide.value<UserModelProvide>(context).username;
 //            String pwd = Provide.value<UserModelProvide>(context).pwd;
             Provide.value<UserModelProvide>(context)
                 .logout(context)
-                .whenComplete(() {});
+                .whenComplete(() {
+
+            });
           }
         },
       ),

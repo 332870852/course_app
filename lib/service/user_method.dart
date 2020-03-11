@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:course_app/config/service_url.dart';
 import 'package:course_app/data/announcement_vo.dart';
+import 'package:course_app/data/chat/friend_model.dart';
 import 'package:course_app/data/comment_vo.dart';
 import 'package:course_app/data/user_dto.dart';
 import 'package:course_app/data/user_head_image.dart';
@@ -10,7 +11,9 @@ import 'package:course_app/data/user_model_vo.dart';
 import 'package:course_app/model/Course.dart';
 import 'package:course_app/service/service_method.dart';
 import 'package:course_app/utils/ResponseModel.dart';
+import 'package:course_app/utils/base64_util.dart';
 import 'package:course_app/utils/exception.dart';
+import 'package:course_app/utils/video_image_thumb_util.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'dart:io';
@@ -320,6 +323,7 @@ class UserMethod {
     map.putIfAbsent('update', () => update);
     ResponseModel responseModel = await get(context,
         method: userPath.servicePath['getUserQRcode'], queryParameters: map);
+    // print(responseModel);
     if (responseModel != null) {
       if (responseModel.code == 1) {
         return responseModel.data;
@@ -429,15 +433,16 @@ class UserMethod {
   static Future<List<UserInfoVo>> getStudentInfo(
       BuildContext context, List<String> studentId) async {
     List<UserInfoVo> result = [];
-    if(studentId.isEmpty){
+    if (studentId.isEmpty) {
       return result;
     }
     Map<String, dynamic> map = new Map();
-    String str=studentId.toString().replaceAll('[', '');
-    str=str.replaceAll(']', '');
+    String str = studentId.toString().replaceAll('[', '');
+    str = str.replaceAll(']', '');
     map.putIfAbsent('studentId', () => str);
     ResponseModel responseModel = await get(context,
         method: userPath.servicePath['getStudentInfo'], queryParameters: map);
+    //print(responseModel);
     if (responseModel != null) {
       if (responseModel.code == 1) {
         List<dynamic> list = responseModel.data;
@@ -446,6 +451,157 @@ class UserMethod {
           result.add(userInfoVo);
         });
         return result;
+      } else {
+        throw responseModel.errors[0].message;
+      }
+    }
+    return null;
+  }
+
+  ///获取我的好友
+  static Future<List<MyFriendsVo>> getAllMyFriends(BuildContext context) async {
+    ResponseModel responseModel =
+        await get(context, method: userPath.servicePath['getAllMyFriends']);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        List<MyFriendsVo> res = [];
+        List<dynamic> list = responseModel.data;
+        list.forEach((item) {
+          MyFriendsVo myFriendsVo = MyFriendsVo.fromJson(item);
+          res.add(myFriendsVo);
+        });
+        return res;
+      } else {
+        throw responseModel.errors[0].message;
+      }
+    }
+    return null;
+  }
+
+  ///批量查好友资料
+  static Future<List<UserInfoVo>> getFriendsUserInfo(
+      BuildContext context, List<String> friendIds) async {
+    List<UserInfoVo> result = [];
+    if (friendIds.isEmpty) {
+      return result;
+    }
+    Map<String, dynamic> map = new Map();
+    String str = friendIds.toString().replaceAll('[', '');
+    str = str.replaceAll(']', '');
+    map.putIfAbsent('friendId', () => str);
+    ResponseModel responseModel = await get(context,
+        method: userPath.servicePath['getFriendsUserInfo'],
+        queryParameters: map);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        List<dynamic> list = responseModel.data;
+        list.forEach((item) {
+          UserInfoVo userInfoVo = UserInfoVo.fromJson(item);
+          result.add(userInfoVo);
+        });
+        return result;
+      } else {
+        throw responseModel.errors[0].message;
+      }
+    }
+    return null;
+  }
+
+  ///是否是好友关系
+  static Future<bool> IsMyFriend(BuildContext context, String friendId) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('friendId', () => friendId);
+    ResponseModel responseModel = await get(context,
+        method: userPath.servicePath['IsMyFriend'], queryParameters: map);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
+      }
+    } else {
+      throw responseModel.errors[0].message;
+    }
+    return false;
+  }
+
+  ///同意添加好友
+  static Future<bool> agreeFriend(
+      BuildContext context, String sid, String friendId) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('sid', () => sid);
+    map.putIfAbsent('friendId', () => friendId);
+    ResponseModel responseModel = await get(context,
+        method: userPath.servicePath['agreeFriend'], queryParameters: map);
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
+      }
+    } else {
+      throw responseModel.errors[0].message;
+    }
+    return false;
+  }
+
+  ///上传base64图片, 压缩图片
+  static Future<UserHeadImage> uploadChatImageBase64(
+      BuildContext context, String path,
+      {timeout = 30 * 1000}) async {
+    //Map<String, dynamic> map = new Map();
+    ///压缩
+    File fp = await ImageCompressUtil.getCompressImgWH(
+      path: path,
+      targetWidth: 600,
+    );
+    String base64 = await Base64Util.image2Base64(fp.path);
+    ResponseModel responseModel = await post(context,
+        timeout: timeout,
+        method: userPath.servicePath['uploadChatImageBase64'],
+        data: base64);
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        UserHeadImage userHeadImage =
+            UserHeadImage.fromJson(responseModel.data);
+        return userHeadImage;
+      }
+    } else {
+      throw responseModel.errors[0].message;
+    }
+    return null;
+  }
+
+  /**
+   * 视频小于8M，高质量压缩
+   * 视频大于8M，视频品质压缩
+   * 视频大于100M，默认压缩，
+   * 大于150M，低质量压缩
+   */
+
+  ///上传聊天视频, 压缩图片
+  static Future<String> uploadChatVideo(BuildContext context, String videoPath,
+      {timeout = 3 * 60 * 1000,
+      ProgressCallback onSendProgress,
+      compressSize = 8}) async {
+    File file = File(videoPath);
+    print(file.statSync().type.toString());
+    ///compress
+    //MediaInfo mediaInfo = await VideoCompressUtil.LimitCompressVideo(videoPath);
+    if (file.existsSync()) {
+      var name = file.path
+          .substring(file.path.lastIndexOf("/") + 1, file.path.length);
+      FormData formData = FormData.fromMap({
+        "video": MultipartFile.fromFileSync(file.path, filename: name),
+      });
+      ResponseModel responseModel = await post(context,
+          timeout: timeout,
+          method: userPath.servicePath['uploadChatVideo'],
+          data: formData,
+          onSendProgress: onSendProgress);
+      print(responseModel);
+      if (responseModel != null) {
+        if (responseModel.code == 1) {
+          return responseModel.data;
+        }
       } else {
         throw responseModel.errors[0].message;
       }
