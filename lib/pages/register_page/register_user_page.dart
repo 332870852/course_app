@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mobile_number/mobile_number.dart';
 import 'package:provide/provide.dart';
 
 ///注册页面
@@ -97,9 +96,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
     displayBtn = false;
     displayLoding = false;
     focusNode = FocusNode();
-    initMobileNumberState().then((onValue){
-      textEditingController.text=onValue;
-    });
+
   }
 
   @override
@@ -111,17 +108,17 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
   }
 
   ///获取android手机号码
-  Future<String> initMobileNumberState() async {
-    String mobileNumber = '';
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      mobileNumber = await MobileNumber.mobileNumber;
-    } on PlatformException catch (e) {
-      debugPrint("Failed to get mobile number because of '${e.message}'");
-    }
-    if (!mounted) return '';
-    return mobileNumber;
-  }
+//  Future<String> initMobileNumberState() async {
+//    String mobileNumber = '';
+//    // Platform messages may fail, so we use a try/catch PlatformException.
+//    try {
+//      mobileNumber = await MobileNumber.mobileNumber;
+//    } on PlatformException catch (e) {
+//      debugPrint("Failed to get mobile number because of '${e.message}'");
+//    }
+//    if (!mounted) return '';
+//    return mobileNumber;
+//  }
 
   clickExitsUserName(context, String username) async {
     setState(() {

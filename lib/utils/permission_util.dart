@@ -23,4 +23,34 @@ class PermissionUtil {
       return false;
     }
   }
+
+  static Future<bool> requestPermission(
+      {@required PermissionGroup permissionGroup}) async {
+    Map<PermissionGroup, PermissionStatus> permissions =
+    await PermissionHandler().requestPermissions([PermissionGroup.access_media_location]);
+    if (permissions[permissionGroup] == PermissionStatus.granted) {
+      return true;
+    } else {
+      print('需要权限!');
+      return false;
+    }
+  }
+
+  static Future<PermissionStatus> findPermissionStatus(
+      {@required PermissionGroup permissionGroup}) async {
+    PermissionStatus permissions =
+        await PermissionHandler().checkPermissionStatus(permissionGroup);
+    return permissions;
+  }
+
+  static Future<ServiceStatus> findServicePermission(
+      {@required PermissionGroup permissionGroup}) async {
+    ServiceStatus serviceStatus =
+        await PermissionHandler().checkServiceStatus(permissionGroup);
+    return serviceStatus;
+  }
+
+  static Future<bool> openAppSettings() async {
+    return await PermissionHandler().openAppSettings();
+  }
 }

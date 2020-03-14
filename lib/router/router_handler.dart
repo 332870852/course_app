@@ -12,6 +12,7 @@ import 'package:course_app/pages/chat/pic_view.dart';
 import 'package:course_app/pages/chat/search_friend.dart';
 import 'package:course_app/pages/chat/video_view_page.dart';
 import 'package:course_app/pages/classroom_page.dart';
+import 'package:course_app/pages/doucument_list_page.dart';
 import 'package:course_app/pages/home_page.dart';
 import 'package:course_app/pages/join_course_page.dart';
 import 'package:course_app/pages/login_page.dart';
@@ -21,11 +22,13 @@ import 'package:course_app/pages/register_page/final_registe_page.dart';
 import 'package:course_app/pages/register_page/next_pegist_page.dart';
 import 'package:course_app/pages/register_page/register_user_page.dart';
 import 'package:course_app/pages/register_page/result_registe_page.dart';
+import 'package:course_app/pages/soft/software_page.dart';
 import 'package:course_app/pages/student/attendance_check_page.dart';
 import 'package:course_app/pages/teacher/attendance_detail_page.dart';
 import 'package:course_app/pages/teacher/attendance_page.dart';
 import 'package:course_app/pages/teacher/create_announce_page.dart';
 import 'package:course_app/pages/teacher/create_course_page.dart';
+import 'package:course_app/pages/topic_page.dart';
 import 'package:course_app/pages/user_info_page.dart';
 import 'package:course_app/pages/student/attendance_stu_page.dart';
 import 'package:course_app/provide/course_provide.dart';
@@ -334,9 +337,41 @@ Handler imageViewHanderl = Handler(
 ///video view
 Handler videoViewHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      var urlPath = (ObjectUtil.isNotEmpty(params['urlPath'].first))
-          ? params['urlPath'].first
-          : '';
-      return VideoViewPage(urlPath: urlPath,);
-    });
+  var urlPath = (ObjectUtil.isNotEmpty(params['urlPath'].first))
+      ? params['urlPath'].first
+      : '';
+  return VideoViewPage(
+    urlPath: urlPath,
+  );
+});
 
+///doucument
+Handler doucumentListHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  var courseId = (ObjectUtil.isNotEmpty(params['courseId'].first))
+      ? params['courseId'].first
+      : '';
+  var teacherId = (ObjectUtil.isNotEmpty(params['teacherId'].first))
+      ? params['teacherId'].first
+      : '';
+  return DoucumentListPage(
+    courseId: courseId,
+    teacherId: teacherId,
+  );
+});
+
+///topic page
+
+Handler topicHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  var courseId = (ObjectUtil.isNotEmpty(params['courseId'].first))
+      ? params['courseId'].first
+      : '';
+  var teacherId = (ObjectUtil.isNotEmpty(params['teacherId'].first))
+      ? params['teacherId'].first
+      : '';
+  return TopicPage(
+    courseId: courseId,
+    teacherId: teacherId,
+  );
+});

@@ -6,6 +6,7 @@ import 'package:course_app/router/routes.dart';
 import 'package:course_app/router/navigatorUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provide/provide.dart';
 
 ///顶部导航
@@ -111,12 +112,36 @@ class ClassRoomTopNavigatorWidget extends StatelessWidget {
                   context, Routes.announcementPage + '?courseId=${courseId}&teacherId=${teacherId}');
               break;
             }
+          case 1:{
+            NavigatorUtil.goDoucumentListPage(context, teacherId, courseId);
+            break;
+          }
+          case 2:{
+            NavigatorUtil.goTopicPage(context, teacherId, courseId);
+            break;
+          }
           case 3:{
             if( Provide.value<UserProvide>(context).userId==teacherId){///教师
               NavigatorUtil.goAttendancePage(context,courseId: courseId,studentNums: studentNums);
             }else{
               NavigatorUtil.goAttendanceStuPage(context,courseId);
             }
+            break;
+          }
+          case 4:{
+            Fluttertoast.showToast(msg: '功能处于开发阶段..');
+            break;
+          }
+          case 5:{
+            Fluttertoast.showToast(msg: '功能处于开发阶段..');
+            break;
+          }
+          case 6:{
+            Fluttertoast.showToast(msg: '功能处于开发阶段..');
+            break;
+          }
+          case 7:{
+            Fluttertoast.showToast(msg: '功能处于开发阶段..');
             break;
           }
         }

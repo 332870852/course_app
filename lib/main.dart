@@ -14,6 +14,7 @@ import 'package:course_app/provide/expire_timer_provide.dart';
 import 'package:course_app/provide/register_page_provide.dart';
 import 'package:course_app/provide/chat/request_friend_provide.dart';
 import 'package:course_app/provide/showAttend_provide.dart';
+import 'package:course_app/provide/soft_ware_provide.dart';
 import 'package:course_app/provide/teacher/attend_stu_provide.dart';
 import 'package:course_app/provide/teacher/course_teacher_provide.dart';
 import 'package:course_app/provide/reply_list_provide.dart';
@@ -62,7 +63,7 @@ void main() async {
   var chatPageProvide = ChatPageProvide();
   var chatMessageProvide = ChatMessageProvide();
   var chatDetailProvide = ChatDetailProvide();
-
+  var softWareProvide = SoftWareProvide();
   providers
     ..provide(Provider<CurrentIndexProvide>.value(currentIndexProvide))
     ..provide(Provider<BottomTabBarProvide>.value(bottomTabBarProvide))
@@ -84,6 +85,7 @@ void main() async {
     ..provide(Provider<ChatPageProvide>.value(chatPageProvide))
     ..provide(Provider<ChatMessageProvide>.value(chatMessageProvide))
     ..provide(Provider<ChatDetailProvide>.value(chatDetailProvide))
+    ..provide(Provider<SoftWareProvide>.value(softWareProvide))
     ..provide(Provider<CourseProvide>.value(courseProvide));
   runApp(ProviderNode(child: MyApp(), providers: providers));
 }

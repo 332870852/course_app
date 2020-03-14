@@ -36,11 +36,11 @@ class CommentMethod{
           Fluttertoast.showToast(msg: onValue.result);
         }else{
           print(url);
-          print(url.contains('getUserFriendById?findType=0'));
+          print(url.contains('getUserFriend?findType=0'));
           if(url.contains('joinCode=')){
             pr.dismiss();
             QRCodeScanUtil.doResult(context, 1, onValue.data);
-          }else if(url.contains('getUserFriendById?findType=0')){
+          }else if(url.contains('getUserFriend?findType=0')){
             pr.dismiss();
             QRCodeScanUtil.doResult(context, 2, onValue.data);
           } else{

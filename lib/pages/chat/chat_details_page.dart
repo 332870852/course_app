@@ -17,6 +17,7 @@ import 'package:course_app/router/application.dart';
 import 'package:course_app/router/navigatorUtil.dart';
 import 'package:course_app/service/chat_service.dart';
 import 'package:course_app/service/user_method.dart';
+import 'package:course_app/utils/softwareUtil.dart';
 import 'package:course_app/utils/video_image_thumb_util.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/foundation.dart';
@@ -136,7 +137,6 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
         selectCount: 1,
         showCamera: true,
         compressSize: 1024 * 15,
-
         ///超过15MB 将压缩图片
       );
     } else if (type == 'camara') {
@@ -144,6 +144,7 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
       _listImagePaths = [];
       _listImagePaths.add(media);
     }
+    SoftWareUtil.saveAlunmPermisson(true);
     return _listImagePaths;
   }
 

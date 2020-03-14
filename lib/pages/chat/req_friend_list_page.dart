@@ -76,11 +76,11 @@ class _ReqFriendListPageState extends State<ReqFriendListPage> {
                 return NoDataWidget(
                     path: 'assets/img/nodata2.png', title: '加载失败');
               }
-              return Provide<RequestFriendProvide>(
-                builder: (context, child, data) {
-
-                },
-              );
+//              return Provide<RequestFriendProvide>(
+//                builder: (context, child, data) {
+//
+//                },
+//              );
             }),
       ),
     );

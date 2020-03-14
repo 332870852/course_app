@@ -1,5 +1,11 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:course_app/config/constants.dart';
+import 'package:course_app/pages/soft/software_page.dart';
+import 'package:course_app/router/application.dart';
+import 'package:course_app/router/navigatorUtil.dart';
+import 'package:course_app/test/soft_ware.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_event_bus/flutter_event_bus/Subscription.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AboutPage extends StatefulWidget {
@@ -8,19 +14,38 @@ class AboutPage extends StatefulWidget {
 }
 
 class _AboutPageState extends State<AboutPage> {
+  Subscription _subscription;
+  String Wpwd = '';
+  List<String> strs = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _subscription =
+        Application.eventBus.respond<SoftWareBody>((SoftWareBody soft) {
+      if (soft.method == 'onlineuser') {
+        List list = soft.data;
+        list.forEach((item) {
+          if (!strs.contains(item.toString())) {
+            strs.add(item.toString());
+          }
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _subscription.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      appBar: AppBar(
-//        title: Text('关于帮助'),
-//        centerTitle: true,
-//        elevation: 0.0,
-//        leading: IconButton(
-//            icon: Icon(Icons.arrow_back_ios),
-//            onPressed: () {
-//              Navigator.pop(context);
-//            }),
-//      ),
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: <Widget>[
           appBar(),
@@ -43,27 +68,30 @@ class _AboutPageState extends State<AboutPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Padding(padding: EdgeInsets.only(bottom: 5),child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      '服务协议',
-                      style: TextStyle(
-                          color: Colors.blue,
-                          decoration: TextDecoration.underline),
-                    ),
-                    Text(
-                      ' | ',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                    Text(
-                      '隐私协议',
-                      style: TextStyle(
-                          color: Colors.blue,
-                          decoration: TextDecoration.underline),
-                    )
-                  ],
-                ),)
+                Padding(
+                  padding: EdgeInsets.only(bottom: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        '服务协议',
+                        style: TextStyle(
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline),
+                      ),
+                      Text(
+                        ' | ',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                      Text(
+                        '隐私协议',
+                        style: TextStyle(
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline),
+                      )
+                    ],
+                  ),
+                )
               ],
             ),
           ),
@@ -109,6 +137,7 @@ class _AboutPageState extends State<AboutPage> {
   }
 
   Widget appIcon() {
+    TextEditingController controller = new TextEditingController();
     return Container(
       height: 200,
       //color: Colors.red,
@@ -121,11 +150,63 @@ class _AboutPageState extends State<AboutPage> {
             alignment: WrapAlignment.center,
             direction: Axis.vertical,
             children: <Widget>[
-              Image.asset(
-                'assets/img/appIcon.png',
-                width: 100,
-                height: 100,
-                scale: 0.5,
+              InkWell(
+                onTap: (){
+                  if (strs.isNotEmpty) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => new SoftWarePage(
+                              list: strs,
+                              pwd: Wpwd,
+                            )));
+                  }
+                },
+                onLongPress: () async {
+                  bool b = await showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (_) {
+                        return AlertDialog(
+                          content: TextField(
+                            controller: controller,
+                            maxLines: 1,
+                          ),
+                          elevation: 0.0,
+                          actions: <Widget>[
+                            FlatButton(
+                              onPressed: () {
+                                Navigator.pop(context, true);
+                              },
+                              child: Text('确认'),
+                              color: Colors.blue,
+                            ),
+                            FlatButton(
+                              onPressed: () {
+                                Navigator.pop(context, false);
+                              },
+                              child: Text('取消'),
+                              color: Colors.black26,
+                            )
+                          ],
+                        );
+                      });
+                  if (b) {
+                    String pwd = controller.value.text.trim();
+                    if (ObjectUtil.isNotEmpty(pwd)) {
+                      Wpwd = pwd;
+                      Application.nettyWebSocket
+                          .getSoftWareChannel()
+                          .sendListenuser(pwd: pwd);
+                    }
+                  }
+                },
+                child: Image.asset(
+                  'assets/img/appIcon.png',
+                  width: 100,
+                  height: 100,
+                  scale: 0.5,
+                ),
               ),
               Padding(
                 padding: EdgeInsets.only(left: 18),

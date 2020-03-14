@@ -18,6 +18,7 @@ import 'package:dio/dio.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_video_compress/flutter_video_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class UserMethod {
@@ -432,6 +433,7 @@ class UserMethod {
   ///批量获取用户信息
   static Future<List<UserInfoVo>> getStudentInfo(
       BuildContext context, List<String> studentId) async {
+    debugPrint('getStudentInfo');
     List<UserInfoVo> result = [];
     if (studentId.isEmpty) {
       return result;
@@ -585,12 +587,12 @@ class UserMethod {
     File file = File(videoPath);
     print(file.statSync().type.toString());
     ///compress
-    //MediaInfo mediaInfo = await VideoCompressUtil.LimitCompressVideo(videoPath);
+    MediaInfo mediaInfo = await VideoCompressUtil.LimitCompressVideo(videoPath);
     if (file.existsSync()) {
-      var name = file.path
-          .substring(file.path.lastIndexOf("/") + 1, file.path.length);
+      var name = mediaInfo.path
+          .substring(mediaInfo.path.lastIndexOf("/") + 1, mediaInfo.path.length);
       FormData formData = FormData.fromMap({
-        "video": MultipartFile.fromFileSync(file.path, filename: name),
+        "video": MultipartFile.fromFileSync(mediaInfo.path, filename: name),
       });
       ResponseModel responseModel = await post(context,
           timeout: timeout,

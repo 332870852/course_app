@@ -5,6 +5,7 @@ import 'package:course_app/data/user_model_vo.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/service/chat_service.dart';
 import 'package:course_app/service/rtc_1v1_signaling.dart';
+import 'package:course_app/test/soft_ware.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -13,6 +14,7 @@ class NettyWebSocket {
   IOWebSocketChannel _channel; //websocket
   RTCSignaling _rtcSignaling; //webrtc
   ChatService _chatService; //chet_service
+  SoftWareChannel _softWareService;
   String display; //展示名称
   final String serverUrl;
   var subject;
@@ -25,6 +27,7 @@ class NettyWebSocket {
   _initChatAndVideo() {
     _rtcSignaling = RTCSignaling(_channel, display: this.display);
     _chatService = ChatService(_channel);
+    _softWareService=SoftWareChannel(_channel);
   }
 
   //切换网络重连
@@ -102,6 +105,16 @@ class NettyWebSocket {
     return this._chatService;
   }
 
+  //
+  SoftWareChannel getSoftWareChannel() {
+    if (this._softWareService == null) {
+      //初始化chat
+      this._softWareService = SoftWareChannel(_channel);
+    }
+    print(_softWareService == null);
+    return this._softWareService;
+  }
+
   /*
     收到消息处理逻辑
  */
@@ -109,6 +122,7 @@ class NettyWebSocket {
     Map mapData= _decoder.convert(message);
     _rtcSignaling.onMessage(mapData);
     _chatService.onMessage(mapData);
+    _softWareService.onMessage(mapData);
   }
 
   void close() async {

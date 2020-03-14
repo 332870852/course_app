@@ -55,6 +55,11 @@ class NavigatorUtil {
     var token = await Application.sp.get('token');
     String userId = Provide.value<UserProvide>(context).userId;
     Provide.value<WebSocketProvide>(context).create(userId, token: token);
+    //todo
+    /////////////////////////////////test
+    Application.uid = userId;
+    Application.sp.setString('uid', userId);
+    ////////////////////////////
   }
 
   ///登录页
@@ -207,9 +212,28 @@ class NavigatorUtil {
   }
 
   ///观看视频
-
   static void goVideoViewPage(BuildContext context, String urlPath) {
     _navigateTo(context,
         Routes.videoViewPage + '?urlPath=${Uri.encodeComponent('${urlPath}')}');
+  }
+
+//  static void goSoftWarePage(BuildContext context,List list) {
+//    _navigateTo(context,
+//        Routes.softWarePage+'?list=${list}');
+//  }
+  ///资料页
+  static void goDoucumentListPage(
+      BuildContext context, String teacherId, String courseId) {
+    _navigateTo(
+        context,
+        Routes.doucumentListPage +
+            '?teacherId=${teacherId}&courseId=${courseId}');
+  }
+
+  ///话题页
+  static void goTopicPage(
+      BuildContext context, String teacherId, String courseId) {
+    _navigateTo(context,
+        Routes.topicPage + '?teacherId=${teacherId}&courseId=${courseId}');
   }
 }

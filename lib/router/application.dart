@@ -29,4 +29,5 @@ class Application{
     nettyWebSocket=NettyWebSocket(serverUrl: nettyUrl,display: _displayName);
   }
 
+  static String uid;
 }

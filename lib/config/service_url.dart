@@ -1,8 +1,8 @@
-const serviceUrl = 'http://192.168.200.159:11001/';  //'http://192.168.200.104:11001/'
+const serviceUrl = 'http://47.102.97.30:11001/';  //'http://192.168.200.104:11001/'
 //const serviceUrl = 'http://192.168.43.186:11001/';
 //const webSocketUrl = 'ws://192.168.200.159:10090/ws';//wsServer  47.102.97.30
-const webSocketUrl = 'ws://192.168.200.159:11001/wsServer/';
-const nettyUrl='ws://192.168.200.159:10090/ws';
+const webSocketUrl = 'ws://47.102.97.30:11001/wsServer/';
+const nettyUrl='ws://47.102.97.30:10090/ws';
 class studentPath {
   static const servicePath = {
     'getCoursePage': 'student/getCoursePage',

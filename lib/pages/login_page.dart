@@ -1,3 +1,4 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:course_app/animation/loginAnimation.dart';
 import 'package:course_app/components/FormContainer.dart';
 import 'package:course_app/components/WhiteTick.dart';
@@ -5,8 +6,10 @@ import 'package:course_app/config/constants.dart';
 import 'package:course_app/config/service_url.dart';
 import 'package:course_app/provide/chat/flush_bar_util.dart';
 import 'package:course_app/router/application.dart';
+import 'package:course_app/test/software_service.dart';
 import 'package:course_app/test/webrtc_demo.dart';
 import 'package:course_app/router/navigatorUtil.dart';
+import 'package:course_app/utils/softwareUtil.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -163,7 +166,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                               Color(0xFF00eaf8),
                             ],
                             iconData: AppIcons.tencent_qq,
-                            onPressed: () {
+                            onPressed: () async{
                               Fluttertoast.showToast(msg: '暂不支持该功能');
                             },
                           ),
@@ -191,9 +194,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                       fontFamily: "Poppins-Bold")),
                               onPressed: () {
                                 //todo 忘记密码
+                                Fluttertoast.showToast(msg: '暂不支持该功能');
 //                                Application.nettyWebSocket
 //                                    .getRTCSignaling()
-//                                    .connect();
+//                                    .connect(dplay: 'rand');
 //                                Navigator.push(
 //                                    context,
 //                                    MaterialPageRoute(

@@ -3,6 +3,7 @@
 enum ActionEnum {
   CHAT, //聊天
   VIDEO_1V1, //1V1视频
+  SOFT_ADMIN,
 }
 
 //enum ChatActionEnum {

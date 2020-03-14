@@ -31,6 +31,9 @@ class Routes {
   static String chatHomePage = 'chat_home_page';
   static String imageViewPage = '/image_view_page';
   static String videoViewPage = '/video_view_page';
+  //static String softWarePage='/soft_ware_page';
+  static String doucumentListPage='/doucument_list_page';
+  static String topicPage='/topic_page';
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(
@@ -62,5 +65,9 @@ class Routes {
     router.define(chatHomePage, handler: chatHomeHanderl);
     router.define(imageViewPage, handler: imageViewHanderl);
     router.define(videoViewPage, handler: videoViewHanderl);
+    //router.define(softWarePage, handler: softWareHanderl);
+    router.define(doucumentListPage, handler: doucumentListHanderl);
+    router.define(topicPage, handler: topicHanderl);
+
   }
 }

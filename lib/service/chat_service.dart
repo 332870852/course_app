@@ -1,7 +1,4 @@
 import 'dart:convert';
-
-import 'package:common_utils/common_utils.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:course_app/data/chat/agree_req.dart';
 import 'package:course_app/data/chat/chat_info.dart';
 import 'package:course_app/data/chat/request_friend.dart';

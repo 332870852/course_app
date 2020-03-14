@@ -119,7 +119,7 @@ class VideoCompressUtil {
    * 大于150M，低质量压缩
    */
   static LimitCompressVideo(String path,
-      {first = 5, second = 100, last = 150}) async {
+      {first = 5, second = 20, last = 100}) async {
     VideoCompressUtil util = VideoCompressUtil();
     MediaInfo mediaInfo = await util.getVideoInfo(path);
     debugPrint('videofilesize ：${mediaInfo.filesize}');
@@ -131,11 +131,11 @@ class VideoCompressUtil {
       debugPrint('MediumQuality');
       mediaInfo = await util.getCompressVideo(path,
           quality: VideoQuality.MediumQuality);
-    } else if (mediaInfo.filesize <= last * 1000000) {
+    }else if (mediaInfo.filesize < last * 1000000) {
       debugPrint('DefaultQuality');
       mediaInfo = await util.getCompressVideo(path,
           quality: VideoQuality.DefaultQuality);
-    } else {
+    }else {
       debugPrint('LowQuality');
       mediaInfo =
           await util.getCompressVideo(path, quality: VideoQuality.LowQuality);

@@ -232,20 +232,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.8"
-  direct_select:
-    dependency: "direct main"
-    description:
-      name: direct_select
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.0.0"
-  file_picker:
-    dependency: "direct main"
-    description:
-      name: file_picker
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.4.3+2"
   fixnum:
     dependency: transitive
     description:
@@ -555,13 +541,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.9.6+3"
-  mobile_number:
-    dependency: "direct main"
-    description:
-      name: mobile_number
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.0.4"
   node_interop:
     dependency: transitive
     description:
@@ -625,6 +604,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.4.0"
+  photo_album_manager:
+    dependency: "direct main"
+    description:
+      name: photo_album_manager
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.6"
   platform:
     dependency: transitive
     description:

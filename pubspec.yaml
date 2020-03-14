@@ -42,7 +42,7 @@ dependencies:
   sqflite: ^1.2.0
   path_provider: ^1.5.1
   connectivity: ^0.4.6+2  #网络状态
-  direct_select: ^1.0.0
+  #direct_select: ^1.0.0
   #flutter_jpush: ^0.0.4 #极光推送
   flutter_local_notifications: ^1.1.5+1
   flutter_qr_reader: ^1.0.3 #二维码扫描
@@ -57,10 +57,9 @@ dependencies:
   video_thumbnail: ^0.2.0 #视频缩略图
   flutter_native_image: ^0.0.5 #图片压缩
   flutter_video_compress: ^0.3.7  #视频压缩
-  mobile_number: ^0.0.2   #android 机获取手机号码
-  file_picker: ^1.4.3+2
+  #file_picker: ^1.4.3+2
   flushbar: ^1.9.1
-  #photo_album_manager: ^1.0.6
+  photo_album_manager: ^1.0.6
 dev_dependencies:
   flutter_test:
     sdk: flutter

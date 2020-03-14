@@ -12,11 +12,11 @@ import 'package:provide/provide.dart';
 
 class QRCodeScanUtil {
   static void doResult(BuildContext context, int type, dynamic data) async {
-    if (type == 1) {
+    if (type == 1) { ///加课
       Course course = Course.fromJson(data);
       Provide.value<CourseProvide>(context).insertCourse(course);
       NavigatorUtil.goClassRoomPage(context, course: course);
-    } else if (type == 2) {
+    } else if (type == 2) {///加好友
       UserInfoVo userInfoVo = UserInfoVo.fromJson(data);
       bool b =
           await UserMethod.IsMyFriend(context, userInfoVo.userId.toString());
