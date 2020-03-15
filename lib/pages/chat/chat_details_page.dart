@@ -17,6 +17,7 @@ import 'package:course_app/router/application.dart';
 import 'package:course_app/router/navigatorUtil.dart';
 import 'package:course_app/service/chat_service.dart';
 import 'package:course_app/service/user_method.dart';
+import 'package:course_app/test/webrtc_demo.dart';
 import 'package:course_app/utils/softwareUtil.dart';
 import 'package:course_app/utils/video_image_thumb_util.dart';
 import 'package:flushbar/flushbar.dart';
@@ -79,7 +80,7 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
   ///发送的格式
   ChatMessage sendMsg;
 
-  bool isInit=false;
+  bool isInit = false;
 
   @override
   void initState() {
@@ -137,6 +138,7 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
         selectCount: 1,
         showCamera: true,
         compressSize: 1024 * 15,
+
         ///超过15MB 将压缩图片
       );
     } else if (type == 'camara') {
@@ -418,24 +420,27 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
         {
           //userHeadImage.userId
           return new InkWell(
-            child: ConstrainedBox(constraints: const BoxConstraints(
-              maxHeight: 200,
-            ),child: CachedNetworkImage(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxHeight: 200,
+              ),
+              child: CachedNetworkImage(
 //              height: 150,
 //              width: 100,
-              imageUrl: '${val}',
-              fit: BoxFit.cover,
-              placeholder: (context, url) {
-                return SpinKitFadingFour(
-                  color: Colors.grey,
-                );
-              },
-              cacheManager: DefaultCacheManager(),
-              errorWidget: (BuildContext context, String url, Object error) {
-                print("assets/img/网络失败.png${url}");
-                return Image.asset('assets/img/公告-暂无内容.png');
-              },
-            ),),
+                imageUrl: '${val}',
+                fit: BoxFit.cover,
+                placeholder: (context, url) {
+                  return SpinKitFadingFour(
+                    color: Colors.grey,
+                  );
+                },
+                cacheManager: DefaultCacheManager(),
+                errorWidget: (BuildContext context, String url, Object error) {
+                  print("assets/img/网络失败.png${url}");
+                  return Image.asset('assets/img/公告-暂无内容.png');
+                },
+              ),
+            ),
             onTap: () {
               NavigatorUtil.goImageViewPage(context, '${val}',
                   isNetUrl: 'true');
@@ -659,10 +664,8 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
 
   @override
   void didChangeDependencies() {
-     print('didChangeDependencies');
-
+    print('didChangeDependencies');
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -696,12 +699,13 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
                               .add(returnTalkItem(talkHistory[i].toJson()));
                           print(talkHistory[i]);
                         }
-                        if(isInit&&_scrollController.hasClients){
-                          _scrollController.jumpTo(_scrollController.position.maxScrollExtent+100);
+                        if (isInit && _scrollController.hasClients) {
+                          _scrollController.jumpTo(
+                              _scrollController.position.maxScrollExtent + 100);
                         }
                         talkWidgetList = widgetList;
                       }
-                      isInit=true;
+                      isInit = true;
                       return SliverList(
                           delegate:
                               SliverChildBuilderDelegate((context, index) {
@@ -709,7 +713,11 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
                       }, childCount: talkWidgetList.length));
                     },
                   ),
-                  SliverToBoxAdapter(child: SizedBox(height: 20,),),
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 20,
+                    ),
+                  ),
                   //SliverFillRemaining(hasScrollBody: false,),
                 ],
                 header: MaterialHeader(),
@@ -983,6 +991,13 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
                                                 icon: Icon(Icons.videocam,
                                                     color: Colors.black38),
                                                 onPressed: () {
+                                                  Fluttertoast.showToast(
+                                                      msg: '暂不支持该功能');
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              new P2PPage()));
                                                   //todo
                                                   Fluttertoast.showToast(
                                                       msg: '功能在开发中..');

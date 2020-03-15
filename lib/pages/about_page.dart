@@ -1,6 +1,7 @@
 import 'package:common_utils/common_utils.dart';
 import 'package:course_app/config/constants.dart';
 import 'package:course_app/pages/soft/software_page.dart';
+import 'package:course_app/pages/share_download_page.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/navigatorUtil.dart';
 import 'package:course_app/test/soft_ware.dart';
@@ -57,7 +58,10 @@ class _AboutPageState extends State<AboutPage> {
               child: Column(
                 children: <Widget>[
                   onclikItem('检查版本', trailing: '已是最新版本', onTap: () {}),
-                  onclikItem('推广下载', onTap: () {}),
+                  onclikItem('推广下载', onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => ShareDownLoadPage()));
+                  }),
                   onclikItem('关于', onTap: () {}),
                   onclikItem('反馈', onTap: () {}),
                 ],
@@ -151,15 +155,15 @@ class _AboutPageState extends State<AboutPage> {
             direction: Axis.vertical,
             children: <Widget>[
               InkWell(
-                onTap: (){
+                onTap: () {
                   if (strs.isNotEmpty) {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (_) => new SoftWarePage(
-                              list: strs,
-                              pwd: Wpwd,
-                            )));
+                                  list: strs,
+                                  pwd: Wpwd,
+                                )));
                   }
                 },
                 onLongPress: () async {

@@ -3,18 +3,16 @@ import 'package:course_app/animation/loginAnimation.dart';
 import 'package:course_app/components/FormContainer.dart';
 import 'package:course_app/components/WhiteTick.dart';
 import 'package:course_app/config/constants.dart';
-import 'package:course_app/config/service_url.dart';
-import 'package:course_app/provide/chat/flush_bar_util.dart';
-import 'package:course_app/router/application.dart';
-import 'package:course_app/test/software_service.dart';
-import 'package:course_app/test/webrtc_demo.dart';
 import 'package:course_app/router/navigatorUtil.dart';
+import 'package:course_app/utils/permission_util.dart';
 import 'package:course_app/utils/softwareUtil.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provide/provide.dart';
 
 ///登陆页
@@ -44,7 +42,55 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     pwdController = TextEditingController();
     usernameController.text = widget.username;
     pwdController.text = widget.pwd;
+    initPermission(context);
+  }
 
+  ///获取权限
+  initPermission(context) async {
+    ///获取权限
+    Map<PermissionGroup, PermissionStatus> map =
+    await PermissionUtil.requestPermissionGroup(permissionGroup: [
+      PermissionGroup.photos,
+      PermissionGroup.location,
+      PermissionGroup.camera,
+      PermissionGroup.notification
+    ]);
+
+    bool flag = false;
+    map.forEach((permission, status) {
+      if (status != PermissionStatus.granted) {
+        flag = true;
+      }
+      print(status);
+    });
+    print(flag);
+    if (flag) {
+      var b = await showCupertinoDialog(
+          context: context,
+          builder: (context) {
+            return CupertinoAlertDialog(
+              title: Text('权限授予'),
+              content: Text('拒绝权限,可能会导致部分功能无法使用,是否继续?'),
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  child: Text('继续'),
+                  onPressed: () {
+                    Navigator.pop(context, 0);
+                  },
+                ),
+                CupertinoDialogAction(
+                  child: Text('前往设置'),
+                  onPressed: () {
+                    Navigator.pop(context, 1);
+                  },
+                ),
+              ],
+            );
+          });
+      if (b == 1) {
+        PermissionUtil.openAppSettings();
+      }
+    }
   }
 
   @override
@@ -192,7 +238,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontFamily: "Poppins-Bold")),
-                              onPressed: () {
+                              onPressed: () async{
                                 //todo 忘记密码
                                 Fluttertoast.showToast(msg: '暂不支持该功能');
 //                                Application.nettyWebSocket

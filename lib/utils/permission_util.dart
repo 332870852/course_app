@@ -27,13 +27,21 @@ class PermissionUtil {
   static Future<bool> requestPermission(
       {@required PermissionGroup permissionGroup}) async {
     Map<PermissionGroup, PermissionStatus> permissions =
-    await PermissionHandler().requestPermissions([PermissionGroup.access_media_location]);
+        await PermissionHandler().requestPermissions([permissionGroup]);
     if (permissions[permissionGroup] == PermissionStatus.granted) {
       return true;
     } else {
       print('需要权限!');
       return false;
     }
+  }
+
+  ///获取数组权限
+  static Future<Map<PermissionGroup, PermissionStatus>> requestPermissionGroup(
+      {@required List<PermissionGroup> permissionGroup}) async {
+    Map<PermissionGroup, PermissionStatus> permissions =
+        await PermissionHandler().requestPermissions(permissionGroup);
+    return permissions;
   }
 
   static Future<PermissionStatus> findPermissionStatus(

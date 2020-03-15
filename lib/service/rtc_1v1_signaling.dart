@@ -6,7 +6,7 @@ import 'package:course_app/utils/data_content.dart';
 import 'package:flutter_webrtc/webrtc.dart';
 import 'package:random_string/random_string.dart';
 import 'package:web_socket_channel/io.dart';
-
+import 'package:flutter/material.dart';
 
 //信令状态的回调
 typedef void SignalingStateCallback(SignalingState state);
@@ -28,7 +28,7 @@ enum SignalingState {
 }
 
 class RTCSignaling {
-  final String _selfId = randomNumeric(6);
+  String _selfId = randomNumeric(6);
   final IOWebSocketChannel _channel;
   String _sessionId; //会话id
   String display; //展示名称
@@ -87,8 +87,9 @@ class RTCSignaling {
   RTCSignaling(this._channel, {this.display});
 
 //socket 连接
-  void connect({String dplay}) async {
+  void connect(String selfId, {String dplay}) async {
     if (!ObjectUtil.isEmptyString(display)) this.display = dplay;
+    _selfId = selfId;
 /*
   向信令服务发送注册消息
  */
@@ -295,6 +296,7 @@ class RTCSignaling {
   创建answer
  */
   void _createAnswer(String id, RTCPeerConnection pc) async {
+    debugPrint('_createAnswer');
     RTCSessionDescription sdp = await pc.createAnswer(_constraints);
     pc.setLocalDescription(sdp);
     /*

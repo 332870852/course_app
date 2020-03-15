@@ -26,10 +26,11 @@ import 'package:course_app/router/routes.dart';
 import 'package:course_app/service/chat_service.dart';
 import 'package:course_app/splash_page.dart';
 import 'package:course_app/utils/notifications_util.dart';
-import 'package:course_app/utils/video_image_thumb_util.dart';
+import 'package:course_app/utils/permission_util.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provide/provide.dart';
 
 void main() async {
@@ -151,4 +152,6 @@ class MyApp extends StatelessWidget {
 //        }
 //    );
 //  }
+
+
 }

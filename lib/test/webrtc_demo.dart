@@ -1,13 +1,13 @@
 import 'dart:io';
 
+import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/service/rtc_1v1_signaling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/webrtc.dart';
-
+import 'package:provide/provide.dart';
 
 class P2PPage extends StatefulWidget {
-
   P2PPage({Key key}) : super(key: key);
 
   @override
@@ -15,7 +15,6 @@ class P2PPage extends StatefulWidget {
 }
 
 class _P2PPageState extends State<P2PPage> {
-
   _P2PPageState({Key key});
 
   //信令对象
@@ -76,13 +75,13 @@ class _P2PPageState extends State<P2PPage> {
           }
           break;
         case SignalingState.CallStateRinging:
-        // TODO: Handle this case.
+          // TODO: Handle this case.
           break;
         case SignalingState.CallStateInvite:
-        // TODO: Handle this case.
+          // TODO: Handle this case.
           break;
         case SignalingState.CallStateConnected:
-        // TODO: Handle this case.
+          // TODO: Handle this case.
           break;
         case SignalingState.CallStateBye:
           {
@@ -94,13 +93,13 @@ class _P2PPageState extends State<P2PPage> {
           }
           break;
         case SignalingState.CallStateOpen:
-        // TODO: Handle this case.
+          // TODO: Handle this case.
           break;
         case SignalingState.CallStateClosed:
-        // TODO: Handle this case.
+          // TODO: Handle this case.
           break;
         case SignalingState.CallStateError:
-        // TODO: Handle this case.
+          // TODO: Handle this case.
           break;
       }
     };
@@ -122,7 +121,8 @@ class _P2PPageState extends State<P2PPage> {
     });
 
     //服务发送注册消息
-    _signaling.connect(dplay: _displayName);
+    _signaling.connect(Provide.value<UserProvide>(context).userId,
+        dplay: _displayName);
   }
 
   //邀请对方
@@ -167,82 +167,76 @@ class _P2PPageState extends State<P2PPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('P2P demo'),
+        title: Text('P2P'),
       ),
       floatingActionButton: _inCalling
           ? SizedBox(
-        width: 200,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            FloatingActionButton(
-              onPressed: _switchCamera,
-              child: Icon(Icons.autorenew),
-            ),
-            FloatingActionButton(
-              onPressed: _hangup,
-              backgroundColor: Colors.deepOrange,
-              child: Icon(
-                Icons.call_end,
-                color: Colors.white,
+              width: 200,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  FloatingActionButton(
+                    onPressed: _switchCamera,
+                    child: Icon(Icons.autorenew),
+                  ),
+                  FloatingActionButton(
+                    onPressed: _hangup,
+                    backgroundColor: Colors.deepOrange,
+                    child: Icon(
+                      Icons.call_end,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
-
-            ),
-          ],
-        ),
-      )
+            )
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: _inCalling
           ? OrientationBuilder(builder: (context, orientation) {
-        return Container(
-          child: Stack(
-            children: <Widget>[
-              Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: Container(
-                    margin: EdgeInsets.all(0),
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    child: RTCVideoView(_remoteRendered),
-                    decoration: BoxDecoration(color: Colors.grey),
-                  )),
-              Positioned(
-                child: Container(
-                  width:
-                  orientation == Orientation.portrait ? 90.0 : 120.0,
-                  height:
-                  orientation == Orientation.portrait ? 120.0 : 90.0,
-                  child: RTCVideoView(_localRenderer),
-                  decoration: BoxDecoration(color: Colors.black54.withOpacity(0.5)),
+              return Container(
+                child: Stack(
+                  children: <Widget>[
+                    Positioned(
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        child: Container(
+                          margin: EdgeInsets.all(0),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          child: RTCVideoView(_remoteRendered),
+                          decoration: BoxDecoration(color: Colors.grey),
+                        )),
+                    Positioned(
+                      child: Container(
+                        width:
+                            orientation == Orientation.portrait ? 90.0 : 120.0,
+                        height:
+                            orientation == Orientation.portrait ? 120.0 : 90.0,
+                        child: RTCVideoView(_localRenderer),
+                        decoration: BoxDecoration(
+                            color: Colors.black54.withOpacity(0.5)),
+                      ),
+                      right: 20.0,
+                      top: 20.0,
+                    ),
+                  ],
                 ),
-                right: 20.0,
-                top: 20.0,
-              ),
-            ],
-          ),
-        );
-      })
+              );
+            })
           : ListView.builder(
-        shrinkWrap: true,
-        padding: EdgeInsets.all(1),
-        itemBuilder: (context, index) {
-          return _buildRow(context, _peers[index]);
-        },
-        itemCount: (_peers != null) ? _peers.length : 0,
-      ),
+              shrinkWrap: true,
+              padding: EdgeInsets.all(1),
+              itemBuilder: (context, index) {
+                return _buildRow(context, _peers[index]);
+              },
+              itemCount: (_peers != null) ? _peers.length : 0,
+            ),
     );
   }
 }
-
-
-
-
-
-
 
 //class P2PDemo extends StatefulWidget {
 //  final String url;

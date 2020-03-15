@@ -9,9 +9,12 @@ import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:course_app/service/user_method.dart';
 import 'package:course_app/router/navigatorUtil.dart';
+import 'package:course_app/utils/permission_util.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provide/provide.dart';
 
 class SplashPage extends StatefulWidget {
@@ -46,6 +49,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     });
 
   }
+
 
   void goPage() async {
     await Application.initSp();
