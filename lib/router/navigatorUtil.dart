@@ -236,4 +236,9 @@ class NavigatorUtil {
     _navigateTo(context,
         Routes.topicPage + '?teacherId=${teacherId}&courseId=${courseId}');
   }
+
+  ///文件传输页面
+  static void goFileOptPage(BuildContext context,{initValue}) {
+    _navigateTo(context, Routes.fileOptPage+'?initValue=${initValue}');
+  }
 }

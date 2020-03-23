@@ -752,7 +752,7 @@ class UserInfoPage extends StatelessWidget {
                         style: TextStyle(
                             color:
                                 (_choise == 1) ? Colors.purple : Colors.black,
-                            fontSize: ScreenUtil().setSp(40),
+                            fontSize: ScreenUtil.textScaleFactory*20,
                             fontWeight: FontWeight.w500),
                       ),
                     ],
@@ -767,7 +767,7 @@ class UserInfoPage extends StatelessWidget {
                   '取消',
                   style: TextStyle(
                       color: Colors.green,
-                      fontSize: ScreenUtil().setSp(40),
+                      fontSize: ScreenUtil.textScaleFactory*20,
                       fontWeight: FontWeight.w500),
                 ),
                 onPressed: () {

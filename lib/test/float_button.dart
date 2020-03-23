@@ -1,13 +1,18 @@
+import 'dart:io';
+
+import 'package:course_app/provide/file_opt_provide.dart';
+import 'package:course_app/router/navigatorUtil.dart';
+import 'package:course_app/service/user_method.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'dart:convert';
-
-import 'chat_demo.dart';
-
+import 'package:flutter/widgets.dart';
+import 'package:provide/provide.dart';
 
 class MenuFloatButton extends StatefulWidget {
+  final courseId;
+
+  MenuFloatButton({Key key, @required this.courseId}) : super(key: key);
+
   @override
   MenuFloatButtonState createState() => new MenuFloatButtonState();
 }
@@ -15,19 +20,9 @@ class MenuFloatButton extends StatefulWidget {
 class MenuFloatButtonState extends State<MenuFloatButton> {
   bool btnShow = true;
 
-  Map mySelf = {};
-
   @override
   void initState() {
     super.initState();
-
-    getMySelf();
-  }
-
-  getMySelf() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    mySelf = json.decode(prefs.getString('userInfo'));
   }
 
   Widget build(BuildContext context) {
@@ -66,11 +61,23 @@ class MenuFloatButtonState extends State<MenuFloatButton> {
                     child: Center(
                       child: CircleAvatar(
                         child: new IconButton(
-                          icon: new Icon(Icons.camera),
+                          icon: new Icon(Icons.file_upload),
                           color: const Color(0xFFffffff),
-                          onPressed: () {
-                            Navigator.of(context).push(new MaterialPageRoute(
-                                builder: (_) => new Talk()));
+                          onPressed: () async {
+                            // var file = await FilePicker.getFilePath(type: FileType.any);
+                            var map = await FilePicker.getMultiFilePath(
+                                type: FileType.any);
+                            if (map.isNotEmpty) {
+                              Provide.value<FileOptProvide>(context)
+                                  .uploadFiles(context, map, widget.courseId);
+
+//                              UserMethod.uploadCourseFile(context, map,
+//                                  onSendProgress: (send,total) {
+//                                print('send :${total}, total: ${send}');
+//                              });
+                              NavigatorUtil.goFileOptPage(context,
+                                  initValue: 1);
+                            }
                           },
                         ),
                         backgroundColor: const Color(0xFF6f69c1),
@@ -87,11 +94,10 @@ class MenuFloatButtonState extends State<MenuFloatButton> {
                     child: Center(
                       child: CircleAvatar(
                         child: new IconButton(
-                          icon: new Icon(Icons.person_add),
+                          icon: new Icon(Icons.file_download),
                           color: const Color(0xFFffffff),
                           onPressed: () {
-//                            Navigator.of(context).push(new MaterialPageRoute(
-//                                builder: (_) => new SearchFriendPage()));
+                            NavigatorUtil.goFileOptPage(context, initValue: 0);
                           },
                         ),
                         backgroundColor: const Color(0xFF6f69c1),
@@ -108,12 +114,9 @@ class MenuFloatButtonState extends State<MenuFloatButton> {
                     child: Center(
                       child: CircleAvatar(
                         child: new IconButton(
-                          icon: new Icon(Icons.photo_camera),
+                          icon: new Icon(Icons.security),
                           color: const Color(0xFFffffff),
-                          onPressed: () {
-//                            Navigator.of(context).push(new MaterialPageRoute(
-//                                builder: (_) => new SendPhoto()));
-                          },
+                          onPressed: () {},
                         ),
                         backgroundColor: const Color(0xFF6f69c1),
                       ),

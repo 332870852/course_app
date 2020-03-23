@@ -124,7 +124,7 @@ class DetailsWeb extends StatelessWidget {
             );
           } else if (val.currentIndex == 1) {
             return Container(
-                width: ScreenUtil().setWidth(750),
+                width: ScreenUtil.screenWidth,
                 padding: EdgeInsets.all(10),
                 alignment: Alignment.center,
                 child: Text('暂时没有数据'));

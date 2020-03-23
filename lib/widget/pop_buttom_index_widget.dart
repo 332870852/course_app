@@ -9,7 +9,6 @@ import 'package:course_app/provide/teacher/course_teacher_provide.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:course_app/service/service_method.dart';
-import 'package:course_app/test/scan.dart';
 import 'package:course_app/pages/scanViewDemo.dart';
 import 'package:course_app/utils/QRcodeScanUtil.dart';
 import 'package:course_app/router/navigatorUtil.dart';
@@ -157,9 +156,9 @@ class IndexBuildPopupMenuItem extends StatelessWidget {
           child: Icon(
             IconData(iconName, fontFamily: fontFamily),
             color: color,
-            size: ScreenUtil().setSp(40),
+            size: ScreenUtil.textScaleFactory*20,
           ),
-          maxRadius: ScreenUtil().setSp(30),
+          maxRadius: ScreenUtil.textScaleFactory*15,
           backgroundColor: Colors.blue.shade100,
         ),
         SizedBox(

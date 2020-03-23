@@ -70,7 +70,7 @@ class _ChatHomeState extends State<ChatHome> {
       ),
       floatingActionButton: Stack(
         children: <Widget>[
-          MenuFloatButton()
+         // MenuFloatButton(courseId: widget,)
         ],
       ),
       body: Container(

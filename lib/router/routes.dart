@@ -34,6 +34,7 @@ class Routes {
   //static String softWarePage='/soft_ware_page';
   static String doucumentListPage='/doucument_list_page';
   static String topicPage='/topic_page';
+  static String fileOptPage='/file_opt_page';
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(
@@ -68,6 +69,8 @@ class Routes {
     //router.define(softWarePage, handler: softWareHanderl);
     router.define(doucumentListPage, handler: doucumentListHanderl);
     router.define(topicPage, handler: topicHanderl);
+    router.define(fileOptPage, handler: fileOptHanderl);
+
 
   }
 }

@@ -9,7 +9,6 @@ import 'package:course_app/test/soft_ware.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
 
-
 class NettyWebSocket {
   IOWebSocketChannel _channel; //websocket
   RTCSignaling _rtcSignaling; //webrtc
@@ -69,7 +68,7 @@ class NettyWebSocket {
     }, onDone: () {
      debugPrint('netty by closed');
      _chatService.connecting=false;
-      Future.delayed(Duration(seconds: 10), () {
+      Future.delayed(Duration(seconds: 3), () {
         Connectivity().checkConnectivity().then((onValue){
           debugPrint('done');
             if(onValue!=ConnectivityResult.none){

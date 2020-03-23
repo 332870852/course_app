@@ -14,6 +14,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_pickers/image_pickers.dart';
 import 'package:provide/provide.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -195,6 +196,7 @@ class MemberPage extends StatelessWidget {
           ListItem(
               onTap: () {
                 //TODO
+                Fluttertoast.showToast(msg: '暂不支持该功能');
               },
               title: '消息推送',
               icon: Icon(
@@ -209,6 +211,7 @@ class MemberPage extends StatelessWidget {
               ),
               onTap: () {
                 //TODO
+                Fluttertoast.showToast(msg: '不支持该功能');
               }),
           ListItem(
               title: '关于',
@@ -228,6 +231,7 @@ class MemberPage extends StatelessWidget {
               ),
               onTap: () {
                 //TODO
+                Fluttertoast.showToast(msg: '暂不支持该功能');
               })
         ],
       ),
@@ -317,7 +321,7 @@ class UserItemWidget extends StatelessWidget {
       margin: EdgeInsets.only(top: 80.0, left: 20, right: 20),
       padding: EdgeInsets.only(top: 0, bottom: 0),
       height: 120,
-      width: ScreenUtil().width,
+      width: ScreenUtil.screenWidth,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -385,20 +389,20 @@ class UserItemWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
-                  width: 160,
+                  width: ScreenUtil.textScaleFactory*160,
                   alignment: Alignment.center,
                   child: RichText(
                     text: TextSpan(
                         text: name,
                         style: TextStyle(
                             color: Colors.black,
-                            fontSize: ScreenUtil().setSp(40)),
+                            fontSize: ScreenUtil.textScaleFactory*20),
                         children: [
                           TextSpan(
                             text: (identify == 3) ? '(学生)' : '(教师)',
                             style: TextStyle(
                                 color: Colors.blue,
-                                fontSize: ScreenUtil().setSp(40)),
+                                fontSize: ScreenUtil.textScaleFactory*20),
                           ),
                         ]),
                     maxLines: 1,

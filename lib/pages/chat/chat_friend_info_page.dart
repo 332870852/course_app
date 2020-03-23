@@ -220,7 +220,7 @@ class ChatFriendInfoPage extends StatelessWidget {
             (ObjectUtil.isEmptyString(friendInfo.nickname))
                 ? '(${friendInfo.nickname})${title}'
                 : '${title}',
-            style: TextStyle(fontSize: ScreenUtil().setSp(40)),
+            style: TextStyle(fontSize: ScreenUtil.textScaleFactory*20),
             overflow: TextOverflow.ellipsis,
           ),
         ],
@@ -249,7 +249,7 @@ class ChatFriendInfoPage extends StatelessWidget {
               Flexible(
                 child: Container(
                   //color: Colors.red,
-                  width: 185,
+                  width: ScreenUtil.textScaleFactory*185,
                   padding: EdgeInsets.only(left: 5),
                   child: Column(
                     children: <Widget>[
@@ -260,7 +260,7 @@ class ChatFriendInfoPage extends StatelessWidget {
                             (ObjectUtil.isEmptyString(friendInfo.nickname))
                                 ? '${username}'
                                 : '${username}(${friendInfo.nickname})',
-                            style: TextStyle(fontSize: ScreenUtil().setSp(30)),
+                            style: TextStyle(fontSize: ScreenUtil.textScaleFactory*15),
                             overflow: TextOverflow.ellipsis,
                           )),
                         ],
@@ -285,7 +285,7 @@ class ChatFriendInfoPage extends StatelessWidget {
                               ' ${friendInfo.identityVo.schoolName}',
                               overflow: TextOverflow.ellipsis,
                               style:
-                                  TextStyle(fontSize: ScreenUtil().setSp(30)),
+                                  TextStyle(fontSize: ScreenUtil.textScaleFactory*15),
                             ),
                           )
                         ],

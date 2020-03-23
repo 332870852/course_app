@@ -336,6 +336,7 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
 
   //刷新界面列表
   getTalkList() {
+    debugPrint('getTalkList');
     List<Widget> widgetList = [];
     talkHistory =
         Provide.value<ChatMessageProvide>(context).msgMap[widget.friendId];
@@ -409,7 +410,8 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
                   fontSize: ScreenUtil().setSp(30),
                 )),
             onLongPress: () {
-              Clipboard.setData(ClipboardData(text: '复制到剪切板${val}'));
+              Clipboard.setData(ClipboardData(text: '${val}'));
+              Fluttertoast.showToast(msg: '已复制到粘贴栏');
               var text = Clipboard.getData(Clipboard.kTextPlain);
             },
           );
@@ -516,7 +518,7 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
                     maxWidth: 200, maxHeight: 200), //
                 builder: (context, data) {
                   if (data.connectionState == ConnectionState.waiting) {
-                    return const SpinKitFadingFour(
+                    return SpinKitFadingFour(
                       color: Colors.grey,
                     );
                   }
@@ -552,7 +554,7 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
                 //videoCompressUtil.getGifFile(val),
                 builder: (context, data) {
                   if (data.connectionState == ConnectionState.waiting) {
-                    return const SpinKitFadingFour(
+                    return SpinKitFadingFour(
                       color: Colors.grey,
                     );
                   }
@@ -597,11 +599,8 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
     if (item['myUserId'] == widget.myUserId) {
       // 本人的信息
       widgetList = [
-        new CircleAvatar(
-          backgroundImage: new NetworkImage('${item['myHeadUrl']}'),
-        ),
         new Container(
-          margin: const EdgeInsets.only(left: 20.0),
+          margin: const EdgeInsets.only(right: 20.0),
           padding: const EdgeInsets.all(10.0),
           decoration: new BoxDecoration(
               color: Colors.blue.withOpacity(0.7),
@@ -613,13 +612,18 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
                 item['content'],
               )),
         ),
-        //
+        new CircleAvatar(
+          backgroundImage: new NetworkImage('${item['myHeadUrl']}'),
+        ),
       ];
     } else {
       // 非本人的信息
       widgetList = [
+        new CircleAvatar(
+          backgroundImage: new NetworkImage('${item['userHeadUrl']}'),
+        ),
         new Container(
-            margin: new EdgeInsets.only(right: 20.0),
+            margin: new EdgeInsets.only(left: 20.0),
             padding: new EdgeInsets.all(10.0),
             decoration: new BoxDecoration(
                 color: Color(0xFFebebf3),
@@ -646,9 +650,6 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
                 ),
               ],
             )),
-        new CircleAvatar(
-          backgroundImage: new NetworkImage('${item['userHeadUrl']}'),
-        ),
       ];
     }
     return new Container(
@@ -656,8 +657,8 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
         margin: new EdgeInsets.symmetric(vertical: 10.0),
         child: new Row(
             mainAxisAlignment: widget.myUserId == item['myUserId']
-                ? MainAxisAlignment.start
-                : MainAxisAlignment.end,
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: widgetList));
   }
@@ -669,6 +670,7 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('build...');
     Provide.value<ChatMessageProvide>(context).cureentFriendId =
         widget.friendId;
     return Scaffold(
@@ -699,7 +701,13 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
                               .add(returnTalkItem(talkHistory[i].toJson()));
                           print(talkHistory[i]);
                         }
-                        if (isInit && _scrollController.hasClients) {
+                        print('@ ${_scrollController.offset}');
+                        print('@max ${_scrollController.position.maxScrollExtent}');
+                        if (isInit &&
+                            _scrollController.hasClients &&
+                            _scrollController.position.maxScrollExtent >
+                                _scrollController.offset+150) {
+                          debugPrint('jumpTo...');
                           _scrollController.jumpTo(
                               _scrollController.position.maxScrollExtent + 100);
                         }

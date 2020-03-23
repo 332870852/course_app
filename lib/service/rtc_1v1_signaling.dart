@@ -59,9 +59,9 @@ class RTCSignaling {
         'username': 'coturn',
         'credential': '332870852',
       },
-      {
-        'urls': 'stun:47.102.97.30:3478',
-      },
+//      {
+//        'urls': 'stun:47.102.97.30:3478',
+//      },
     ]
   };
 
@@ -234,6 +234,10 @@ class RTCSignaling {
           }
           break;
         }
+      case 'switchCamara':{  //todo 切换摄像头
+        switchCamara();
+        break;
+      }
     }
   }
 

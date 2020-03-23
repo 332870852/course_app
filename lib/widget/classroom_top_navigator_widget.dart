@@ -4,6 +4,7 @@ import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/router/routes.dart';
 import 'package:course_app/router/navigatorUtil.dart';
+import 'package:course_app/utils/toast_web.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,8 +15,12 @@ class ClassRoomTopNavigatorWidget extends StatelessWidget {
   final String courseId;
   final String teacherId;
   final int studentNums;
+
   ClassRoomTopNavigatorWidget(
-      {Key key, @required this.courseId,@required this.teacherId,this.studentNums})
+      {Key key,
+      @required this.courseId,
+      @required this.teacherId,
+      this.studentNums})
       : super(key: key);
 
   @override
@@ -75,26 +80,20 @@ class ClassRoomTopNavigatorWidget extends StatelessWidget {
     },
     {
       'id': 4,
-      'image': 0xe61b,
-      'itemname': "复习包",
-      'backgroundColor': Colors.lightBlue.shade400
-    },
-    {
-      'id': 5,
       'image': 0xe6c4,
       'itemname': "作业",
       'backgroundColor': Colors.lightBlue.shade900
     },
     {
-      'id': 6,
+      'id': 5,
       'image': 0xe69d,
       'itemname': "测试",
       'backgroundColor': Colors.green.withOpacity(0.5)
     },
     {
-      'id': 7,
-      'image': 0xe60f,
-      'itemname': "视频",
+      'id': 6,
+      'image': 0xe61e,
+      'itemname': "成绩",
       'backgroundColor': Colors.green.withBlue(200)
     },
   ];
@@ -109,41 +108,53 @@ class ClassRoomTopNavigatorWidget extends StatelessWidget {
             {
               Provide.value<ReplyListProvide>(context).changDisplay(true);
               Application.router.navigateTo(
-                  context, Routes.announcementPage + '?courseId=${courseId}&teacherId=${teacherId}');
+                  context,
+                  Routes.announcementPage +
+                      '?courseId=${courseId}&teacherId=${teacherId}');
               break;
             }
-          case 1:{
-            NavigatorUtil.goDoucumentListPage(context, teacherId, courseId);
-            break;
-          }
-          case 2:{
-            NavigatorUtil.goTopicPage(context, teacherId, courseId);
-            break;
-          }
-          case 3:{
-            if( Provide.value<UserProvide>(context).userId==teacherId){///教师
-              NavigatorUtil.goAttendancePage(context,courseId: courseId,studentNums: studentNums);
-            }else{
-              NavigatorUtil.goAttendanceStuPage(context,courseId);
+          case 1:
+            {
+              print('courseId ：${courseId}');
+              NavigatorUtil.goDoucumentListPage(context, teacherId, courseId);
+              break;
             }
-            break;
-          }
-          case 4:{
-            Fluttertoast.showToast(msg: '功能处于开发阶段..');
-            break;
-          }
-          case 5:{
-            Fluttertoast.showToast(msg: '功能处于开发阶段..');
-            break;
-          }
-          case 6:{
-            Fluttertoast.showToast(msg: '功能处于开发阶段..');
-            break;
-          }
-          case 7:{
-            Fluttertoast.showToast(msg: '功能处于开发阶段..');
-            break;
-          }
+          case 2:
+            {
+              NavigatorUtil.goTopicPage(context, teacherId, courseId);
+              break;
+            }
+          case 3:
+            {
+              if (Provide.value<UserProvide>(context).userId == teacherId) {
+                ///教师
+                NavigatorUtil.goAttendancePage(context,
+                    courseId: courseId, studentNums: studentNums);
+              } else {
+                NavigatorUtil.goAttendanceStuPage(context, courseId);
+              }
+              break;
+            }
+          case 4:
+            {
+              Fluttertoast.showToast(msg: '功能处于开发阶段..');
+              break;
+            }
+          case 5:
+            {
+              Fluttertoast.showToast(msg: '功能处于开发阶段..');
+              break;
+            }
+          case 6:
+            {
+              //Fluttertoast.showToast(msg: '功能处于开发阶段..');
+              if (Provide.value<UserProvide>(context).userId == teacherId) {
+                ToastWeb.showInfoTip(context, tip: '请使用网页版操作');
+              } else {
+                ToastWeb.showInfoTip(context, tip: '无权查看');
+              }
+              break;
+            }
         }
       },
       child: Column(
@@ -159,7 +170,7 @@ class ClassRoomTopNavigatorWidget extends StatelessWidget {
             child: CircleAvatar(
               child: Icon(
                 IconData(item['image'], fontFamily: Constants.IconFontFamily),
-                size: ScreenUtil().setWidth(50),
+                size: ScreenUtil.textScaleFactory*25,
               ),
               foregroundColor: Colors.white,
               backgroundColor: backgroundColor,

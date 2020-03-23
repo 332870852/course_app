@@ -34,7 +34,7 @@ Widget BackBtn(context) {
           icon: Icon(
             Icons.arrow_back_ios,
             color: Colors.black26,
-            size: ScreenUtil().setSp(50),
+            size: ScreenUtil.textScaleFactory*30,
           ),
         ),
       ],
@@ -164,7 +164,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
-                          fontSize: 30),
+                          fontSize: ScreenUtil.textScaleFactory*30),
                     ),
                   ],
                 ),
@@ -289,7 +289,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                 Text(
                   ' 选择注册方式',
                   style: TextStyle(
-                      color: Colors.grey, fontSize: ScreenUtil().setSp(30)),
+                      color: Colors.grey, fontSize: ScreenUtil.textScaleFactory*15),
                 ),
               ],
             ),
@@ -314,7 +314,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                   '手机注册',
                   style: TextStyle(
                       color: (registeType == 0) ? Colors.blue : Colors.grey,
-                      fontSize: ScreenUtil().setSp(30)),
+                      fontSize: ScreenUtil.textScaleFactory*15),
                 ),
               ],
             ),
@@ -339,7 +339,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                   '邮箱注册',
                   style: TextStyle(
                       color: (registeType == 1) ? Colors.blue : Colors.grey,
-                      fontSize: ScreenUtil().setSp(30)),
+                      fontSize: ScreenUtil.textScaleFactory*15),
                 ),
               ],
             ),

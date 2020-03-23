@@ -188,14 +188,11 @@ Future<ResponseModel> post(BuildContext context,
     Function connectOutCallBack,
     timeout = 7000,
     ProgressCallback onReceiveProgress,
-    ProgressCallback onSendProgress}) async {
+    ProgressCallback onSendProgress,
+    CancelToken cancelToken}) async {
   //TODO network
   checkNetwork();
-//  var connectivityResult = await (Connectivity().checkConnectivity());
-//  if (connectivityResult == ConnectivityResult.none) {
-//    Fluttertoast.showToast(msg: '网络不可用,请检查网络');
-//    throw '网络不可用,请检查网络';
-//  }
+
   Dio dio = new Dio();
   dio.interceptors.add(InterceptorsWrapper(onRequest: (options) {
     dio.interceptors.requestLock.lock();
@@ -224,7 +221,8 @@ Future<ResponseModel> post(BuildContext context,
         queryParameters: requestmap,
         data: data,
         onReceiveProgress: onReceiveProgress,
-        onSendProgress: onSendProgress);
+        onSendProgress: onSendProgress,
+        cancelToken: cancelToken);
     // print('rrrrrrrrrrrrrr :${response}');
     if (response.statusCode == 200) {
       // print(response);

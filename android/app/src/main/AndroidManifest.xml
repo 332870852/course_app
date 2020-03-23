@@ -8,6 +8,7 @@
          FlutterApplication and put your custom class here. -->
     <!--android:usesCleartextTraffic="true"-->
     <application
+        android:usesCleartextTraffic="true"
         android:name="io.flutter.app.FlutterApplication"
         android:label="course_app"
         android:icon="@mipmap/appicon">

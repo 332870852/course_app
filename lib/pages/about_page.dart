@@ -47,59 +47,65 @@ class _AboutPageState extends State<AboutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Column(
-        children: <Widget>[
-          appBar(),
-          appIcon(),
-          Container(
-            height: 232,
-            child: Ink(
-              decoration: BoxDecoration(color: Colors.white),
+      body: Container(
+        width: ScreenUtil.screenWidthDp,
+        height: ScreenUtil.screenHeightDp,
+        child: Column(
+          children: <Widget>[
+            appBar(),
+            appIcon(),
+            Container(
+              height: 232,
+              child: Ink(
+                decoration: BoxDecoration(color: Colors.white),
+                child: Column(
+                  children: <Widget>[
+                    onclikItem('检查版本', trailing: '已是最新版本', onTap: () {}),
+                    onclikItem('推广下载', onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => ShareDownLoadPage()));
+                    }),
+                    onclikItem('关于', onTap: () {}),
+                    onclikItem('反馈', onTap: () {}),
+                  ],
+                ),
+              ),
+            ),
+            Flexible(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  onclikItem('检查版本', trailing: '已是最新版本', onTap: () {}),
-                  onclikItem('推广下载', onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => ShareDownLoadPage()));
-                  }),
-                  onclikItem('关于', onTap: () {}),
-                  onclikItem('反馈', onTap: () {}),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          '服务协议',
+                          style: TextStyle(
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline),
+                        ),
+                        Text(
+                          ' | ',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                        Text(
+                          '隐私协议',
+                          style: TextStyle(
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline),
+                        )
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
-          ),
-          Flexible(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(bottom: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        '服务协议',
-                        style: TextStyle(
-                            color: Colors.blue,
-                            decoration: TextDecoration.underline),
-                      ),
-                      Text(
-                        ' | ',
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                      Text(
-                        '隐私协议',
-                        style: TextStyle(
-                            color: Colors.blue,
-                            decoration: TextDecoration.underline),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -132,7 +138,8 @@ class _AboutPageState extends State<AboutPage> {
             child: Text(
               '关于与帮助',
               style: TextStyle(
-                  color: Colors.white, fontSize: ScreenUtil().setSp(40)),
+                  color: Colors.white,
+                  fontSize: ScreenUtil.textScaleFactory * 20),
             ),
           )
         ],

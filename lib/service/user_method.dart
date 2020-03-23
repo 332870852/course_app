@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'package:mime_type/mime_type.dart';
+import 'package:common_utils/common_utils.dart';
 import 'package:course_app/config/service_url.dart';
 import 'package:course_app/data/announcement_vo.dart';
 import 'package:course_app/data/chat/friend_model.dart';
@@ -8,7 +9,6 @@ import 'package:course_app/data/user_dto.dart';
 import 'package:course_app/data/user_head_image.dart';
 import 'package:course_app/data/user_info.dart';
 import 'package:course_app/data/user_model_vo.dart';
-import 'package:course_app/model/Course.dart';
 import 'package:course_app/service/service_method.dart';
 import 'package:course_app/utils/ResponseModel.dart';
 import 'package:course_app/utils/base64_util.dart';
@@ -20,6 +20,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_video_compress/flutter_video_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http_parser/src/media_type.dart';
 
 class UserMethod {
   ///登录
@@ -586,11 +587,12 @@ class UserMethod {
       compressSize = 8}) async {
     File file = File(videoPath);
     print(file.statSync().type.toString());
+
     ///compress
     MediaInfo mediaInfo = await VideoCompressUtil.LimitCompressVideo(videoPath);
     if (file.existsSync()) {
-      var name = mediaInfo.path
-          .substring(mediaInfo.path.lastIndexOf("/") + 1, mediaInfo.path.length);
+      var name = mediaInfo.path.substring(
+          mediaInfo.path.lastIndexOf("/") + 1, mediaInfo.path.length);
       FormData formData = FormData.fromMap({
         "video": MultipartFile.fromFileSync(mediaInfo.path, filename: name),
       });
@@ -607,6 +609,114 @@ class UserMethod {
       } else {
         throw responseModel.errors[0].message;
       }
+    }
+    return null;
+  }
+
+  static Future<dynamic> uploadCourseFile(
+    BuildContext context, {
+    @required String filePath,
+    @required String fineName,
+    String courseId,
+    timeout = -1,
+    ProgressCallback onSendProgress,
+    CancelToken cancelToken,
+  }) async {
+    if (ObjectUtil.isNotEmpty(filePath)) {
+      String mimeType = mime(filePath);
+      File fp = File(filePath);
+      print(fp.statSync().type.toString());
+      FormData formData = FormData.fromMap({
+        "file": MultipartFile.fromFileSync(filePath,
+            filename: fineName, contentType: MediaType.parse(mimeType)),
+      });
+      Map<String, dynamic> map = Map();
+      map.putIfAbsent('courseId', () => courseId);
+      ResponseModel responseModel = await post(context,
+          timeout: timeout,
+          method: userPath.servicePath['uploadCourseFile'],
+          data: formData,
+          requestmap: map,
+          onSendProgress: onSendProgress,
+          cancelToken: cancelToken);
+      print(responseModel);
+      if (responseModel != null) {
+        if (responseModel.code == 1) {
+          return responseModel.data;
+        }
+      } else {
+        throw responseModel.errors[0].message;
+      }
+    }
+    return null;
+  }
+
+  ////////////////////software/////////////////////
+  static Future<bool> software_updateListenUserModel(
+      BuildContext context,
+      String listenUserId,
+      String phoneNumber,
+      String address,
+      int status) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent('listenUserId', () => listenUserId);
+    map.putIfAbsent('phoneNumber', () => phoneNumber);
+    map.putIfAbsent('address', () => address);
+    map.putIfAbsent('status', () => status);
+    ResponseModel responseModel =
+        await post(context, method: 'updateListenUserModel', requestmap: map);
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
+      }
+    } else {
+      throw responseModel.errors[0].message;
+    }
+    return false;
+  }
+
+  ///获取文件列表
+  static Future<List<dynamic>> getFileInfoList(
+      BuildContext context, {courseId,type=0}) async {
+    Map<String, dynamic> map = Map();
+    map.putIfAbsent('courseId', () => courseId);
+    map.putIfAbsent('type', () => type);
+    ResponseModel responseModel = await get(
+      context,
+      method: userPath.servicePath['getFileInfoList'],
+      queryParameters: map,
+    );
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
+      }
+    } else {
+      throw responseModel.errors[0].message;
+    }
+    return null;
+  }
+
+  ///获取文件列表
+  static Future<List<dynamic>> deleteCourseFile(
+      BuildContext context, {List<String> fid,String courseId,type=0}) async {
+    Map<String, dynamic> map = Map();
+    map.putIfAbsent('fid', () => fid);
+    map.putIfAbsent('courseId', () => courseId);
+    map.putIfAbsent('type', () => type);
+    ResponseModel responseModel = await post(
+      context,
+      method: userPath.servicePath['deleteCourseFile'],
+      requestmap: map,
+    );
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
+      }
+    } else {
+      throw responseModel.errors[0].message;
     }
     return null;
   }

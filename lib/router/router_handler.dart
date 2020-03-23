@@ -13,6 +13,7 @@ import 'package:course_app/pages/chat/search_friend.dart';
 import 'package:course_app/pages/chat/video_view_page.dart';
 import 'package:course_app/pages/classroom_page.dart';
 import 'package:course_app/pages/doucument_list_page.dart';
+import 'package:course_app/pages/file_opt_page.dart';
 import 'package:course_app/pages/home_page.dart';
 import 'package:course_app/pages/join_course_page.dart';
 import 'package:course_app/pages/login_page.dart';
@@ -375,3 +376,13 @@ Handler topicHanderl = Handler(
     teacherId: teacherId,
   );
 });
+
+///文件传输页面
+Handler fileOptHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      var initValue = (ObjectUtil.isNotEmpty(params['initValue'].first))
+          ? num.parse(params['initValue'].first)
+          : 0;
+      return FileOptPage(initValue: initValue,);
+    });
+

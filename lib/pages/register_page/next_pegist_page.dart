@@ -165,7 +165,7 @@ class _NextRegistPageState extends State<NextRegistPage> {
                   '学校名称不能为空',
                   style: TextStyle(
                       color: (schoolRadio) ? Colors.green : Colors.grey,
-                      fontSize: ScreenUtil().setSp(30)),
+                      fontSize: ScreenUtil.textScaleFactory*15),
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
@@ -184,7 +184,7 @@ class _NextRegistPageState extends State<NextRegistPage> {
                   '真实姓名必须限制在1-10位',
                   style: TextStyle(
                       color: (realRadio) ? Colors.green : Colors.grey,
-                      fontSize: ScreenUtil().setSp(30)),
+                      fontSize: ScreenUtil.textScaleFactory*15),
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
@@ -277,7 +277,7 @@ class _NextRegistPageState extends State<NextRegistPage> {
                 Text(
                   '选择身份',
                   style: TextStyle(
-                      color: Colors.grey, fontSize: ScreenUtil().setSp(35)),
+                      color: Colors.grey, fontSize: ScreenUtil.textScaleFactory*15),
                 ),
               ],
             ),
@@ -299,7 +299,7 @@ class _NextRegistPageState extends State<NextRegistPage> {
                   '教师',
                   style: TextStyle(
                       color: (role == 2) ? Colors.blue : Colors.grey,
-                      fontSize: ScreenUtil().setSp(35)),
+                      fontSize: ScreenUtil.textScaleFactory*15),
                 ),
               ],
             ),
@@ -321,7 +321,7 @@ class _NextRegistPageState extends State<NextRegistPage> {
                   '学生',
                   style: TextStyle(
                       color: (role == 3) ? Colors.blue : Colors.grey,
-                      fontSize: ScreenUtil().setSp(35)),
+                      fontSize: ScreenUtil.textScaleFactory*15),
                 ),
               ],
             ),

@@ -86,8 +86,12 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     //NetUtils.init();
-    ScreenUtil.instance = ScreenUtil(width: 750, height: 1300)..init(context);
-    final size = MediaQuery.of(context).size;
+    ScreenUtil.instance = ScreenUtil(width: 750, height: 1300,allowFontScaling: true)..init(context);
+//    print(ScreenUtil.textScaleFactory);
+//    print(ScreenUtil.screenHeightDp);
+//    print(ScreenUtil.mediaQueryData.textScaleFactor);
+//    print(ScreenUtil.pixelRatio);
+    //final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -109,7 +113,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                   Text(
                     '智慧课堂辅助App',
                     style: TextStyle(
-                        color: Colors.pink, fontSize: ScreenUtil().setSp(50)),
+                        color: Colors.pink, fontSize: ScreenUtil.textScaleFactory*35),
                   ),
                 ],
               )),

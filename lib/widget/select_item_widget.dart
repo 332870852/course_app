@@ -47,7 +47,7 @@ class SelectItemWidget extends StatelessWidget {
                       title,
                       style: TextStyle(
                           color: color,
-                          fontSize: ScreenUtil().setSp(40),
+                          fontSize: ScreenUtil.textScaleFactory*20,
                           fontWeight: FontWeight.w500),
                     ),
                     Row(
@@ -58,7 +58,7 @@ class SelectItemWidget extends StatelessWidget {
                             ? Icon(
                                 Icons.chevron_right,
                                 color: Colors.black26,
-                                size: ScreenUtil().setSp(50),
+                                size: ScreenUtil.textScaleFactory*25,
                               )
                             : SizedBox(
                                 width: 10,

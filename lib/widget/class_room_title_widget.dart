@@ -54,7 +54,7 @@ class ClassRoomTitleWidget extends StatelessWidget {
   ///头部appBar
   Widget _titleBar(context, {@required classtitle}) {
     return Container(
-      width: ScreenUtil().width,
+      width: ScreenUtil.screenWidth,
       height: 50,
       //color: Colors.,
       child: Row(
@@ -86,7 +86,7 @@ class ClassRoomTitleWidget extends StatelessWidget {
               classtitle,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: ScreenUtil().setSp(35),
+                fontSize: ScreenUtil.textScaleFactory * 20,
               ),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
@@ -122,7 +122,7 @@ class ClassRoomTitleWidget extends StatelessWidget {
                     fontFamily: Constants.IconFontFamily,
                   ),
                   color: Colors.white,
-                  size: ScreenUtil().setSp(35),
+                  size: ScreenUtil.textScaleFactory * 20,
                 ),
                 '加课码: ${joinCode}'),
           ),
@@ -146,7 +146,7 @@ class ClassRoomTitleWidget extends StatelessWidget {
                 Icon(
                   Icons.person,
                   color: Colors.white,
-                  size: ScreenUtil().setSp(35),
+                  size: ScreenUtil.textScaleFactory * 20,
                 ),
                 '同学 ${studentNums}'),
           ),
@@ -163,7 +163,7 @@ class ClassRoomTitleWidget extends StatelessWidget {
                 Icon(
                   Icons.event_note,
                   color: Colors.white,
-                  size: ScreenUtil().setSp(35),
+                  size: ScreenUtil.textScaleFactory * 20,
                 ),
                 '成绩'),
           ),
@@ -219,7 +219,8 @@ class ClassRoomTitleWidget extends StatelessWidget {
                           Text(
                             '${joinCode}',
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: ScreenUtil().setSp(40)),
+                            style: TextStyle(
+                                fontSize: ScreenUtil.textScaleFactory * 20),
                           )
                         ],
                       ),
@@ -229,7 +230,8 @@ class ClassRoomTitleWidget extends StatelessWidget {
                           Text(
                             '扫描上面二维码加入课堂',
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: ScreenUtil().setSp(25)),
+                            style: TextStyle(
+                                fontSize: ScreenUtil.textScaleFactory * 10),
                           )
                         ],
                       ),

@@ -125,7 +125,6 @@ class _VideoLookPageState extends State<VideoLookPage> {
                 ),
                 delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
-                    print(item[index]);
                     return Item(
                         item[index]['url'], title: '${item[index]['t']}',
                         subTitle: item[index]['subTitle'],

@@ -123,7 +123,7 @@ class CreateCoursePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: ScreenUtil().width,
+        width: ScreenUtil.screenWidth,
         child: Scaffold(
             appBar: AppBar(
               title: Text('${titlePage}'),
@@ -155,7 +155,7 @@ class CreateCoursePage extends StatelessWidget {
                               : SpinKitWave(
                                   color: Colors.white,
                                   type: SpinKitWaveType.start,
-                                  size: ScreenUtil().setSp(30),
+                                  size: ScreenUtil.textScaleFactory*15,
                                 ) //,
                           ),
                     );
@@ -274,7 +274,7 @@ class CreateCoursePage extends StatelessWidget {
   Widget _uploadImage(context, {String bgkUrl}) {
     return Container(
         height: 230,
-        width: ScreenUtil().width,
+        width: ScreenUtil.screenWidth,
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -326,7 +326,7 @@ class CreateCoursePage extends StatelessWidget {
                 children: <Widget>[
                   Icon(
                     Icons.add,
-                    size: ScreenUtil().setSp(100),
+                    size: ScreenUtil.textScaleFactory*50,
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 5),
@@ -442,7 +442,7 @@ class CreateCoursePage extends StatelessWidget {
               title,
               style: TextStyle(
                   color: Colors.black,
-                  fontSize: ScreenUtil().setSp(40),
+                  fontSize: ScreenUtil.textScaleFactory*20,
                   fontWeight: FontWeight.w500),
             ),
             flex: 1,
@@ -451,7 +451,7 @@ class CreateCoursePage extends StatelessWidget {
             child: TextFormField(
               style: TextStyle(
                   color: Colors.black87,
-                  fontSize: ScreenUtil.getInstance().setSp(35),
+                  fontSize: ScreenUtil.textScaleFactory*18,
                   fontFamily: 'SF-UI-Display-Regular'),
               keyboardType: TextInputType.text,
               maxLines: 1,
@@ -503,7 +503,7 @@ class CreateCoursePage extends StatelessWidget {
                         child: Text('取消',
                             style: TextStyle(
                               color: Colors.black38,
-                              fontSize: ScreenUtil().setSp(35),
+                              fontSize: ScreenUtil.textScaleFactory*20,
                             ))),
                     Text(
                       title,
@@ -519,7 +519,7 @@ class CreateCoursePage extends StatelessWidget {
                               '确认',
                               style: TextStyle(
                                 color: Colors.blue,
-                                fontSize: ScreenUtil().setSp(30),
+                                fontSize:  ScreenUtil.textScaleFactory*20,
                               ),
                             ))
                         : FlatButton(

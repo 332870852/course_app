@@ -49,8 +49,8 @@ class TeacherImageInfoWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           CircleAvatar(
-            minRadius: ScreenUtil().setSp(30),
-            maxRadius: ScreenUtil().setSp(30),
+            minRadius: ScreenUtil.textScaleFactory*20,
+            maxRadius: ScreenUtil.textScaleFactory*20,
             backgroundImage: (url!=null)?NetworkImage(url):AssetImage('assets/img/dpic.png'),
           ),
           Text(

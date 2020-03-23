@@ -232,6 +232,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.8"
+  file_picker:
+    dependency: "direct main"
+    description:
+      name: file_picker
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.5.0+2"
   fixnum:
     dependency: transitive
     description:
@@ -320,7 +327,7 @@ packages:
       name: flutter_plugin_android_lifecycle
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.6"
   flutter_qr_reader:
     dependency: "direct main"
     description:
@@ -513,6 +520,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.3.2"
+  loading_view:
+    dependency: transitive
+    description:
+      name: loading_view
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.2"
   logging:
     dependency: transitive
     description:
@@ -541,6 +555,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.9.6+3"
+  mime_type:
+    dependency: "direct main"
+    description:
+      name: mime_type
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.2.7"
   node_interop:
     dependency: transitive
     description:
@@ -791,6 +812,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.1.1+2"
+  tip_dialog:
+    dependency: "direct main"
+    description:
+      name: tip_dialog
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.1.0"
   transformer_page_view:
     dependency: transitive
     description:
@@ -876,7 +904,7 @@ packages:
     source: hosted
     version: "0.9.7+13"
   web_socket_channel:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: web_socket_channel
       url: "https://pub.flutter-io.cn"

@@ -1,8 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 ///推广下载app
 class ShareDownLoadPage extends StatelessWidget {
@@ -54,14 +56,22 @@ class ShareDownLoadPage extends StatelessWidget {
                               ),
                             ),
                             Flexible(
-                              child: Text(
-                                'http://47.102.97.30:11001/app/app-release.apk',
-                                maxLines: 3,
-                                style: TextStyle(
-                                    fontSize: ScreenUtil().setSp(35),
-                                    color: Colors.blue,
-                                    decoration: TextDecoration.underline),
-                                overflow: TextOverflow.ellipsis,
+                              child: InkWell(
+                                child: Text(
+                                  'http://47.102.97.30:11001/app/app-release.apk',
+                                  maxLines: 3,
+                                  style: TextStyle(
+                                      fontSize: ScreenUtil().setSp(35),
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                onLongPress: () {
+                                  Clipboard.setData(ClipboardData(
+                                      text:
+                                          'http://47.102.97.30:11001/app/app-release.apk'));
+                                  Fluttertoast.showToast(msg: '已复制到粘贴栏');
+                                },
                               ),
                             ),
                           ],

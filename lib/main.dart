@@ -10,7 +10,9 @@ import 'package:course_app/provide/classroom_notif_provide.dart';
 import 'package:course_app/provide/course_provide.dart';
 import 'package:course_app/provide/create_course_provider.dart';
 import 'package:course_app/provide/currentIndex_provide.dart';
+import 'package:course_app/provide/doucument_page_provide.dart';
 import 'package:course_app/provide/expire_timer_provide.dart';
+import 'package:course_app/provide/file_opt_provide.dart';
 import 'package:course_app/provide/register_page_provide.dart';
 import 'package:course_app/provide/chat/request_friend_provide.dart';
 import 'package:course_app/provide/showAttend_provide.dart';
@@ -65,6 +67,8 @@ void main() async {
   var chatMessageProvide = ChatMessageProvide();
   var chatDetailProvide = ChatDetailProvide();
   var softWareProvide = SoftWareProvide();
+  var doucumentPageProvide = DoucumentPageProvide();
+  var fileOptProvide = FileOptProvide();
   providers
     ..provide(Provider<CurrentIndexProvide>.value(currentIndexProvide))
     ..provide(Provider<BottomTabBarProvide>.value(bottomTabBarProvide))
@@ -87,6 +91,8 @@ void main() async {
     ..provide(Provider<ChatMessageProvide>.value(chatMessageProvide))
     ..provide(Provider<ChatDetailProvide>.value(chatDetailProvide))
     ..provide(Provider<SoftWareProvide>.value(softWareProvide))
+    ..provide(Provider<DoucumentPageProvide>.value(doucumentPageProvide))
+    ..provide(Provider<FileOptProvide>.value(fileOptProvide))
     ..provide(Provider<CourseProvide>.value(courseProvide));
   runApp(ProviderNode(child: MyApp(), providers: providers));
 }
@@ -152,6 +158,5 @@ class MyApp extends StatelessWidget {
 //        }
 //    );
 //  }
-
 
 }

@@ -121,7 +121,7 @@ class _P2PPageState extends State<P2PPage> {
     });
 
     //服务发送注册消息
-    _signaling.connect(Provide.value<UserProvide>(context).userId,
+    _signaling.connect(_selfId,
         dplay: _displayName);
   }
 

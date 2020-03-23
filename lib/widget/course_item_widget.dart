@@ -30,7 +30,7 @@ class CourseItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     print("999*08454");
     return Container(
-      height: ScreenUtil().setHeight(330),
+      height: 160,
       margin: EdgeInsets.only(top: 10, left: 20, right: 20),
       child: Column(
         children: <Widget>[
@@ -240,7 +240,7 @@ class CourseItemWidget extends StatelessWidget {
     //print("color :${bgkColor}");
     return InkWell(
       child: Container(
-        height: ScreenUtil().setHeight(200),
+        height: 120,
         //margin: EdgeInsets.only(top: 10),
         padding: EdgeInsets.only(top: 5, left: 10, bottom: 0),
         decoration: BoxDecoration(
@@ -266,7 +266,7 @@ class CourseItemWidget extends StatelessWidget {
                   ? '${title}(${courseId})'
                   : title,
               style: TextStyle(
-                  color: Colors.white, fontSize: ScreenUtil().setSp(40)),
+                  color: Colors.white, fontSize: ScreenUtil.textScaleFactory*20),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
             ),
@@ -321,7 +321,7 @@ class CourseItemWidget extends StatelessWidget {
   Widget leadingItem(BuildContext context,
       {@required int nums, @required String courseId, String title}) {
     return Container(
-      height: ScreenUtil().setHeight(100),
+      height: 40,
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -415,11 +415,11 @@ class CourseItemWidget extends StatelessWidget {
               fontFamily: Constants.IconFontFamily,
             ),
             color: Colors.white,
-            size: ScreenUtil().setSp(35),
+            size: ScreenUtil.textScaleFactory*20,
           ),
           Text(' 加课码${joincode}',
               style: TextStyle(
-                  color: Colors.white, fontSize: ScreenUtil().setSp(30))),
+                  color: Colors.white, fontSize: ScreenUtil.textScaleFactory*15)),
         ],
       ),
     );

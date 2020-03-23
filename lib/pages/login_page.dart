@@ -53,12 +53,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       PermissionGroup.photos,
       PermissionGroup.location,
       PermissionGroup.camera,
-      PermissionGroup.notification
+      PermissionGroup.notification,
+      PermissionGroup.storage,
+//      PermissionGroup.access_media_location
     ]);
 
     bool flag = false;
     map.forEach((permission, status) {
-      if (status != PermissionStatus.granted) {
+      if (status != PermissionStatus.granted&&status!=PermissionStatus.unknown) {
         flag = true;
       }
       print(status);

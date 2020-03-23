@@ -63,12 +63,16 @@ class PersonItem extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => ChatFriendInfoPage(
-                      friendInfo: userInfoVo,
-                      action: action,
-                    )));
+                          friendInfo: userInfoVo,
+                          action: action,
+                        )));
           } else {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ChatDetailsPage(friendId: '1',)));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ChatDetailsPage(
+                          friendId: '1',
+                        )));
           }
         },
         onLongPress: () {},
@@ -76,7 +80,7 @@ class PersonItem extends StatelessWidget {
             backgroundImage: (ObjectUtil.isEmptyString(headUrl))
                 ? AssetImage('assets/img/user.png')
                 : CachedNetworkImageProvider('${headUrl}',
-                cacheManager: DefaultCacheManager())),
+                    cacheManager: DefaultCacheManager())),
         title: Padding(
           padding: EdgeInsets.only(left: 5),
           child: Wrap(
@@ -90,25 +94,25 @@ class PersonItem extends StatelessWidget {
               ),
               (displayMsg)
                   ? Text(
-                '${msg}',
-                overflow: TextOverflow.ellipsis,
-              )
+                      '${msg}',
+                      overflow: TextOverflow.ellipsis,
+                    )
                   : Row(
-                children: <Widget>[
-                  Text(
-                    '${stateInfo}',
-                    style: TextStyle(
-                        color: Colors.black54,
-                        fontSize: ScreenUtil().setSp(28)),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Icon(
-                    Icons.fiber_manual_record,
-                    color: (state == 1) ? Colors.green : Colors.black26,
-                    size: ScreenUtil().setSp(28),
-                  )
-                ],
-              )
+                      children: <Widget>[
+                        Text(
+                          '${stateInfo}',
+                          style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: ScreenUtil.textScaleFactory * 14),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Icon(
+                          Icons.fiber_manual_record,
+                          color: (state == 1) ? Colors.green : Colors.black26,
+                          size: ScreenUtil.textScaleFactory * 14,
+                        )
+                      ],
+                    )
             ],
           ),
         ),
@@ -118,18 +122,18 @@ class PersonItem extends StatelessWidget {
             Text('${time}'),
             (unRead != 0)
                 ? Container(
-              padding: EdgeInsets.fromLTRB(6, 3, 6, 3),
-              decoration: BoxDecoration(
-                  color: Colors.deepOrange,
-                  border: Border.all(width: 2, color: Colors.white),
-                  borderRadius: BorderRadius.circular(12.0)),
-              child: Text(
-                '${unRead}',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: ScreenUtil().setSp(20)),
-              ),
-            )
+                    padding: EdgeInsets.fromLTRB(6, 3, 6, 3),
+                    decoration: BoxDecoration(
+                        color: Colors.deepOrange,
+                        border: Border.all(width: 2, color: Colors.white),
+                        borderRadius: BorderRadius.circular(12.0)),
+                    child: Text(
+                      '${unRead}',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: ScreenUtil().setSp(20)),
+                    ),
+                  )
                 : SizedBox()
           ],
         ),
@@ -137,7 +141,6 @@ class PersonItem extends StatelessWidget {
     );
   }
 }
-
 
 ///loding widget
 Widget lodingWidget(ConnectionState connectionState, {int length = 0}) {
@@ -180,7 +183,15 @@ Widget NoDataWidget({@required String path, String title, double top = 50.0}) {
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Image.asset('${path}'),
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: 80,
+            maxHeight: 80,
+          ),
+          child: Image.asset(
+            '${path}',
+          ),
+        ),
         Text(
           '${title}',
           style: TextStyle(color: Colors.blue.shade200),

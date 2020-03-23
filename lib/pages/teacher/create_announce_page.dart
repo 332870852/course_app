@@ -139,7 +139,7 @@ class _CreateAnnouncePageState extends State<CreateAnnouncePage> {
               //initialValue:'${ widget.title}',
               decoration: InputDecoration(
                   hintText: '公告告标题',
-                  hintStyle: TextStyle(fontSize: ScreenUtil().setSp(40)),
+                  hintStyle: TextStyle(fontSize: ScreenUtil.textScaleFactory*20),
                   filled: true,
                   focusedBorder: OutlineInputBorder(),
                   border: InputBorder.none,
@@ -158,7 +158,7 @@ class _CreateAnnouncePageState extends State<CreateAnnouncePage> {
             child: TextFormField(
               controller: _contextController,
               //initialValue: '${widget.contextBody}',
-              style: TextStyle(fontSize: ScreenUtil().setSp(40)),
+              style: TextStyle(fontSize: ScreenUtil.textScaleFactory*20),
               decoration: InputDecoration(
                   hintText: '公告详细内容',
                   filled: true,

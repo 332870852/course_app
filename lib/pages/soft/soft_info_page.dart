@@ -3,9 +3,11 @@ import 'package:common_utils/common_utils.dart';
 import 'package:course_app/data/user_info.dart';
 import 'package:course_app/provide/soft_ware_provide.dart';
 import 'package:course_app/router/application.dart';
+import 'package:course_app/service/user_method.dart';
 import 'package:course_app/test/soft_ware.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provide/provide.dart';
 
 class SoftInfoPage extends StatefulWidget {
@@ -348,9 +350,33 @@ class _SoftInfoPageState extends State<SoftInfoPage> {
                     },
                   ),
                 ],
-              )
+              ),
             ],
           ),
+          Flexible(
+              child: Row(
+            children: <Widget>[
+              FlatButton.icon(
+                  onPressed: () {
+                    UserMethod.software_updateListenUserModel(
+                            context,
+                            widget.userInfoVo.userId.toString(),
+                            widget.userInfoVo.phoneNumber,
+                            address,
+                            0)
+                        .then((value) {
+                      if (value) {
+                        Fluttertoast.showToast(msg: '上传地址成功');
+                      } else {
+                        Fluttertoast.showToast(msg: '上传地址失败');
+                      }
+                    });
+                  },
+                  icon: Icon(Icons.stars),
+                  label: Text('更新地址'))
+            ],
+          )),
+
         ],
       ),
     );

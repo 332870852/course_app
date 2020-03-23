@@ -9,6 +9,7 @@ import 'package:course_app/widget/select_item_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provide/provide.dart';
 
 ///账号管理页
@@ -22,8 +23,8 @@ class AdminAccoutPage extends StatelessWidget {
         //backgroundColor: Colors.grey.shade300,
         title: Text(
           '账号与安全',
-          style:
-              TextStyle(color: Colors.white, fontSize: ScreenUtil().setSp(40)),
+          style: TextStyle(
+              color: Colors.white, fontSize: ScreenUtil.textScaleFactory * 20),
         ),
         leading: IconButton(
             icon: Icon(
@@ -87,9 +88,7 @@ class AdminAccoutPage extends StatelessWidget {
 //            String pwd = Provide.value<UserModelProvide>(context).pwd;
             Provide.value<UserModelProvide>(context)
                 .logout(context)
-                .whenComplete(() {
-
-            });
+                .whenComplete(() {});
           }
         },
       ),
@@ -116,6 +115,7 @@ class AdminAccoutPage extends StatelessWidget {
             height: 50,
             onTap: () {
               //todo 更多安全设置
+              Fluttertoast.showToast(msg: '不支持该功能');
             },
           ),
         ],
