@@ -39,8 +39,8 @@ class ImageViewPage extends StatelessWidget {
                   image: (isNetUrl)
                       ? CachedNetworkImageProvider('${urlPath}',
                           cacheManager: DefaultCacheManager())
-                      : AssetImage(
-                          '${urlPath}',
+                      : FileImage(
+                          File('${urlPath}'),
                         ),
 //                      : FileImage(File('${urlPath}')),
                   fit: BoxFit.cover)),

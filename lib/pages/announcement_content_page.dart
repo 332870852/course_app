@@ -35,8 +35,8 @@ class AnnouncementContentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //TODO 获取评论
-    UserMethod.getReplyListPage(context,
-        announceId, Provide.value<UserProvide>(context).userId);
+    UserMethod.getReplyListPage(
+        context, announceId, Provide.value<UserProvide>(context).userId);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -116,42 +116,60 @@ class AnnouncementContentPage extends StatelessWidget {
                 ),
                 subtitle: Text('${date}'),
               ),
-              RichText(
-                text: TextSpan(
-                    style: TextStyle(
-                        fontSize: ScreenUtil().setSp(40), color: Colors.black),
-                    text: '${announceText}'),
-                maxLines: 10,
-                overflow: TextOverflow.ellipsis,
+//              RichText(
+//                text: TextSpan(
+//                    style: TextStyle(
+//                        fontSize: 20, color: Colors.black),
+//                    text: '${announceText}'),
+//                maxLines: 10,
+//                overflow: TextOverflow.ellipsis,
+//              ),
+              Container(
+                height: 350,
+                child: ListView(
+                  shrinkWrap: true,
+                  //physics: NeverScrollableScrollPhysics(),
+                  children: <Widget>[
+                    RichText(
+                      text: TextSpan(
+                          style: TextStyle(fontSize: 20, color: Colors.black),
+                          text: '${announceText}'),
+                      maxLines: 15,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    ('${annex}'.trim().isNotEmpty)
+                        ? Container(
+                            height: 150,
+                            width: ScreenUtil.screenWidth,
+                            child: InkWell(
+                              onTap: () {
+                                //TODO 点击图片
+                                if (annex != null && annex.isNotEmpty) {
+                                  ImagePickers.previewImage(annex);
+                                }
+                              },
+                              child: CachedNetworkImage(
+                                imageUrl: ''
+                                    '${annex}',
+                                placeholder: (context, url) {
+                                  return SpinKitFadingFour(
+                                    color: Colors.grey,
+                                  );
+                                },
+                                errorWidget: (BuildContext context, String url,
+                                    Object error) {
+                                  //print("assets/img/加载失败.png        ${url}");
+                                  return Image.asset('assets/img/加载失败.png');
+                                },
+                                cacheManager: DefaultCacheManager(),
+                              ),
+                            ),
+                          )
+                        : SizedBox(),
+                  ],
+                ),
               ),
-              ('${annex}'.trim().isNotEmpty)
-                  ? Flexible(
-                      flex: 7,
-                      child: InkWell(
-                        onTap: () {
-                          //TODO 点击图片
-                          if (annex != null && annex.isNotEmpty) {
-                            ImagePickers.previewImage(annex);
-                          }
-                        },
-                        child: CachedNetworkImage(
-                          imageUrl: ''
-                              '${annex}',
-                          placeholder: (context, url) {
-                            return SpinKitFadingFour(
-                              color: Colors.grey,
-                            );
-                          },
-                          errorWidget:
-                              (BuildContext context, String url, Object error) {
-                            //print("assets/img/加载失败.png        ${url}");
-                            return Image.asset('assets/img/加载失败.png');
-                          },
-                          cacheManager: DefaultCacheManager(),
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
+
               Flexible(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,

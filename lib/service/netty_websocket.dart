@@ -94,6 +94,9 @@ class NettyWebSocket {
     return this._rtcSignaling;
   }
 
+
+
+
   //返回chat
   ChatService getChatService() {
     if (this._chatService == null) {

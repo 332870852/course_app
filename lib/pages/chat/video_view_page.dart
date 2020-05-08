@@ -27,6 +27,7 @@ class _VideoViewPageState extends State<VideoViewPage> with AutomaticKeepAliveCl
   void initState() {
     // TODO: implement initState
     super.initState();
+    print(widget.urlPath);
     widget.display=true;
     if (RegexUtil.isURL(widget.urlPath)) {
       _controller = VideoPlayerController.network((widget.urlPath));

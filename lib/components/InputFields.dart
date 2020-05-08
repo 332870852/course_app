@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 class InputFieldArea extends StatefulWidget {
   final String hint;
   bool obscure;

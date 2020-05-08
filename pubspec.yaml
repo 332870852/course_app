@@ -109,6 +109,9 @@ flutter:
     - assets/img/nodata2.png
     - assets/img/nodata3.png
     - assets/img/nodata4.png
+    - assets/img/create.png
+    - assets/img/questionList.png
+    - assets/img/muban.png
     - assets/fimage/download.png
     - assets/fimage/upload.png
     - assets/fimage/picture.png

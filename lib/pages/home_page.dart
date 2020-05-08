@@ -58,14 +58,14 @@ class HomePage extends StatelessWidget {
   final List<Widget> tabBodies = [
     IndexPage(),
     ChatPage(),
-    VideoPage(),
+    //VideoPage(),
     MemberPage(),
   ];
 
   final List<BottomNavigationBarItem> bottomTabs = [
     BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('课堂')),
     BottomNavigationBarItem(icon: Icon(Icons.chat), title: Text('私信')),
-    BottomNavigationBarItem(icon: Icon(Icons.videocam), title: Text('视频')),
+    //BottomNavigationBarItem(icon: Icon(Icons.videocam), title: Text('视频')),
     BottomNavigationBarItem(
         icon: Icon(Icons.account_circle), title: Text('我的')),
   ];

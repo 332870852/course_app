@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:course_app/provide/doucument_page_provide.dart';
 import 'package:course_app/provide/file_opt_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
@@ -10,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provide/provide.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:async/async.dart';
@@ -239,12 +243,28 @@ class FileItem extends StatelessWidget {
     }
 
     return ListTile(
-      onTap: () {
+      onTap: () async {
         if (Provide.value<DoucumentPageProvide>(context).bottomTOF) {
           item['select'] = !item['select'];
           Provide.value<DoucumentPageProvide>(context)
               .changeFileList(index, item);
           Provide.value<DoucumentPageProvide>(context).judgetAndOpt();
+        } else {
+          var path = await getExternalStorageDirectory();
+          String fPath = path.path + '/download/${item['fileName']}';
+          File fp = File(fPath);
+          bool exit = fp.existsSync();
+          if (exit == false) {
+            fPath = item['urlPath'];
+          }
+          if (item['ftype'].toString().contains('image')) {
+            NavigatorUtil.goImageViewPage(context, fPath, isNetUrl: '${!exit}');
+          } else if (item['ftype'].toString().contains('video')) {
+            NavigatorUtil.goVideoViewPage(context, fPath);
+          } else {
+            Fluttertoast.showToast(
+                msg: '不支持打开该格式', gravity: ToastGravity.CENTER);
+          }
         }
       },
       onLongPress: () {

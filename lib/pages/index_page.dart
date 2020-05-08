@@ -34,6 +34,7 @@ class _IndexPageState extends State<IndexPage>
     with AutomaticKeepAliveClientMixin {
   EasyRefreshController _controller = EasyRefreshController();
 
+
   @override
   void initState() {
     super.initState();

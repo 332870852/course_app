@@ -12,6 +12,7 @@ import 'package:course_app/pages/chat/pic_view.dart';
 import 'package:course_app/pages/chat/search_friend.dart';
 import 'package:course_app/pages/chat/video_view_page.dart';
 import 'package:course_app/pages/classroom_page.dart';
+import 'package:course_app/pages/create_test_page.dart';
 import 'package:course_app/pages/doucument_list_page.dart';
 import 'package:course_app/pages/file_opt_page.dart';
 import 'package:course_app/pages/home_page.dart';
@@ -29,7 +30,10 @@ import 'package:course_app/pages/teacher/attendance_detail_page.dart';
 import 'package:course_app/pages/teacher/attendance_page.dart';
 import 'package:course_app/pages/teacher/create_announce_page.dart';
 import 'package:course_app/pages/teacher/create_course_page.dart';
+import 'package:course_app/pages/test_detail_page.dart';
+import 'package:course_app/pages/test_page.dart';
 import 'package:course_app/pages/topic_page.dart';
+import 'package:course_app/pages/upload_question_page.dart';
 import 'package:course_app/pages/user_info_page.dart';
 import 'package:course_app/pages/student/attendance_stu_page.dart';
 import 'package:course_app/provide/course_provide.dart';
@@ -380,9 +384,74 @@ Handler topicHanderl = Handler(
 ///文件传输页面
 Handler fileOptHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      var initValue = (ObjectUtil.isNotEmpty(params['initValue'].first))
-          ? num.parse(params['initValue'].first)
-          : 0;
-      return FileOptPage(initValue: initValue,);
-    });
+  var initValue = (ObjectUtil.isNotEmpty(params['initValue'].first))
+      ? num.parse(params['initValue'].first)
+      : 0;
+  return FileOptPage(
+    initValue: initValue,
+  );
+});
 
+///课堂测试页
+Handler testPageHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  var courseId = (ObjectUtil.isNotEmpty(params['courseId'].first))
+      ? params['courseId'].first
+      : '';
+  var teacherId = (ObjectUtil.isNotEmpty(params['teacherId'].first))
+      ? params['teacherId'].first
+      : '';
+  return TestPage(
+    courseId: courseId,
+    teacherId: teacherId,
+  );
+});
+
+///课堂测试详情情况页
+
+Handler testDetailPageHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  var pageTitle = (ObjectUtil.isNotEmpty(params['pageTitle'].first))
+      ? params['pageTitle'].first
+      : '';
+  var releaseTime = (ObjectUtil.isNotEmpty(params['releaseTime'].first))
+      ? params['releaseTime'].first
+      : '';
+  var endTime = (ObjectUtil.isNotEmpty(params['endTime'].first))
+      ? params['endTime'].first
+      : '';
+  num submitted = (ObjectUtil.isNotEmpty(params['submitted'].first))
+      ? num.tryParse(params['submitted'].first)
+      : 0;
+  num unsubmitted = (ObjectUtil.isNotEmpty(params['unsubmitted'].first))
+      ? num.tryParse(params['unsubmitted'].first)
+      : 0;
+  return TestDetailPage(
+    pageTitle: pageTitle,
+    releaseTime: releaseTime,
+    endTime: endTime,
+    submitted: submitted,
+    unsubmitted: unsubmitted,
+  );
+});
+
+///创建试题页面
+Handler createTestHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  var courseId = (ObjectUtil.isNotEmpty(params['courseId'].first))
+      ? params['courseId'].first
+      : '';
+  return CreateTestPage(
+    courseId: courseId,
+  );
+});
+
+//Handler uploadQuestHanderl = Handler(
+//    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+//  var courseId = (ObjectUtil.isNotEmpty(params['courseId'].first))
+//      ? params['questionList'].first
+//      : '';
+//  return UploadQuestPage(
+//    questionList: questionList,
+//  );
+//});

@@ -59,6 +59,7 @@ class NavigatorUtil {
     /////////////////////////////////test
     Application.uid = userId;
     Application.sp.setString('uid', userId);
+
     ////////////////////////////
   }
 
@@ -238,7 +239,38 @@ class NavigatorUtil {
   }
 
   ///文件传输页面
-  static void goFileOptPage(BuildContext context,{initValue}) {
-    _navigateTo(context, Routes.fileOptPage+'?initValue=${initValue}');
+  static void goFileOptPage(BuildContext context, {initValue}) {
+    _navigateTo(context, Routes.fileOptPage + '?initValue=${initValue}');
+  }
+
+  ///课堂测试页面
+  static void goTestPage(BuildContext context,
+      {@required courseId, @required teacherId}) {
+    _navigateTo(context,
+        Routes.testPage + '?courseId=${courseId}&teacherId=${teacherId}');
+  }
+
+  ///课堂测试详情分析页面
+  static void goTestDetailPage(BuildContext context,
+      {@required pageTitle,
+      @required releaseTime,
+      endTime,
+      submitted = 0,
+      unsubmitted = 0}) {
+    _navigateTo(
+        context,
+        Routes.testDetailPage +
+            '?pageTitle=${Uri.encodeComponent('${pageTitle}')}'
+                '&releaseTime=${Uri.encodeComponent('${releaseTime}')}'
+                '&endTime=${Uri.encodeComponent('${endTime}')}'
+                '&submitted=${submitted}'
+                '&unsubmitted=${unsubmitted}');
+  }
+
+  ///课堂创建试题页面
+  static void goCreateTestPage(BuildContext context,
+      {@required courseId}) {
+    _navigateTo(context,
+        Routes.createTestPage + '?courseId=${courseId}');
   }
 }

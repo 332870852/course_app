@@ -20,6 +20,7 @@ class FileIconUtil{
   };
 
    static String getStringPath(String ftype){
+     
         if(ObjectUtil.isEmptyString(ftype)){
           return fileIcon['file'];
         }else if(ftype.contains('image')){

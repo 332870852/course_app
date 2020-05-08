@@ -32,8 +32,9 @@ import 'package:course_app/utils/permission_util.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provide/provide.dart';
+import 'package:flutter_webrtc/webrtc.dart';
+import 'utils/rtc_signaling.dart';
 
 void main() async {
   ///高德地图插件
@@ -98,8 +99,11 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
+
     Application.initGlobalKey();
     Application.initNettyWebSocket();
     final router = Router();
@@ -118,6 +122,7 @@ class MyApp extends StatelessWidget {
       print("websocket-----------");
       Provide.value<WebSocketProvide>(context).listenMessage();
     });
+
     return Container(
       child: MaterialApp(
         navigatorKey: Application.navigatorKey,

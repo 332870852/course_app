@@ -31,10 +31,14 @@ class Routes {
   static String chatHomePage = 'chat_home_page';
   static String imageViewPage = '/image_view_page';
   static String videoViewPage = '/video_view_page';
+
   //static String softWarePage='/soft_ware_page';
-  static String doucumentListPage='/doucument_list_page';
-  static String topicPage='/topic_page';
-  static String fileOptPage='/file_opt_page';
+  static String doucumentListPage = '/doucument_list_page';
+  static String topicPage = '/topic_page';
+  static String fileOptPage = '/file_opt_page';
+  static String testPage = '/testPage';
+  static String testDetailPage = '/test_detail_page';
+  static String createTestPage = '/create_test_page';
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(
@@ -70,7 +74,8 @@ class Routes {
     router.define(doucumentListPage, handler: doucumentListHanderl);
     router.define(topicPage, handler: topicHanderl);
     router.define(fileOptPage, handler: fileOptHanderl);
-
-
+    router.define(testPage, handler: testPageHanderl);
+    router.define(testDetailPage, handler: testDetailPageHanderl);
+    router.define(createTestPage, handler: createTestHanderl);
   }
 }

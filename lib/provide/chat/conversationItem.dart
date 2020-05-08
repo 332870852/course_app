@@ -41,9 +41,15 @@ class _ConversationItemState extends State<ConversationItem> {
     if (widget.unRead > 99) {
       widget.unRead = 99;
     }
-    if (widget.time.length > 5) {
-      int len = widget.time.length;
-      widget.time = widget.time.substring(len - 5, len);
+    int len = widget.time.length;
+
+    if (len > 10) {
+      int i=widget.time.indexOf('.000');
+      if(i!=-1){
+        widget.time=widget.time.substring(0,len-4);
+        print(widget.time);
+      }
+      widget.time = widget.time.substring(len - 12, len-7);
     }
     return Ink(
       color: widget.backColor,

@@ -88,6 +88,7 @@ class FileOptProvide with ChangeNotifier {
           'finish': false
         });
       });
+      print(list);
       insertDownLoad(list);
       NavigatorUtil.goFileOptPage(context, initValue: 0);
 

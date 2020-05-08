@@ -55,7 +55,7 @@ class ReplyListProvide with ChangeNotifier {
 
   insertAnnouncement(AnnouncementVo source)async{
     announceList.insert(1,source);
-    await saveAnnouncement(announceList);
+     saveAnnouncement(announceList);
   }
 
   removeAnnouncement(String announceId)async{

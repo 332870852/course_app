@@ -203,7 +203,7 @@ Future<ResponseModel> post(BuildContext context,
     return options;
   }));
   var url = serviceUrl + method;
-  print(url);
+  print('post : ${url}');
   Response response;
   ResponseModel responseModel;
   try {

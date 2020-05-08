@@ -142,7 +142,9 @@ class ClassRoomTopNavigatorWidget extends StatelessWidget {
             }
           case 5:
             {
-              Fluttertoast.showToast(msg: '功能处于开发阶段..');
+              NavigatorUtil.goTestPage(context,
+                  courseId: courseId, teacherId: teacherId);
+              //Fluttertoast.showToast(msg: '功能处于开发阶段..');
               break;
             }
           case 6:
@@ -170,7 +172,7 @@ class ClassRoomTopNavigatorWidget extends StatelessWidget {
             child: CircleAvatar(
               child: Icon(
                 IconData(item['image'], fontFamily: Constants.IconFontFamily),
-                size: ScreenUtil.textScaleFactory*25,
+                size: ScreenUtil.textScaleFactory * 25,
               ),
               foregroundColor: Colors.white,
               backgroundColor: backgroundColor,
