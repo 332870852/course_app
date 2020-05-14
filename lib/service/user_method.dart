@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:course_app/data/topic_comement_dto.dart';
+import 'package:course_app/data/topic_dto.dart';
+import 'package:course_app/data/topic_vo.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:common_utils/common_utils.dart';
 import 'package:course_app/config/service_url.dart';
@@ -111,8 +114,9 @@ class UserMethod {
     map.putIfAbsent('userId', () => userId.toString());
     ResponseModel responseModel = await get(context,
         method: userPath.servicePath['getUserInfo'], queryParameters: map);
+    print(responseModel.data);
     if (responseModel != null) {
-      if (responseModel.code == 1) {
+      if (responseModel.code == 1 && responseModel.data != null) {
         //print(responseModel.data);
         UserInfoVo userInfoVo = UserInfoVo.fromJson(responseModel.data);
         return userInfoVo;
@@ -677,8 +681,8 @@ class UserMethod {
   }
 
   ///获取文件列表
-  static Future<List<dynamic>> getFileInfoList(
-      BuildContext context, {courseId,type=0}) async {
+  static Future<List<dynamic>> getFileInfoList(BuildContext context,
+      {courseId, type = 0}) async {
     Map<String, dynamic> map = Map();
     map.putIfAbsent('courseId', () => courseId);
     map.putIfAbsent('type', () => type);
@@ -699,8 +703,8 @@ class UserMethod {
   }
 
   ///获取文件列表
-  static Future<List<dynamic>> deleteCourseFile(
-      BuildContext context, {List<String> fid,String courseId,type=0}) async {
+  static Future<List<dynamic>> deleteCourseFile(BuildContext context,
+      {List<String> fid, String courseId, type = 0}) async {
     Map<String, dynamic> map = Map();
     map.putIfAbsent('fid', () => fid);
     map.putIfAbsent('courseId', () => courseId);
@@ -711,6 +715,117 @@ class UserMethod {
       requestmap: map,
     );
     print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
+      }
+    } else {
+      throw responseModel.errors[0].message;
+    }
+    return null;
+  }
+
+  ///获取话题
+  static Future<List<TopicVo>> getTopicList(BuildContext context,
+      {@required String courseId, String userId}) async {
+    Map<String, dynamic> map = Map();
+    map.putIfAbsent('courseId', () => courseId);
+    if (ObjectUtil.isNotEmpty(userId)) {
+      map.putIfAbsent('userId', () => userId);
+    }
+    ResponseModel responseModel = await post(
+      context,
+      method: userPath.servicePath['getTopicList'],
+      requestmap: map,
+    );
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        List data = responseModel.data;
+        List<TopicVo> res = [];
+        data.forEach((element) {
+          res.add(TopicVo.fromJson(element));
+        });
+        return res;
+      }
+    } else {
+      throw responseModel.errors[0].message;
+    }
+    return null;
+  }
+
+  ///createTopic
+  static Future<dynamic> createTopic(
+      BuildContext context, TopicDto topicDto) async {
+    ResponseModel responseModel = await post(
+      context,
+      method: userPath.servicePath['createTopic'],
+      data: topicDto.toJson(),
+    );
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
+      }
+    } else {
+      throw responseModel.errors[0].message;
+    }
+    return null;
+  }
+
+  ///getTopicCommentList
+  ///获取评论内容
+  static Future<dynamic> getTopicCommentList(
+      BuildContext context, String topId) async {
+    Map<String, dynamic> map = Map();
+    map.putIfAbsent('topId', () => topId);
+    ResponseModel responseModel = await get(
+      context,
+      method: userPath.servicePath['getTopicCommentList'],
+      queryParameters: map,
+    );
+    print(responseModel);
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
+      }
+    } else {
+      throw responseModel.errors[0].message;
+    }
+    return null;
+  }
+
+  ///发表评论
+  static Future<bool> createTopicComment(
+      BuildContext context, TopicCommentDto dto) async {
+    print(dto.toString());
+    ResponseModel responseModel = await post(
+      context,
+      method: userPath.servicePath['createTopicComment'],
+      data: dto.toJson(),
+    );
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        print(responseModel.data);
+        return responseModel.data;
+      }
+    } else {
+      throw responseModel.errors[0].message;
+    }
+    return null;
+  }
+
+  ///点赞
+  static Future<bool> commendationTop(
+      BuildContext context, String topId,{like=true}) async {
+    Map<String, dynamic> map = Map();
+    map.putIfAbsent('topId', () => topId);
+    map.putIfAbsent('like', () => like);
+    ResponseModel responseModel = await post(
+      context,
+      method: userPath.servicePath['commendationTop'],
+      requestmap: map,
+    );
     if (responseModel != null) {
       if (responseModel.code == 1) {
         return responseModel.data;

@@ -48,6 +48,8 @@ class RTCSignaling {
 
   //JsonDecoder _decoder = JsonDecoder();
   JsonEncoder _encoder = JsonEncoder();
+  ///声音
+  bool audio=true;
 
   /**
    * turn stun 服务器的地址
@@ -103,7 +105,7 @@ class RTCSignaling {
 //创建本地媒体流
   Future<MediaStream> creasteStream() async {
     final Map<String, dynamic> mediaConstraints = {
-      'audio': true,
+      'audio': audio,
       'video': {
         'mandatory': {
           'minWidth': '640',
@@ -217,7 +219,7 @@ class RTCSignaling {
           String id = data['from'];
           _localStream?.dispose();
           _localStream = null;
-
+              ////
           RTCPeerConnection pc = _peerConnections[id];
           pc?.close();
           _peerConnections.remove(pc);

@@ -63,6 +63,7 @@ dependencies:
   tip_dialog: ^3.1.0
   file_picker: ^1.5.0+2     #file
   mime_type: ^0.2.7
+  weui: ^0.0.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -97,6 +98,7 @@ flutter:
     - assets/img/user.png
     - assets/img/sex0.png
     - assets/img/sex1.png
+    - assets/img/pic_error.png
     - assets/img/性别v.png
     - assets/img/性别男.png
     - assets/img/add.png

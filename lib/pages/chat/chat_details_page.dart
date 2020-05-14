@@ -702,11 +702,12 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
                           print(talkHistory[i]);
                         }
                         print('@ ${_scrollController.offset}');
-                        print('@max ${_scrollController.position.maxScrollExtent}');
+                        print(
+                            '@max ${_scrollController.position.maxScrollExtent}');
                         if (isInit &&
                             _scrollController.hasClients &&
                             _scrollController.position.maxScrollExtent >
-                                _scrollController.offset+150) {
+                                _scrollController.offset + 150) {
                           debugPrint('jumpTo...');
                           _scrollController.jumpTo(
                               _scrollController.position.maxScrollExtent + 100);
@@ -1005,7 +1006,10 @@ class _ChatDetailsPageState extends State<ChatDetailsPage>
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>
-                                                              new P2PPage()));
+                                                              new P2PPage(
+                                                                userId: widget
+                                                                    .myUserId,
+                                                              )));
                                                   //todo
                                                   Fluttertoast.showToast(
                                                       msg: '功能在开发中..');

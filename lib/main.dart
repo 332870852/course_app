@@ -33,8 +33,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
-import 'package:flutter_webrtc/webrtc.dart';
-import 'utils/rtc_signaling.dart';
+import 'package:course_app/provide/topic_provide.dart';
 
 void main() async {
   ///高德地图插件
@@ -70,6 +69,8 @@ void main() async {
   var softWareProvide = SoftWareProvide();
   var doucumentPageProvide = DoucumentPageProvide();
   var fileOptProvide = FileOptProvide();
+  var topicProvide = TopicProvide();
+
   providers
     ..provide(Provider<CurrentIndexProvide>.value(currentIndexProvide))
     ..provide(Provider<BottomTabBarProvide>.value(bottomTabBarProvide))
@@ -94,16 +95,14 @@ void main() async {
     ..provide(Provider<SoftWareProvide>.value(softWareProvide))
     ..provide(Provider<DoucumentPageProvide>.value(doucumentPageProvide))
     ..provide(Provider<FileOptProvide>.value(fileOptProvide))
-    ..provide(Provider<CourseProvide>.value(courseProvide));
+    ..provide(Provider<CourseProvide>.value(courseProvide))
+    ..provide(Provider<TopicProvide>.value(topicProvide));
   runApp(ProviderNode(child: MyApp(), providers: providers));
 }
 
 class MyApp extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
-
     Application.initGlobalKey();
     Application.initNettyWebSocket();
     final router = Router();
