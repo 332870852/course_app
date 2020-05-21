@@ -26,9 +26,23 @@ class CourseItemWidget extends StatelessWidget {
   CourseItemWidget({Key key, @required this.item, this.role = 1})
       : super(key: key);
 
+  Shader shader;
+
   @override
   Widget build(BuildContext context) {
-    print("999*08454");
+//    print("999*08454");
+
+    Size size = MediaQuery.of(context).size;
+    Gradient gradient = LinearGradient(
+      colors: [
+        Colors.grey,
+        Colors.white,
+        Colors.white,
+        Colors.grey,
+      ],
+    );
+    shader =
+        gradient.createShader(Rect.fromLTWH(0, 0, size.width, size.height));
     return Container(
       height: 160,
       margin: EdgeInsets.only(top: 10, left: 20, right: 20),
@@ -238,6 +252,7 @@ class CourseItemWidget extends StatelessWidget {
     var semester,
   }) {
     //print("color :${bgkColor}");
+
     return InkWell(
       child: Container(
         height: 120,
@@ -266,7 +281,9 @@ class CourseItemWidget extends StatelessWidget {
                   ? '${title}(${courseId})'
                   : title,
               style: TextStyle(
-                  color: Colors.white, fontSize: ScreenUtil.textScaleFactory*20),
+                  //color: Colors.white,
+                  foreground: Paint()..shader = shader,
+                  fontSize: ScreenUtil.textScaleFactory * 20),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
             ),
@@ -415,11 +432,12 @@ class CourseItemWidget extends StatelessWidget {
               fontFamily: Constants.IconFontFamily,
             ),
             color: Colors.white,
-            size: ScreenUtil.textScaleFactory*20,
+            size: ScreenUtil.textScaleFactory * 20,
           ),
           Text(' 加课码${joincode}',
               style: TextStyle(
-                  color: Colors.white, fontSize: ScreenUtil.textScaleFactory*15)),
+                  color: Colors.white,
+                  fontSize: ScreenUtil.textScaleFactory * 15)),
         ],
       ),
     );

@@ -98,6 +98,7 @@ void main() async {
     ..provide(Provider<CourseProvide>.value(courseProvide))
     ..provide(Provider<TopicProvide>.value(topicProvide));
   runApp(ProviderNode(child: MyApp(), providers: providers));
+
 }
 
 class MyApp extends StatelessWidget {
@@ -121,7 +122,6 @@ class MyApp extends StatelessWidget {
       print("websocket-----------");
       Provide.value<WebSocketProvide>(context).listenMessage();
     });
-
     return Container(
       child: MaterialApp(
         navigatorKey: Application.navigatorKey,

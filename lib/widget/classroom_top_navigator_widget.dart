@@ -137,7 +137,8 @@ class ClassRoomTopNavigatorWidget extends StatelessWidget {
             }
           case 4:
             {
-              Fluttertoast.showToast(msg: '功能处于开发阶段..');
+              //Fluttertoast.showToast(msg: '功能处于开发阶段..');
+              NavigatorUtil.goClassworkPagePage(context,courseId: courseId,teacherId: teacherId);
               break;
             }
           case 5:

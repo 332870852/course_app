@@ -1,15 +1,11 @@
 import 'dart:io';
 
 import 'package:course_app/provide/chat/chat_contact_provide.dart';
-import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/application.dart';
 import 'package:course_app/service/rtc_1v1_signaling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/webrtc.dart';
 import 'package:provide/provide.dart';
-
-
-
 
 class P2PPage extends StatefulWidget {
   P2PPage({Key key, @required this.userId}) : super(key: key);

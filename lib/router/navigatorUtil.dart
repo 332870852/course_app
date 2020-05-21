@@ -273,4 +273,11 @@ class NavigatorUtil {
     _navigateTo(context,
         Routes.createTestPage + '?courseId=${courseId}');
   }
+
+  ///课堂作业页面
+  static void goClassworkPagePage(BuildContext context,
+      {@required courseId,@required teacherId}) {
+    _navigateTo(context,
+        Routes.classworkPage + '?courseId=${courseId}&teacherId=${teacherId}');
+  }
 }

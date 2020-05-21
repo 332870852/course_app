@@ -146,28 +146,37 @@ class _TopicDetalPageState extends State<TopicDetalPage> {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: RichText(
-                      text: TextSpan(
-                          text:
-                              (ObjectUtil.isEmptyString(widget.dataSource.tag))
+                      padding: const EdgeInsets.only(top: 5),
+                      child: InkWell(
+                        child: RichText(
+                          text: TextSpan(
+                              text: (ObjectUtil.isEmptyString(
+                                      widget.dataSource.tag))
                                   ? ''
                                   : '#${widget.dataSource.tag}\r\n',
-                          children: [
-                            TextSpan(
-                              text: '${widget.dataSource.content}',
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.black),
-                            )
-                          ],
-                          style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.blueAccent)),
-                      maxLines: 30,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
+                              children: [
+                                TextSpan(
+                                  text: '${widget.dataSource.content}',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black,),
+                                )
+                              ],
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500,
+                                //foreground: Paint()..shader=shader,
+                                color: Colors.blueAccent,
+                              )),
+                          maxLines: 50,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        onLongPress: () {
+                          //todo
+                          Clipboard.setData(ClipboardData(
+                              text: '${widget.dataSource.content}'));
+                          Fluttertoast.showToast(msg: '已复制到粘贴栏');
+                        },
+                      )),
                   Visibility(
                     child: GridView.count(
                       shrinkWrap: true,
@@ -208,20 +217,6 @@ class _TopicDetalPageState extends State<TopicDetalPage> {
                                             userId: Provide.value<UserProvide>(
                                                     context)
                                                 .userId);
-//                                        if (value) {
-//                                          widget.dataSource.likeNums.add(
-//                                              Provide.value<UserProvide>(
-//                                                      context)
-//                                                  .userId);
-//                                        } else {
-//                                          widget.dataSource.likeNums
-//                                              .removeWhere((e) =>
-//                                                  e ==
-//                                                  Provide.value<UserProvide>(
-//                                                          context)
-//                                                      .userId);
-//                                        }
-//                                        setState(() {});
                                       }
                                     });
                                   },
@@ -320,7 +315,7 @@ class _TopicDetalPageState extends State<TopicDetalPage> {
                                 child: Icon(Icons.info_outline,
                                     color: Colors.yellow)),
                             Text(
-                              '内容不能为空',
+                              '评论内容不能为空',
                               style: TextStyle(color: Colors.red),
                             )
                           ]));
@@ -329,6 +324,7 @@ class _TopicDetalPageState extends State<TopicDetalPage> {
                 var b = await sendComment(message: message);
                 if (b == true) {
                   _textInputController.clear();
+                  _focusNode.unfocus(focusPrevious: true);
                 }
               },
               child: Text(
@@ -369,7 +365,7 @@ class _TopicDetalPageState extends State<TopicDetalPage> {
             if (d.connectionState == ConnectionState.waiting) {
               return CircularProgressIndicator();
             }
-            print(d.data);
+            //print(d.data);
             return Row(
               children: <Widget>[
                 Expanded(
@@ -402,12 +398,13 @@ class _TopicDetalPageState extends State<TopicDetalPage> {
                         InkWell(
                           child: Row(
                             children: <Widget>[
-                              Text(
+                              Expanded(
+                                  child: Text(
                                 '${'${data['content']}'}',
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(fontSize: 18),
                                 maxLines: 30,
                                 overflow: TextOverflow.ellipsis,
-                              )
+                              )),
                             ],
                           ),
                           onLongPress: () {

@@ -7,7 +7,7 @@ import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/service/user_method.dart';
 import 'package:course_app/ui/like_button.dart';
 import 'package:course_app/widget/person_item_widget.dart';
-import 'package:course_app/widget/topic_widget.dart';
+import 'package:course_app/widget/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/ball_pulse_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -56,15 +56,15 @@ class _TopicPageState extends State<TopicPage> {
     return await UserMethod.getUserInfo(context, userId: userId);
   }
 
-  openPage(topicVo,waiting,list) async {
+  openPage(topicVo, waiting, list) async {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (_) => TopicDetalPage(
-              dataSource: topicVo,
-              userInfoVo: waiting,
-              annexes: list,
-            )));
+                  dataSource: topicVo,
+                  userInfoVo: waiting,
+                  annexes: list,
+                )));
   }
 
   @override
@@ -93,8 +93,8 @@ class _TopicPageState extends State<TopicPage> {
                     context,
                     MaterialPageRoute(
                         builder: (_) => TopicCreatePage(
-                          courseId: widget.courseId,
-                        )));
+                              courseId: widget.courseId,
+                            )));
                 if (ObjectUtil.isNotEmpty(data)) {
                   print(data.toString());
                   TopicVo top = new TopicVo(
@@ -142,11 +142,6 @@ class _TopicPageState extends State<TopicPage> {
                       delegate: SliverChildBuilderDelegate((context, index) {
                     return cardItem(context, topicVo: data.data[index]);
                   }, childCount: data.data.length)
-//                    SliverChildListDelegate(
-//                  _data.map((e) {
-//                    return cardItem(context, topicVo: e);
-//                  }).toList(),
-//                )
                       ),
                 ),
               ),
@@ -166,7 +161,7 @@ class _TopicPageState extends State<TopicPage> {
             width: 100,
             height: 100,
             child: FadeInImage.assetNetwork(
-              placeholder: 'assets/img/pic_error.png',
+              placeholder: 'assets/img/图片加载失败.png',
               image: '${element}',
               fit: BoxFit.cover,
             )),
@@ -252,7 +247,7 @@ class _TopicPageState extends State<TopicPage> {
               flex: 5,
               child: InkWell(
                 onTap: () {
-                  openPage(topicVo,waiting,list);
+                  openPage(topicVo, waiting, list);
                 },
                 child: Container(
                   padding: const EdgeInsets.only(left: 8, top: 10, right: 8),
@@ -260,29 +255,26 @@ class _TopicPageState extends State<TopicPage> {
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     children: <Widget>[
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                          width: ScreenUtil.screenWidth,
-                          child: RichText(
-                            text: TextSpan(
-                                text: (ObjectUtil.isEmptyString(topicVo.tag))
-                                    ? ''
-                                    : '#${topicVo.tag}\r\n',
-                                children: [
-                                  TextSpan(
-                                    text: '${topicVo.content}',
-                                    style: TextStyle(
-                                        fontSize: 20, color: Colors.black),
-                                  )
-                                ],
-                                style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.blueAccent)),
-                            maxLines: 7,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                      Container(
+                        width: ScreenUtil.screenWidth,
+                        child: RichText(
+                          text: TextSpan(
+                              text: (ObjectUtil.isEmptyString(topicVo.tag))
+                                  ? ''
+                                  : '#${topicVo.tag}\r\n',
+                              children: [
+                                TextSpan(
+                                  text: '${topicVo.content}',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.black),
+                                )
+                              ],
+                              style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.blueAccent)),
+                          maxLines: 7,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Visibility(
@@ -336,7 +328,7 @@ class _TopicPageState extends State<TopicPage> {
                           Icons.message,
                           color: Colors.black26,
                         ),
-                        onPressed: ()=>openPage(topicVo,waiting,list),
+                        onPressed: () => openPage(topicVo, waiting, list),
                       ),
                       Text(
                         '${topicVo.commentNums}',

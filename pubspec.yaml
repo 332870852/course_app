@@ -64,6 +64,8 @@ dependencies:
   file_picker: ^1.5.0+2     #file
   mime_type: ^0.2.7
   weui: ^0.0.4
+  cupertino_tabbar: ^1.0.1 #tab
+  rflutter_alert: ^1.0.3 #对话框
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -111,6 +113,13 @@ flutter:
     - assets/img/nodata2.png
     - assets/img/nodata3.png
     - assets/img/nodata4.png
+    - assets/img/图片加载失败.png
+    - assets/img/图片加载中.png
+    - assets/img/默认图片加载-内容被隐藏.png
+    - assets/img/上传图片加载中.png
+    - assets/img/图片加载默认图2-01.png
+    - assets/img/图片加载前.png
+    - assets/img/缺省-图片-加载.png
     - assets/img/create.png
     - assets/img/questionList.png
     - assets/img/muban.png

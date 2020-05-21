@@ -3,6 +3,7 @@ import 'package:course_app/data/Attendance_dto.dart';
 import 'package:course_app/data/Attendance_vo.dart';
 import 'package:course_app/data/announcement_dto.dart';
 import 'package:course_app/data/announcement_vo.dart';
+import 'package:course_app/data/classwork_dto.dart';
 import 'package:course_app/data/course_do.dart';
 import 'package:course_app/model/Course.dart';
 import 'package:course_app/service/service_method.dart';
@@ -202,9 +203,9 @@ class TeacherMethod {
 
   ///获取考勤记录
   static Future<List<AttendanceVo>> getAttendanceList(
-      BuildContext context,
-      String courseId,
-      ) async {
+    BuildContext context,
+    String courseId,
+  ) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('courseId', () => courseId);
     ResponseModel responseModel = await get(
@@ -230,12 +231,8 @@ class TeacherMethod {
   }
 
   ///修改学生考勤
-  static Future<bool> updateAttendanceStudent(
-      BuildContext context,
-      String attendanceStudentId,
-      String attendanceId,
-      int status
-      ) async {
+  static Future<bool> updateAttendanceStudent(BuildContext context,
+      String attendanceStudentId, String attendanceId, int status) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('attendanceStudentId', () => attendanceStudentId);
     map.putIfAbsent('attendanceId', () => attendanceId);
@@ -256,12 +253,12 @@ class TeacherMethod {
     return null;
   }
 
-///
+  ///
   static Future<bool> delAttendance(
-      BuildContext context,
-      String courseId,
-      String attendanceId,
-      ) async {
+    BuildContext context,
+    String courseId,
+    String attendanceId,
+  ) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('courseId', () => courseId);
     map.putIfAbsent('attendanceId', () => attendanceId);
@@ -282,7 +279,8 @@ class TeacherMethod {
   }
 
   ///查询课堂学生id
-  static Future<List<String>>getStudentListId(BuildContext context,String coureId)async{
+  static Future<List<String>> getStudentListId(
+      BuildContext context, String coureId) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent('coureId', () => coureId);
     ResponseModel responseModel = await post(
@@ -293,10 +291,10 @@ class TeacherMethod {
     print(responseModel);
     if (responseModel != null) {
       if (responseModel.code == 1) {
-         List<dynamic> list=responseModel.data;
-         if(list!=null){
-           return  List<String>.generate(list.length, (i)=>list[i].toString());
-         }
+        List<dynamic> list = responseModel.data;
+        if (list != null) {
+          return List<String>.generate(list.length, (i) => list[i].toString());
+        }
         return responseModel.data;
       } else {
         throw responseModel.errors[0];
@@ -305,5 +303,43 @@ class TeacherMethod {
     return null;
   }
 
+  //作业列表
+  static Future<List> getClassWorkList(
+      BuildContext context, String courseId, String userId) async {
+    Map<String, dynamic> map = Map();
+    map.putIfAbsent('courseId', () => courseId);
+    map.putIfAbsent('userId', () => userId);
+    ResponseModel responseModel = await get(
+      context,
+      method: teacherPath.servicePath['getClassWorkList'],
+      queryParameters: map,
+    );
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
+      }
+    } else {
+      throw responseModel.errors[0].message;
+    }
+    return null;
+  }
 
+  ///发布作业
+  static Future<dynamic> createClassWork(
+      BuildContext context, ClassWorkDto classWorkDto) async {
+    // Map<String, dynamic> map = Map();
+    ResponseModel responseModel = await post(
+      context,
+      method: teacherPath.servicePath['createClassWork'],
+      data: classWorkDto.toJson(),
+    );
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
+      }
+    } else {
+      throw responseModel.errors[0].message;
+    }
+    return null;
+  }
 }

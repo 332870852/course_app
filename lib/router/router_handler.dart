@@ -12,6 +12,7 @@ import 'package:course_app/pages/chat/pic_view.dart';
 import 'package:course_app/pages/chat/search_friend.dart';
 import 'package:course_app/pages/chat/video_view_page.dart';
 import 'package:course_app/pages/classroom_page.dart';
+import 'package:course_app/pages/classwork_page.dart';
 import 'package:course_app/pages/create_test_page.dart';
 import 'package:course_app/pages/doucument_list_page.dart';
 import 'package:course_app/pages/file_opt_page.dart';
@@ -408,7 +409,6 @@ Handler testPageHanderl = Handler(
 });
 
 ///课堂测试详情情况页
-
 Handler testDetailPageHanderl = Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   var pageTitle = (ObjectUtil.isNotEmpty(params['pageTitle'].first))
@@ -455,3 +455,17 @@ Handler createTestHanderl = Handler(
 //    questionList: questionList,
 //  );
 //});
+///课堂作业
+Handler classworkHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  var courseId = (ObjectUtil.isNotEmpty(params['courseId'].first))
+      ? params['courseId'].first
+      : '';
+  var teacherId = (ObjectUtil.isNotEmpty(params['teacherId'].first))
+      ? params['teacherId'].first
+      : '';
+  return ClassworkPage(
+    courseId: courseId,
+    teacherId: teacherId,
+  );
+});
