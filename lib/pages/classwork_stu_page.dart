@@ -1,41 +1,94 @@
 import 'package:course_app/provide/user_provider.dart';
+import 'package:course_app/service/student_method.dart';
 import 'package:course_app/service/teacher_method.dart';
 import 'package:course_app/widget/person_item_widget.dart';
+import 'package:course_app/widget/text_widget.dart';
+import 'package:cupertino_tabbar/cupertino_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/ball_pulse_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:provide/provide.dart';
+import 'package:weui/image_preview/index.dart';
 
-import 'classwork_create_page.dart';
-import 'classwork_detial_page.dart';
+import 'classwork_stu_details_page.dart';
 
-///课堂作业
-class ClassworkPage extends StatefulWidget {
+///学生作业界面
+class ClassWorkStudentPage extends StatefulWidget {
   final courseId;
   final teacherId;
+  final userId;
 
-  ClassworkPage({Key key, @required this.courseId, @required this.teacherId})
+  ClassWorkStudentPage(
+      {Key key,
+      @required this.courseId,
+      @required this.teacherId,
+      @required this.userId})
       : super(key: key);
 
   @override
-  _ClassworkPageState createState() => _ClassworkPageState();
+  _ClassWorkStudentPageState createState() => _ClassWorkStudentPageState();
 }
 
-class _ClassworkPageState extends State<ClassworkPage> {
-  //bool isAdmin;
-
+class _ClassWorkStudentPageState extends State<ClassWorkStudentPage> {
   List data = [];
+  List allData = [];
+  bool isLoading = true;
 
   getDataList() async {
-    var result = await TeacherMethod.getClassWorkList(
-        context, widget.courseId, widget.teacherId);
+    var result = await StudentMethod.getClassWorkListByStudent(
+        context, widget.courseId, widget.userId);
     if (result != null) {
-      setState(() {
-        data = result;
+      allData.addAll(result);
+      data.addAll(result);
+      // data = allData;
+      //print(data);
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  onRefresh() async {
+    var result = await StudentMethod.getClassWorkListByStudent(
+        context, widget.courseId, widget.userId);
+    allData.clear();
+    data.clear();
+    if (result != null) {
+      allData.addAll(result);
+      data.addAll(result);
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  int cupertinoTabBarValue = 0;
+
+  int cupertinoTabBarValueGetter() {
+    return cupertinoTabBarValue;
+  }
+
+  changeCurrentData(int status) {
+    debugPrint('changeCurrentData , $status');
+    if (status == 0) {
+      data.clear();
+      data.addAll(allData);
+    } else if (status == 1) {
+      data.clear();
+      allData.forEach((element) {
+        print(element);
+        if (1 == element['status'] || 2 == element['status']) {
+          data.add(element);
+        }
       });
-      print(data);
+    } else if (status == 2) {
+      data.clear();
+      allData.forEach((element) {
+        if (3 == element['status']) {
+          data.add(element);
+        }
+      });
     }
   }
 
@@ -48,58 +101,97 @@ class _ClassworkPageState extends State<ClassworkPage> {
 
   @override
   Widget build(BuildContext context) {
-    //isAdmin = (Provide.value<UserProvide>(context).userId == widget.teacherId);
     return Scaffold(
       appBar: AppBar(
-        title: Text('作业管理'),
-//        Text((isAdmin) ? '作业管理' : '作业'),
-        centerTitle: true,
-        elevation: 0.0,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          //todo
-          var result = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => ClassWorkCreatePage(
-                        courseId: widget.courseId,
-                      )));
-          if (result != null) {
-            setState(() {
-              print(result);
-              data.insert(0, result);
-            });
-          }
-        },
-        child: Icon(
-          CupertinoIcons.create,
-          size: 30,
+        title: Container(
+          width: ScreenUtil.screenWidth,
+          height: 50,
+          child: CupertinoTabBar(
+            Colors.blueAccent,
+            Colors.lightBlueAccent,
+            [
+              Container(
+                width: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      '全部',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      '已提交',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      '未提交',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            cupertinoTabBarValueGetter,
+            (index) {
+              setState(
+                () {
+                  changeCurrentData(index);
+                  cupertinoTabBarValue = index;
+                },
+              );
+            },
+            useSeparators: true,
+          ),
         ),
+        elevation: 0.0,
       ),
       body: Container(
         width: ScreenUtil.screenWidth,
         height: ScreenUtil.screenHeight,
-        child: EasyRefresh.custom(
-            header: BallPulseHeader(backgroundColor: Colors.purple),
-            onRefresh: () async {},
-            emptyWidget: (data.isEmpty)
-                ? NoDataWidget(
-                    title: '还没有发布作业~', path: 'assets/img/nodata2.png')
-                : null,
-            slivers: <Widget>[
-              SliverSafeArea(
-                //安全区
-                sliver: SliverPadding(
-                  padding: EdgeInsets.only(
-                      top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
-                  sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                    return cardItem(context, dataSource: data[index]);
-                  }, childCount: data.length)),
-                ),
-              ),
-            ]),
+        child: (isLoading)
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : EasyRefresh.custom(
+                header: BallPulseHeader(backgroundColor: Colors.purple),
+                onRefresh: () async {
+                  await onRefresh();
+                  changeCurrentData(cupertinoTabBarValue);
+                },
+                emptyWidget: (data.isEmpty)
+                    ? NoDataWidget(
+                        title: '教师还没有发布作业~', path: 'assets/img/nodata2.png')
+                    : null,
+                slivers: <Widget>[
+                    SliverSafeArea(
+                      //安全区
+                      sliver: SliverPadding(
+                        padding: EdgeInsets.only(
+                            top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
+                        sliver: SliverList(
+                            delegate:
+                                SliverChildBuilderDelegate((context, index) {
+                          return cardItem(context, dataSource: data[index]);
+                        }, childCount: data.length)),
+                      ),
+                    ),
+                  ]),
       ),
     );
   }
@@ -207,7 +299,7 @@ class _ClassworkPageState extends State<ClassworkPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => ClassworkDetalPage(
+                                  builder: (_) => ClassworkStuDetailPage(
                                         dataSource: dataSource,
                                         endTime: endTime,
                                       )));

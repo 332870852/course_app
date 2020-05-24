@@ -7,6 +7,7 @@ import 'package:course_app/provide/chat/chat_detail_provide.dart';
 import 'package:course_app/provide/chat/chat_message_provide.dart';
 import 'package:course_app/provide/chat/chat_page_provide.dart';
 import 'package:course_app/provide/classroom_notif_provide.dart';
+import 'package:course_app/provide/commit_classwork_provide.dart';
 import 'package:course_app/provide/course_provide.dart';
 import 'package:course_app/provide/create_course_provider.dart';
 import 'package:course_app/provide/currentIndex_provide.dart';
@@ -70,6 +71,7 @@ void main() async {
   var doucumentPageProvide = DoucumentPageProvide();
   var fileOptProvide = FileOptProvide();
   var topicProvide = TopicProvide();
+  var commitClassWorkProvide = CommitClassWorkProvide();
 
   providers
     ..provide(Provider<CurrentIndexProvide>.value(currentIndexProvide))
@@ -96,9 +98,9 @@ void main() async {
     ..provide(Provider<DoucumentPageProvide>.value(doucumentPageProvide))
     ..provide(Provider<FileOptProvide>.value(fileOptProvide))
     ..provide(Provider<CourseProvide>.value(courseProvide))
+    ..provide(Provider<CommitClassWorkProvide>.value(commitClassWorkProvide))
     ..provide(Provider<TopicProvide>.value(topicProvide));
   runApp(ProviderNode(child: MyApp(), providers: providers));
-
 }
 
 class MyApp extends StatelessWidget {

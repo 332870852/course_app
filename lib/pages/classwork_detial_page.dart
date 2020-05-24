@@ -6,9 +6,11 @@ import 'package:course_app/service/user_method.dart';
 import 'package:course_app/widget/person_item_widget.dart';
 import 'package:course_app/widget/text_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cupertino_tabbar/cupertino_tabbar.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:weui/image_preview/index.dart';
 import 'package:weui/picker_view/index.dart';
 import 'package:async/async.dart';
@@ -81,7 +83,7 @@ class _ClassworkDetalPageState extends State<ClassworkDetalPage> {
   Widget getWidget({UserInfoVo userInfoVo, Map map}) {
     var status = map['status'];
     String tip = '';
-    if (status == 0) {
+    if (status == 0 || status == 2 || status == 3) {
       tip = '查看';
     } else if (status == 1) {
       tip = '批改';
@@ -120,6 +122,7 @@ class _ClassworkDetalPageState extends State<ClassworkDetalPage> {
                                   teacher: true,
                                   status: status,
                                   endTime: widget.endTime,
+                                  tscore: widget.dataSource['score'],
                                   map: map,
                                 )));
                   },
@@ -177,7 +180,7 @@ class _ClassworkDetalPageState extends State<ClassworkDetalPage> {
     return ConstrainedBox(
       constraints: BoxConstraints(
         minHeight: 100,
-        maxHeight: 400,
+        maxHeight: 350,
       ),
       child: Container(
         padding: const EdgeInsets.all(8),
@@ -243,9 +246,16 @@ class _ClassworkDetalPageState extends State<ClassworkDetalPage> {
                 flex: 6,
                 child: ListView(
                   children: <Widget>[
-                    Text(
-                      '${widget.dataSource['content']}',
-                      style: TextStyle(fontSize: 20),
+                    GestureDetector(
+                      onLongPress: () {
+                        Clipboard.setData(ClipboardData(
+                            text: '${widget.dataSource['content']}'));
+                        Fluttertoast.showToast(msg: '内容已复制到粘贴栏');
+                      },
+                      child: Text(
+                        '${widget.dataSource['content']}',
+                        style: TextStyle(fontSize: 20),
+                      ),
                     ),
                     (annex.isNotEmpty)
                         ? ConstrainedBox(
@@ -383,9 +393,9 @@ class _ClassworkDetalPageState extends State<ClassworkDetalPage> {
             });
       });
     } else {
-      print('uuuuuuuuu');
+      //print('uuuuuuuuu');
       var list = changeCurrentList(cupertinoTabBarValue);
-      print('uuuuuuuuu  ${list.length}');
+      //print('uuuuuuuuu  ${list.length}');
       return ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),

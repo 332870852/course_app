@@ -1,12 +1,12 @@
-//const serviceUrl =
-//    'http://47.102.97.30:11001/'; //'http://192.168.200.104:11001/'
-//const webSocketUrl = 'ws://47.102.97.30:11001/wsServer/';
-//const nettyUrl = 'ws://47.102.97.30:10090/ws';
+const serviceUrl =
+    'http://47.102.97.30:11001/'; //'http://192.168.200.104:11001/'
+const webSocketUrl = 'ws://47.102.97.30:11001/wsServer/';
+const nettyUrl = 'ws://47.102.97.30:10090/ws';
 
 
-const serviceUrl = 'http://192.168.31.67:11001/';
-const webSocketUrl = 'ws://192.168.31.67:10090/ws'; //wsServer  47.102.97.30
-const nettyUrl = 'ws://192.168.31.67:10090/ws';
+//const serviceUrl = 'http://192.168.31.66:11001/';
+//const webSocketUrl = 'ws://192.168.31.66:10090/ws'; //wsServer  47.102.97.30
+//const nettyUrl = 'ws://192.168.31.66:10090/ws';
 
 class studentPath {
   static const servicePath = {
@@ -15,6 +15,9 @@ class studentPath {
     'removeCourse': 'student/removeCourse',
     'findAttendanceStudentScore': 'findAttendanceStudentScore',
     'AttendanceStudentCheck': 'AttendanceStudentCheck',
+    'getClassWorkListByStudent':'student/getClassWorkListByStudent',
+    'uploadClassWorkFile':'student/uploadClassWorkFile',
+    'commitCourseWork':'student/commitCourseWork',
   };
 }
 
@@ -51,6 +54,7 @@ class userPath {
     'getTopicCommentList':'getTopicCommentList',
     'createTopicComment':'createTopicComment',
     'commendationTop':'commendationTop',
+    'getClassWorkFileList':'getClassWorkFileList',
   };
 }
 
@@ -71,5 +75,6 @@ class teacherPath {
     'getStudentListId': 'course/getStudentListId',
     'getClassWorkList':'teacher/getClassWorkList',
     'createClassWork':'teacher/createClassWork',
+    'reviseStudentWork':'teacher/reviseStudentWork',
   };
 }

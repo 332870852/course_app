@@ -327,11 +327,33 @@ class TeacherMethod {
   ///发布作业
   static Future<dynamic> createClassWork(
       BuildContext context, ClassWorkDto classWorkDto) async {
-    // Map<String, dynamic> map = Map();
     ResponseModel responseModel = await post(
       context,
       method: teacherPath.servicePath['createClassWork'],
       data: classWorkDto.toJson(),
+    );
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
+      }
+    } else {
+      throw responseModel.errors[0].message;
+    }
+    return null;
+  }
+
+  ///批改作业
+  static Future<dynamic> reviseStudentWork(
+      BuildContext context, String reviseId, int score,
+      {comment}) async {
+    Map<String, dynamic> map = Map();
+    map.putIfAbsent('reviseId', () => reviseId);
+    map.putIfAbsent('score', () => score);
+    map.putIfAbsent('comment', () => comment);
+    ResponseModel responseModel = await post(
+      context,
+      method: teacherPath.servicePath['reviseStudentWork'],
+      requestmap: map,
     );
     if (responseModel != null) {
       if (responseModel.code == 1) {

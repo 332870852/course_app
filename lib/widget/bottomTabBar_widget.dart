@@ -2,6 +2,7 @@ import 'package:course_app/config/constants.dart';
 import 'package:course_app/data/user_info.dart';
 import 'package:course_app/provide/bottom_tabBar_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
+import 'package:course_app/widget/person_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
@@ -117,11 +118,12 @@ class DetailsWeb extends StatelessWidget {
       child: Provide<BottomTabBarProvide>(
         builder: (context, child, val) {
           if (val.currentIndex == 0) {
-            return Container(
-              child: Text(
-                '无数据',
-              ),
-            );
+            return NoDataWidget(title: '暂无记录', path: 'assets/img/nodata2.png');
+//            return Container(
+//              child: Text(
+//                '无数据',
+//              ),
+//            );
           } else if (val.currentIndex == 1) {
             return Container(
                 width: ScreenUtil.screenWidth,
@@ -164,7 +166,6 @@ class WaittingItem extends StatelessWidget {
     return InkWell(
       onTap: () {
         //TODO 点击待办事项
-
       },
       child: Container(
         height: 100,

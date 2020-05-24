@@ -40,6 +40,7 @@ class Routes {
   static String testDetailPage = '/test_detail_page';
   static String createTestPage = '/create_test_page';
   static String classworkPage='/classwork_page';
+  static String classWorkStudentPage='/classwork_student_page';
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(
@@ -79,5 +80,7 @@ class Routes {
     router.define(testDetailPage, handler: testDetailPageHanderl);
     router.define(createTestPage, handler: createTestHanderl);
     router.define(classworkPage, handler: classworkHanderl);
+    router.define(classWorkStudentPage, handler: classWorkStudentHanderl);
+
   }
 }

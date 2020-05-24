@@ -275,9 +275,16 @@ class NavigatorUtil {
   }
 
   ///课堂作业页面
-  static void goClassworkPagePage(BuildContext context,
+  static void goClassworkPage(BuildContext context,
       {@required courseId,@required teacherId}) {
     _navigateTo(context,
         Routes.classworkPage + '?courseId=${courseId}&teacherId=${teacherId}');
+  }
+
+  ///学生课题作业界面
+  static void goClassWorkStudentPage(BuildContext context,
+      {@required courseId,@required teacherId,@required userId}) {
+    _navigateTo(context,
+        Routes.classWorkStudentPage + '?courseId=${courseId}&teacherId=${teacherId}&userId=${userId}');
   }
 }

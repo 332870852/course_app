@@ -75,7 +75,9 @@ class UserMethod {
     map.putIfAbsent('username', () => username);
     ResponseModel responseModel = await post(context,
             method: userPath.servicePath['userlogout'], requestmap: map)
-        .catchError((e) {});
+        .catchError((e) {
+      //todo
+    });
     if (responseModel != null) {
       if (responseModel.code == 1) {
         return responseModel.data;
@@ -816,8 +818,8 @@ class UserMethod {
   }
 
   ///点赞
-  static Future<bool> commendationTop(
-      BuildContext context, String topId,{like=true}) async {
+  static Future<bool> commendationTop(BuildContext context, String topId,
+      {like = true}) async {
     Map<String, dynamic> map = Map();
     map.putIfAbsent('topId', () => topId);
     map.putIfAbsent('like', () => like);
@@ -836,5 +838,25 @@ class UserMethod {
     return null;
   }
 
-
+  ///获取作业文件列表
+  static Future<dynamic> getClassWorkFileList(
+      BuildContext context, List<String> fid) async {
+    String f = fid.toString();
+    f = f.substring(1, f.length - 1);
+    Map<String, dynamic> map = Map();
+    map.putIfAbsent('fid', () => f);
+    ResponseModel responseModel = await post(
+      context,
+      method: userPath.servicePath['getClassWorkFileList'],
+      requestmap: map,
+    );
+    if (responseModel != null) {
+      if (responseModel.code == 1) {
+        return responseModel.data;
+      }
+    } else {
+      throw responseModel.errors[0].message;
+    }
+    return null;
+  }
 }

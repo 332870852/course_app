@@ -13,6 +13,7 @@ import 'package:course_app/pages/chat/search_friend.dart';
 import 'package:course_app/pages/chat/video_view_page.dart';
 import 'package:course_app/pages/classroom_page.dart';
 import 'package:course_app/pages/classwork_page.dart';
+import 'package:course_app/pages/classwork_stu_page.dart';
 import 'package:course_app/pages/create_test_page.dart';
 import 'package:course_app/pages/doucument_list_page.dart';
 import 'package:course_app/pages/file_opt_page.dart';
@@ -467,5 +468,25 @@ Handler classworkHanderl = Handler(
   return ClassworkPage(
     courseId: courseId,
     teacherId: teacherId,
+  );
+});
+
+///学生作业界面
+
+Handler classWorkStudentHanderl = Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  var courseId = (ObjectUtil.isNotEmpty(params['courseId'].first))
+      ? params['courseId'].first
+      : '';
+  var teacherId = (ObjectUtil.isNotEmpty(params['teacherId'].first))
+      ? params['teacherId'].first
+      : '';
+  var userId = (ObjectUtil.isNotEmpty(params['userId'].first))
+      ? params['userId'].first
+      : '';
+  return ClassWorkStudentPage(
+    courseId: courseId,
+    teacherId: teacherId,
+    userId: userId,
   );
 });

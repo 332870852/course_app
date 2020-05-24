@@ -7,8 +7,10 @@ import 'package:course_app/service/teacher_method.dart';
 import 'package:course_app/widget/cupertion_alert_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provide/provide.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
@@ -114,6 +116,10 @@ class ClassRoomTitleWidget extends StatelessWidget {
                 //showOverlay(context, cid: courseCid);
                 showQRcode(context, cid: courseCid);
               }
+            },
+            onLongPress: (){
+              Clipboard.setData(ClipboardData(text: '${joinCode}'));
+              Fluttertoast.showToast(msg: '课堂码已复制到粘贴栏');
             },
             child: _iconStrItem(
                 Icon(

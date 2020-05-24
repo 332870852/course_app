@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:common_utils/common_utils.dart';
 import 'package:course_app/data/classwork_dto.dart';
 import 'package:course_app/data/topic_dto.dart';
+import 'package:course_app/pages/revise_page.dart';
 import 'package:course_app/provide/chat/flush_bar_util.dart';
 import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/service/teacher_method.dart';
@@ -35,7 +36,7 @@ class _ClassWorkCreatePageState extends State<ClassWorkCreatePage> {
   TextEditingController _titleController;
 
   TextEditingController _contextController;
-
+  TextEditingController _scoreController;
   bool displayLod = false;
   DateTime endTime = DateTime.now();
 
@@ -45,12 +46,14 @@ class _ClassWorkCreatePageState extends State<ClassWorkCreatePage> {
     super.initState();
     _titleController = TextEditingController();
     _contextController = TextEditingController();
+    _scoreController = TextEditingController();
   }
 
   @override
   void dispose() {
     _titleController.dispose();
     _contextController.dispose();
+    _scoreController.dispose();
     super.dispose();
   }
 
@@ -96,6 +99,7 @@ class _ClassWorkCreatePageState extends State<ClassWorkCreatePage> {
                                 ]));
                         return;
                       }
+                      var score;
                       var aler = await Alert(
                           context: context,
                           title: "设置分数并发布",
@@ -103,12 +107,13 @@ class _ClassWorkCreatePageState extends State<ClassWorkCreatePage> {
                             children: <Widget>[
                               TextField(
                                 keyboardType: TextInputType.number,
+                                controller: _scoreController,
                                 decoration: InputDecoration(
                                   labelText: 'socre',
                                   hintText: '输入作业总分',
                                 ),
                                 inputFormatters: [
-                                  LengthLimitingTextInputFormatter(32),
+                                  LengthLimitingTextInputFormatter(5),
                                   //  WhitelistingTextInputFormatter白名单
                                   WhitelistingTextInputFormatter(
                                       RegExp("[0-9]")),
@@ -120,39 +125,47 @@ class _ClassWorkCreatePageState extends State<ClassWorkCreatePage> {
                             DialogButton(
                               child: Text(
                                 "确认",
-                                style: TextStyle(color: Colors.white, fontSize: 20),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
                               ),
-                              onPressed: () => Navigator.pop(context,true),
+                              onPressed: () {
+                                score=_scoreController.value.text;
+                                if (score.isEmpty || num.tryParse(score) < 0) {
+                                  showTip(context, '分数不能为空，也不能小于0');
+                                  return;
+                                }
+                                Navigator.pop(context, true);
+                              },
                               gradient: LinearGradient(colors: [
                                 Color.fromRGBO(116, 116, 191, 1.0),
                                 Color.fromRGBO(52, 138, 199, 1.0)
                               ]),
                             )
                           ]).show();
-                       if(aler){
-                         setState(() {
-                           displayLod = true;
-                         });
-                           ClassWorkDto classwork = ClassWorkDto(
-                               title: title,
-                               content: content,
-                               courseId: widget.courseId,
-                               score: 100,
-                               expireTime: exprie,
-                               annex: urls,
-                               createTime: DateTime.now().toIso8601String());
-                         var res = await TeacherMethod.createClassWork(
-                             context, classwork)
-                             .whenComplete(() {
-                           setState(() {
-                             displayLod = false;
-                           });
-                         });
-                         if (res != null) {
-                           Fluttertoast.showToast(msg: '发布成功~');
-                           Navigator.pop(context, res);
-                         }
-                       }
+                      if (aler) {
+                        setState(() {
+                          displayLod = true;
+                        });
+                        ClassWorkDto classwork = ClassWorkDto(
+                            title: title,
+                            content: content,
+                            courseId: widget.courseId,
+                            score: num.tryParse(score),
+                            expireTime: exprie,
+                            annex: urls,
+                            createTime: DateTime.now().toIso8601String());
+                        var res = await TeacherMethod.createClassWork(
+                                context, classwork)
+                            .whenComplete(() {
+                          setState(() {
+                            displayLod = false;
+                          });
+                        });
+                        if (res != null) {
+                          Fluttertoast.showToast(msg: '发布成功~');
+                          Navigator.pop(context, res);
+                        }
+                      }
                     }
                   : null,
               child: (!displayLod) ? Text('发布') : CupertinoActivityIndicator(),
@@ -252,7 +265,6 @@ class _ClassWorkCreatePageState extends State<ClassWorkCreatePage> {
   }
 
   List<String> urls = [];
-
   List<String> display = [];
 
   ///上传附件
