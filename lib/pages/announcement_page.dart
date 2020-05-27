@@ -119,7 +119,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                           Text('暂无公告',
                               style: TextStyle(
                                 color: Colors.black26,
-                                fontSize: ScreenUtil().setSp(35),
+                                fontSize: 22,
                               )),
                         ],
                       ),
@@ -171,7 +171,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                       '${item.announceTitle}',
                       style: TextStyle(
                           color: Colors.black,
-                          fontSize: ScreenUtil().setSp(35)),
+                          fontSize: 20),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
@@ -219,7 +219,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                       '${item.announceBody}',
                       style: TextStyle(
                           color: Colors.black,
-                          fontSize: ScreenUtil().setSp(30)),
+                          fontSize: 18),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 3,
                     ),
@@ -234,7 +234,7 @@ class _AnnouncementPageState extends State<AnnouncementPage> {
                       '${item.replyNums}条评论',
                       style: TextStyle(
                           color: Colors.black,
-                          fontSize: ScreenUtil().setSp(25)),
+                          fontSize: 18),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 3,
                     ),

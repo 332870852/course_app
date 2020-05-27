@@ -57,7 +57,6 @@ class _ContactPageState extends State<ContactPage>
       ConcactItem(title: '编译原理', numToal: '2/5', friends: friend),
     ];
 
-   // UserMethod.getFriendsUserInfo(context, friendIds);
   }
 
 //  void initFriendsId(List<MyFriendsVo> list) {
@@ -102,10 +101,10 @@ class _ContactPageState extends State<ContactPage>
           future: Provide.value<ChatContactProvide>(context)
               .getMyFriendsInfo(),
           builder: (context, sna) {
-            print('FutureBuilder');
+            //print('FutureBuilder');
             return Provide<ChatContactProvide>(
               builder: (context, child, data) {
-                print('ChatContactProvide ${data.friendsInfo}');
+                //print('ChatContactProvide ${data.friendsInfo}');
                 int currentIndex = data.currentIndex;
                 return EasyRefresh.custom(
                   header: MaterialHeader(),

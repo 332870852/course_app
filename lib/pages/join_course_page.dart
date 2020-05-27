@@ -46,7 +46,7 @@ class _JoinCoursePageState extends State<JoinCoursePage> {
         title: Text(
           '加入课程',
           style:
-              TextStyle(color: Colors.white, fontSize: ScreenUtil().setSp(40)),
+              TextStyle(color: Colors.white, fontSize: 20),
         ),
         leading: IconButton(
             icon: Icon(
@@ -65,8 +65,8 @@ class _JoinCoursePageState extends State<JoinCoursePage> {
             },
             child: Container(
               padding: EdgeInsets.all(2),
-              width: ScreenUtil().setWidth(100),
-              height: ScreenUtil().setHeight(60),
+              width: 50,
+              height: 30,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -82,7 +82,7 @@ class _JoinCoursePageState extends State<JoinCoursePage> {
         ],
       ),
       body: Container(
-        padding: EdgeInsets.only(top: ScreenUtil().setHeight(100)),
+        padding: EdgeInsets.only(top: 50),
         child: EditWidget(),
       ),
       resizeToAvoidBottomPadding: false,
@@ -96,7 +96,7 @@ class _JoinCoursePageState extends State<JoinCoursePage> {
           child: Text(
             '通过6位邀请码加入课堂',
             style: TextStyle(
-                color: Colors.black26, fontSize: ScreenUtil().setSp(30)),
+                color: Colors.black26, fontSize: 18),
           ),
         ),
         Container(
@@ -121,7 +121,7 @@ class _JoinCoursePageState extends State<JoinCoursePage> {
             autofocus: true,
             style: TextStyle(
               color: Colors.black,
-              fontSize: ScreenUtil().setSp(80),
+              fontSize: 40,
             ),
             textAlign: TextAlign.justify,
             onChanged: (str) {

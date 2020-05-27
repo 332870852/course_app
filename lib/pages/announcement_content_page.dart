@@ -96,7 +96,7 @@ class AnnouncementContentPage extends StatelessWidget {
                     child: Text(
                       '${announceTitle}',
                       style: TextStyle(
-                          fontSize: ScreenUtil().setSp(35),
+                          fontSize: 25,
                           fontWeight: FontWeight.w600),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 3,

@@ -66,6 +66,7 @@ dependencies:
   weui: ^0.0.4
   cupertino_tabbar: ^1.0.1 #tab
   rflutter_alert: ^1.0.3 #对话框
+  syncfusion_flutter_charts: ^18.1.53 #统计图
 dev_dependencies:
   flutter_test:
     sdk: flutter

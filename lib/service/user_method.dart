@@ -845,10 +845,10 @@ class UserMethod {
     f = f.substring(1, f.length - 1);
     Map<String, dynamic> map = Map();
     map.putIfAbsent('fid', () => f);
-    ResponseModel responseModel = await post(
+    ResponseModel responseModel = await get(
       context,
       method: userPath.servicePath['getClassWorkFileList'],
-      requestmap: map,
+      queryParameters: map,
     );
     if (responseModel != null) {
       if (responseModel.code == 1) {
@@ -859,4 +859,7 @@ class UserMethod {
     }
     return null;
   }
+
+  ///
+
 }

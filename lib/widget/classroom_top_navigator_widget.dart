@@ -1,4 +1,5 @@
 import 'package:course_app/config/constants.dart';
+import 'package:course_app/pages/statistics_page.dart';
 import 'package:course_app/provide/reply_list_provide.dart';
 import 'package:course_app/provide/user_provider.dart';
 import 'package:course_app/router/application.dart';
@@ -163,6 +164,14 @@ class ClassRoomTopNavigatorWidget extends StatelessWidget {
                 ToastWeb.showInfoTip(context, tip: '请使用网页版操作');
               } else {
                 ToastWeb.showInfoTip(context, tip: '无权查看');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => StatisticsPage(
+                              courseId: courseId,
+                              userId:
+                                  Provide.value<UserProvide>(context).userId,
+                            )));
               }
               break;
             }

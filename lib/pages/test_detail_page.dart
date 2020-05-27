@@ -170,6 +170,8 @@ class _TestDetailPageState extends State<TestDetailPage> {
       commited = 0,
       uncommit = 0}) {
     return Container(
+      width: ScreenUtil.screenWidth,
+      height: ScreenUtil.screenHeight,
       margin: const EdgeInsets.symmetric(horizontal: 2.0),
       padding: const EdgeInsets.only(bottom: 45.0, top: 5),
       child: Column(

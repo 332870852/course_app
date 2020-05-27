@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/ball_pulse_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provide/provide.dart';
-import 'package:weui/image_preview/index.dart';
 
 import 'classwork_stu_details_page.dart';
 

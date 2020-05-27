@@ -61,7 +61,7 @@ class _VideoPageState extends State<VideoPage> with TickerProviderStateMixin {
                         SpinKitWave(
                           color: Colors.red,
                           type: SpinKitWaveType.start,
-                          size: ScreenUtil().setSp(30),
+                          size: 20,
                         )
                       ],
                     ),
