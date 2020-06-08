@@ -4,6 +4,12 @@
 # course_app
 智慧课堂辅助 App 结合了移动跨平台技术，系统由 APP 和 APP 后台管理系统 组成。系统服务端使用 Java 编程语言，采用SSH+Netty+Redis+FastDFS+RabbitMQ 框架设计。App 系统主要分用户模块、课堂模块、聊天模块和后台管理模块四部 分，实现了公告、话题、资料、考勤、作业、成绩、聊天等功能。各功能的查询 业务中引入了 Redis 实现对数据的分页缓存；课堂资料管理以及私信模块的文件 使用 FastDFS 分布式文件系统完成了对文件的存储；考勤、公告等子模块中使用 了 Websocket 与 RabbitMQ 消息队列实现业务纵向解耦和数据实时推送；聊天模 块则采用了 Netty 提供的 NIO 框架进行设计，利用 WebRtc 实现了音视频实时通 迅。APP 和管理后台网站都是基于 Flutter 跨平台框架完成设计。客户端可以打 包成 APP 和 Web 程序，运行在手机、ipad、电脑等设备上，并拥有一致的 UI 体 验。
 
+# 下载体验
+## APP下载链接：http://res.imtt.qq.com/res_mtt/m_download_qb/release/190409/release/qbload_yyb.html
+   web版入口地址： http://47.102.97.30:11001/web/index.html
+   后台管理网址:http://47.102.97.30:11001/admin/index.html
+
+
 # 部分UI展示(图片在display文件夹)
 ## APP
 ![Image text](https://github.com/332870852/course_app/blob/master/display/login.jpg)
